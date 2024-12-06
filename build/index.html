@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Quản lý cơ sở vật chất</title>
+        <script src="https://unpkg.com/react@17/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@17/umd/react-dom.development.js"></script>
+        <script src="https://unpkg.com/react-router-dom@5.3.0/umd/react-router-dom.min.js"></script>
+        <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+        <script src="./src/modules/Cryptage.js"></script>
+
+        <link rel="stylesheet" href="./src/css/style.css" />
+        <link rel="stylesheet" href="./src/css/base.css" />
+        <link rel="stylesheet" href="./src/css/loader.css" />
+        <link rel="stylesheet" href="./src/css/navigation.css" />
+        <link
+            href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="./src/fonts/fonts_css/fonts.css" />
+    </head>
+
+    <body>
+        <div class="overLoader active">
+            <div class="loader">
+                <svg viewBox="0 0 80 80">
+                    <circle id="test" cx="40" cy="40" r="32"></circle>
+                </svg>
+            </div>
+        </div>
+
+        <div id="root"></div>
+
+        <!-- <script type="text/babel" src="./src/js/app.js"></script> -->
+
+        <script src="./src/js/load_page.js"></script>
+        <script src="./src/js/bundle.js"></script>
+    </body>
+</html>
