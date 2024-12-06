@@ -94,4 +94,5 @@ git branch -M main
 git remote add origin https://github.com/danghieu7424/QLCSVC.git
 git push -u origin main
 
+git push origin main
 git pull origin main
