@@ -55,10 +55,10 @@ function Home() {
 
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
-        const targetSection = decode(queryParams.get("p"));
+        const targetSection = queryParams.get("p");
 
         if (targetSection) {
-            scrollToSection(targetSection);
+            scrollToSection(decode(targetSection));
         }
     }, [location.search]); 
 

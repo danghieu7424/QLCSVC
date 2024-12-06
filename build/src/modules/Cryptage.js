@@ -36,6 +36,9 @@ const Cryptage = {
         );
     },
     decode: (encodedText, shiftAmount = 7) => {
+        if(!encodedText) {
+            return;
+        }
         const len = encodedText.length;
         shiftAmount = shiftAmount % len;
         const shiftedBack =

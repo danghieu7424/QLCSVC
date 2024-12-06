@@ -90,3 +90,8 @@ npm install webpack-dev-server --save-dev
 
 git add build public src .babelrc package-lock.json package.json readme.md webpack.config.js Readme.md
 
+git branch -M main
+git remote add origin https://github.com/danghieu7424/QLCSVC.git
+git push -u origin main
+
+git pull origin main
