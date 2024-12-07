@@ -29,6 +29,7 @@
     color: #111;
     text-align: left;
     font-weight: bold;
+    font-family: Roboto_both;
 }
 
 #content_table thead tr th:first-of-type {
@@ -51,6 +52,7 @@
 
 #content_table tbody tr {
     border-bottom: 1px solid #2224;
+    font-family: Roboto;
 }
 
 #content_table tbody tr:nth-of-type(even) {

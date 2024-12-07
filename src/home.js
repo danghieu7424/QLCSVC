@@ -1,8 +1,7 @@
 import React from 'react'
 import { useState, useEffect, useRef } from 'react';
 import { BrowserRouter, Route, Switch, Link, useLocation, useHistory } from 'react-router-dom';
-
-const { encode, decode } = Cryptage;
+import Cryptage from './assets/modules/Cryptage.js';
 
 function Home() {
     const location = useLocation();
@@ -57,7 +56,7 @@ function Home() {
         const targetSection = queryParams.get("p");
 
         if (targetSection) {
-            scrollToSection(decode(targetSection));
+            scrollToSection(Cryptage.decode(targetSection));
         }
     }, [location.search]);
 
@@ -374,6 +373,8 @@ const listKTCK = [
 ];
 
 function Header({ toggleMenu, isMenuActive }) {
+    const img_logo = '/src/img/Logo-Truong-Dai-hoc-Thai-Binh.png';
+
     return (
         <header className="box__header">
             <div className="box__header__embrace">
@@ -389,7 +390,7 @@ function Header({ toggleMenu, isMenuActive }) {
                     <li>
                         <a href="/" id="box__logo">
                             <img
-                                src="./src/img/Logo-Truong-Dai-hoc-Thai-Binh.png"
+                                src={img_logo}
                                 alt="logo"
                             />
                         </a>
@@ -535,7 +536,6 @@ function Navigation() {
                             <i className="bx bx-chevron-down"></i>
                             <abbr title="Công nghệ Thông tin"> CNTT </abbr>
                         </span>
-                        <div className="more"></div>
                         <div className="more">
                             <ul>
                                 {listCNTT.map((cos, index) => {
@@ -543,7 +543,7 @@ function Navigation() {
                                         <ListURL
                                             key={index}
                                             url={cos.page}
-                                            className="option"
+                                            className="nav__option"
                                             title={cos.title}
                                         />
                                     );
@@ -556,7 +556,6 @@ function Navigation() {
                             <i className="bx bx-chevron-down"></i>
                             <abbr title="Điện - Điện tử"> Đ-ĐT </abbr>
                         </span>
-                        <div className="more"></div>
                         <div className="more">
                             <ul>
                                 {listDDTU.map((cos, index) => {
@@ -564,7 +563,7 @@ function Navigation() {
                                         <ListURL
                                             key={index}
                                             url={cos.page}
-                                            className="option"
+                                            className="nav__option"
                                             title={cos.title}
                                         />
                                     );
@@ -577,7 +576,6 @@ function Navigation() {
                             <i className="bx bx-chevron-down"></i>
                             <abbr title="Kỹ thuật Cơ khí"> KTCK </abbr>
                         </span>
-                        <div className="more"></div>
                         <div className="more">
                             <ul>
                                 {listKTCK.map((cos, index) => {
@@ -585,7 +583,7 @@ function Navigation() {
                                         <ListURL
                                             key={index}
                                             url={cos.page}
-                                            className="option"
+                                            className="nav__option"
                                             title={cos.title}
                                         />
                                     );

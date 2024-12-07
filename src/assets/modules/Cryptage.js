@@ -54,3 +54,5 @@ const Cryptage = {
         return Cryptage.fromBase64(base64Encoded);
     },
 };
+
+export default Cryptage;
