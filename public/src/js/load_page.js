@@ -20,7 +20,7 @@ function endLoader() {
 // const { encode, decode } = Cryptage;
 
 // // Sử dụng hàm encode và decode
-// const input = "page6";
+// const input = "phong";
 
 // const encoded = encode(input);
 // console.log("Encoded:", encoded);
