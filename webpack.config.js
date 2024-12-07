@@ -5,7 +5,7 @@ module.exports = {
     entry: "./src/index.js", // Dẫn tới file index.js ta đã tạo
     output: {
         path: path.join(__dirname, "/build"), // Thư mục chứa file được build ra
-        filename: "bundle.js", // Tên file được build ra
+        filename: "src/js/[name].[contenthash].js", // Tên file JS và phân tách theo thư mục js/
         publicPath: "/",
     },
     module: {
@@ -13,21 +13,34 @@ module.exports = {
             {
                 test: /\.js$/, // Sẽ sử dụng babel-loader cho những file .js
                 exclude: /node_modules/, // Loại trừ thư mục node_modules
-                use: ["babel-loader"]
+                use: ["babel-loader"],
             },
             {
                 test: /\.css$/, // Sử dụng style-loader, css-loader cho file .css
-                use: ["style-loader", "css-loader"]
-            }
-        ]
+                use: ["style-loader", "css-loader"],
+            },
+            {
+                test: /\.(jpg|jpeg|png|gif|svg)$/i, // Để xử lý hình ảnh
+                type: "asset/resource", // Sử dụng webpack 5 asset modules
+                generator: {
+                    filename: "src/img/[name].[contenthash][ext]", // Lưu ảnh trong thư mục img/
+                },
+            },
+            {
+                test: /\.(woff|woff2|ttf|eot|otf)$/i, // Để xử lý font
+                type: "asset/resource", // Sử dụng webpack 5 asset modules
+                generator: {
+                    filename: "src/fonts/[name].[contenthash][ext]", // Lưu font trong thư mục fonts/
+                },
+            },
+        ],
     },
-    // Chứa các plugins sẽ cài đặt trong tương lai
     plugins: [
         new HtmlWebpackPlugin({
             template: "./public/index.html",
             filename: "index.html",
             inject: true,
-        })
+        }),
     ],
     devServer: {
         static: path.resolve(__dirname, "public"), // Thư mục tĩnh
