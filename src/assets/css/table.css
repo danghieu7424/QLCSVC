@@ -19,7 +19,7 @@
     position: sticky;
     background-color: aliceblue;
     top: 0;
-    padding: .7rem;
+    padding: 0.7rem;
     font-family: roboto_both;
     font-size: 1.2rem;
 }
@@ -33,11 +33,11 @@
 }
 
 #content_table thead tr th:first-of-type {
-    border-radius: .5rem 0 0 0;
+    border-radius: 0.5rem 0 0 0;
 }
 
 #content_table thead tr th:last-of-type {
-    border-radius: 0 .5rem 0 0;
+    border-radius: 0 0.5rem 0 0;
 }
 
 #content_table thead {
@@ -47,7 +47,7 @@
 
 #content_table th,
 #content_table td {
-    padding: .8rem 1rem;
+    padding: 0.8rem 1rem;
 }
 
 #content_table tbody tr {
@@ -61,4 +61,26 @@
 
 #content_table tbody tr:last-of-type {
     border-bottom: 2px solid #94d3dc;
+}
+
+#content_table th {
+    cursor: pointer;
+}
+
+#content_table .th-sort-asc::after {
+    content: '\25be';
+}
+
+#content_table .th-sort-desc::after {
+    content: '\25b4';
+}
+
+#content_table .th-sort-asc::after,
+#content_table .th-sort-desc::after {
+    margin-left: .4rem;
+}
+
+#content_table .th-sort-asc,
+#content_table .th-sort-desc {
+    background: rgba(0, 0, 0, 0.01);
 }
