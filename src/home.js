@@ -358,17 +358,41 @@ const listCNTT = [
         page: "/CNTT/phong",
         title: "Phòng",
     },
+    {
+        page: "/CNTT/tai_san",
+        title: "Tài Sản",
+    },
+    {
+        page: "/CNTT/thanh_ly_tai_san",
+        title: "Thanh Lý Tài Sản",
+    },
 ];
 const listDDTU = [
     {
         page: "/D_DT/phong",
         title: "Phòng",
     },
+    {
+        page: "/CNTT/tai_san",
+        title: "Tài Sản",
+    },
+    {
+        page: "/CNTT/thanh_ly_tai_san",
+        title: "Thanh Lý Tài Sản",
+    },
 ];
 const listKTCK = [
     {
         page: "/KTCK/phong",
         title: "Phòng",
+    },
+    {
+        page: "/CNTT/tai_san",
+        title: "Tài Sản",
+    },
+    {
+        page: "/CNTT/thanh_ly_tai_san",
+        title: "Thanh Lý Tài Sản",
     },
 ];
 

@@ -3,9 +3,9 @@ import ReactDOM from 'react-dom'
 import { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Route, Switch, Link, useLocation, useHistory } from 'react-router-dom';
 import { Navigation, Home, Header } from './home.js';
-import { PhongCNTT } from './cntt.js';
-import { PhongDDTU } from './ddtu.js';
-import { PhongKTCK } from './ktck.js';
+import { PhongCNTT , TLTaiSanCNTT, TaiSanCNTT } from './cntt.js';
+import { PhongDDTU , TLTaiSanDDTU, TaiSanDDTU } from './ddtu.js';
+import { PhongKTCK , TLTaiSanKTCK, TaiSanKTCK } from './ktck.js';
 
 // ------------ CSS ---------------
 // index.js
@@ -60,14 +60,6 @@ function Loader() {
     );
 }
 
-function D_DT() {
-    return <h1 style={{ paddingTop: "4rem" }}>Đ-ĐT</h1>;
-}
-
-function KTCK() {
-    return <h1 style={{ paddingTop: "4rem" }}>KTCK</h1>;
-}
-
 // Component chính
 function App() {
     return (
@@ -81,6 +73,14 @@ function App() {
                     <Route exact path="/CNTT/phong" component={PhongCNTT} />
                     <Route exact path="/D_DT/phong" component={PhongDDTU} />
                     <Route exact path="/KTCK/phong" component={PhongKTCK} />
+
+                    <Route exact path="/CNTT/tai_san" component={TaiSanCNTT} />
+                    <Route exact path="/D_DT/tai_san" component={TaiSanDDTU} />
+                    <Route exact path="/KTCK/tai_san" component={TaiSanKTCK} />
+
+                    <Route exact path="/CNTT/thanh_ly_tai_san" component={TLTaiSanCNTT} />
+                    <Route exact path="/D_DT/thanh_ly_tai_san" component={TLTaiSanDDTU} />
+                    <Route exact path="/KTCK/thanh_ly_tai_san" component={TLTaiSanKTCK} />
                 </Switch>
             </React.Fragment>
         </Router>
