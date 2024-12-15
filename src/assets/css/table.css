@@ -67,6 +67,10 @@
     cursor: pointer;
 }
 
+#content_table td span {
+    display: none;
+}
+
 #content_table .th-sort-asc::after {
     content: '\25be';
 }
@@ -103,5 +107,11 @@
 
     #content_table td:last-child {
         padding-bottom: 2rem;
+    }
+
+    #content_table td span {
+        display: block;
+        font-weight: 600;
+        text-transform: capitalize;
     }
 }
