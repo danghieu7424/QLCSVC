@@ -1,6 +1,6 @@
 #box_table {
     width: 100%;
-    max-height: 60dvh;
+    max-height: calc(100dvh - 4rem);
     /* border: 1px solid; */
     overflow: hidden;
     overflow-y: auto;
@@ -83,4 +83,25 @@
 #content_table .th-sort-asc,
 #content_table .th-sort-desc {
     background: rgba(0, 0, 0, 0.01);
+}
+
+@media (max-width: 1400px) {
+    th {
+        display: none;
+    }
+
+    td {
+        display: grid;
+
+        grid-template-columns: 15ch auto;
+        padding: .5rem 1rem;
+    }
+
+    #content_table th, #content_table td:first-child {
+        padding-top: 2rem;
+    }
+
+    #content_table th, #content_table td:last-child {
+        padding-bottom: 2rem;
+    }
 }

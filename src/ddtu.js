@@ -119,13 +119,13 @@ function PhongDDTU() {
                         ) : (
                             data.map((item, index) => (
                                 <tr key={index}>
-                                    <td>{item.MAPX}</td>
-                                    <td>{item.TENPX || ''}</td>
-                                    <td>{item.MANG || ''}</td>
-                                    <td>{item.MACB || ''}</td>
-                                    <td>{item.GiaiDoanQL || ''}</td>
-                                    <td>{item.Sotu || ''}</td>
-                                    <td>{item.GioQD || ''}</td>
+                                    <td><span>Mã Phòng</span>{item.MAPX}</td>
+                                    <td><span>Tên Phòng</span>{item.TENPX || ''}</td>
+                                    <td><span>Mã Ngành</span>{item.MANG || ''}</td>
+                                    <td><span>Mã Cán Bộ</span>{item.MACB || ''}</td>
+                                    <td><span>Giai Đoạn QL</span>{item.GiaiDoanQL || ''}</td>
+                                    <td><span>Số Tuần</span>{item.Sotu || ''}</td>
+                                    <td><span>Giờ Quy Đổi</span>{item.GioQD || ''}</td>
                                 </tr>
                             ))
                         )}
@@ -251,19 +251,19 @@ function TaiSanDDTU() {
                         ) : (
                             data.map((item, index) => (
                                 <tr key={index}>
-                                    <td>{item.MADO || ''}</td>
-                                    <td>{item.TENDO || ''}</td>
-                                    <td>{item.THONGSOKT || 'N/A'}</td>
-                                    <td>{item.MAPH || 'N/A'}</td>
-                                    <td>{item.NOISX || ''}</td>
-                                    <td>{item.DVT || 'N/A'}</td>
-                                    <td>{item.GLGSS || '0'}</td>
-                                    <td>{item.GLGTT || '0'}</td>
-                                    <td>{item.SLTHUA || '0'}</td>
-                                    <td>{item.SLTHIEU || '0'}</td>
-                                    <td>{item.SLSD || '0'}</td>
-                                    <td>{item.GIAITRINH || ''}</td>
-                                    <td>{item.GHICHU || ''}</td>
+                                    <td><span>Mã Đồ</span>{item.MADO || ''}</td>
+                                    <td><span>Tên Đồ</span>{item.TENDO || ''}</td>
+                                    <td><span>Thông Số KT</span>{item.THONGSOKT || 'N/A'}</td>
+                                    <td><span>Mã Phòng</span>{item.MAPX || 'N/A'}</td>
+                                    <td><span>Nơi SX</span>{item.NOISX || ''}</td>
+                                    <td><span>ĐVT</span>{item.DVT || 'N/A'}</td>
+                                    <td><span>GLGSS</span>{item.GLGSS || '0'}</td>
+                                    <td><span>GLGTT</span>{item.GLGTT || '0'}</td>
+                                    <td><span>SL Thừa</span>{item.SLTHUA || '0'}</td>
+                                    <td><span>SL Thiếu</span>{item.SLTHIEU || '0'}</td>
+                                    <td><span>SLSD</span>{item.SLSD || '0'}</td>
+                                    <td><span>Giải Trình</span>{item.GIAITRINH || ''}</td>
+                                    <td><span>Ghi Chú</span>{item.GHICHU || ''}</td>
                                 </tr>
                             ))
                         )}
@@ -386,16 +386,16 @@ function TLTaiSanDDTU() {
                         ) : (
                             data.map((item, index) => (
                                 <tr key={index}>
-                                    <td>{item.MADO || 'N/A'}</td>
-                                    <td>{item.TENDO || 'N/A'}</td>
-                                    <td>{item.MAPX || 'N/A'}</td>
-                                    <td>{item.TSKT || 'N/A'}</td>
-                                    <td>{item.NOISX || 'N/A'}</td>
-                                    <td>{item.DVI || 'N/A'}</td>
-                                    <td>{item.DNTL || 'N/A'}</td>
-                                    <td>{item.GIAITRINH || 'N/A'}</td>
-                                    <td>{item.GIAITS || 'N/A'}</td>
-                                    <td>{item.THANHTIEN ? item.THANHTIEN.toLocaleString() : '0'}</td>
+                                    <td><span>Mã Đồ</span>{item.MADO || 'N/A'}</td>
+                                    <td><span>Tên Đồ</span>{item.TENDO || 'N/A'}</td>
+                                    <td><span>Mã Phòng</span>{item.MAPX || 'N/A'}</td>
+                                    <td><span>Thông Số KT</span>{item.TSKT || 'N/A'}</td>
+                                    <td><span>Nơi SX</span>{item.NOISX || 'N/A'}</td>
+                                    <td><span>ĐVT</span>{item.DVI || 'N/A'}</td>
+                                    <td><span>DNTL</span>{item.DNTL || 'N/A'}</td>
+                                    <td><span>Giải Trình</span>{item.GIAITRINH || 'N/A'}</td>
+                                    <td><span>Giải TS</span>{item.GIAITS || 'N/A'}</td>
+                                    <td><span>Thành Tiền</span>{item.THANHTIEN ? item.THANHTIEN.toLocaleString() : '0'}</td>
                                 </tr>
                             ))
                         )}
