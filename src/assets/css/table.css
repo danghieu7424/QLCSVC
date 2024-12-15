@@ -90,18 +90,18 @@
         display: none;
     }
 
-    td {
+    #content_table td {
         display: grid;
-
+        gap: .5rem;
         grid-template-columns: 15ch auto;
         padding: .5rem 1rem;
     }
 
-    #content_table th, #content_table td:first-child {
+    #content_table td:first-child {
         padding-top: 2rem;
     }
 
-    #content_table th, #content_table td:last-child {
+    #content_table td:last-child {
         padding-bottom: 2rem;
     }
 }
