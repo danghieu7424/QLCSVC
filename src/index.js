@@ -2,7 +2,9 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Route, Switch, Link, useLocation, useHistory } from 'react-router-dom';
-import { Navigation, Home, Header } from './home.js';
+import { Navigation, Home, Header, Home_p2, Home_p3, Home_p4, Home_p5  } from './home.js';
+import { Overview } from './overview.js';
+import { CanBo } from './canbo.js';
 import { PhongCNTT, TLTaiSanCNTT, TaiSanCNTT } from './cntt.js';
 import { PhongDDTU, TLTaiSanDDTU, TaiSanDDTU } from './ddtu.js';
 import { PhongKTCK, TLTaiSanKTCK, TaiSanKTCK } from './ktck.js';
@@ -52,6 +54,13 @@ function App() {
                         <Navigation />
                         <Switch>
                             <Route exact path="/" component={Home} />
+                            <Route exact path="/lich-su" component={Home_p2} />
+                            <Route exact path="/nganh-cntt" component={Home_p3} />
+                            <Route exact path="/nganh-ddt" component={Home_p4} />
+                            <Route exact path="/nganh-kt" component={Home_p5} />
+                            {/* Các route khác */}
+                            <Route exact path="/tong-quan" component={Overview} />
+                            <Route exact path="/can-bo" component={CanBo} />
                             <Route exact path="/CNTT/phong" component={PhongCNTT} />
                             <Route exact path="/D_DT/phong" component={PhongDDTU} />
                             <Route exact path="/KTCK/phong" component={PhongKTCK} />

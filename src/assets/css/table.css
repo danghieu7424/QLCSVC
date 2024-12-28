@@ -89,7 +89,7 @@
     background: rgba(0, 0, 0, 0.01);
 }
 
-@media (max-width: 1400px) {
+@media (max-width: 700px) {
     th {
         display: none;
     }
@@ -114,4 +114,45 @@
         font-weight: 600;
         text-transform: capitalize;
     }
+}
+
+#table-function {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    gap: 10px;
+}
+
+#table-function button {
+    position: relative;
+    aspect-ratio: 1/1;
+    border: 1px solid;
+    border-radius: 3px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+#table-function button#btnEdit {
+    background-color: var(--color-light-green);
+}
+#table-function button#btnDel {
+    background-color: var(--color-light-red);
+}
+#table-function button#btnSave {
+    background-color: var(--color-light-blue);
+}
+
+#table-function button:hover {
+    filter: opacity(.8);
+    transition: filter .2s ease-in-out;
+}
+
+#table-function button i {
+    position: relative;
+    font-size: 1.2rem;
+    padding: 2px;
 }

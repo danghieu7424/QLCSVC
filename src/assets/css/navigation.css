@@ -80,6 +80,8 @@ nav.navigation {
     height: calc(100dvh - 4em); */
     z-index: 1000;
     transition: all 0.3s ease-in;
+    font-family: roboto;
+    font-weight: 500;
 }
 
 nav.navigation.active {
@@ -155,6 +157,20 @@ nav.navigation.active {
     z-index: 1000;
     overflow: hidden;
     transition: all 0.3s;
+}
+
+.box__nav__title .box__nav__title--hover .source_home {
+    position: relative;
+    display: block;
+    padding: 5px 24px;
+    font-size: 1rem;
+    text-decoration: none;
+    color: #111;
+    background-color: #FFF;
+    display: inline-block;
+    border-bottom: 2px solid transparent;
+    transition: all 0.3s ease;
+    z-index: 10;
 }
 
 /* .box__nav__title .more::after {
