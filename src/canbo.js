@@ -89,7 +89,7 @@ function CanBo() {
         <section id="section__introduce">
             <div id="box_table">
                 <table id="content_table">
-                    <caption>Bảng</caption>
+                    <caption>Bảng Thông Tin Cán Bộ</caption>
                     <thead>
                         <tr>
                             <th>Mã Cán Bộ</th>
@@ -115,7 +115,7 @@ function CanBo() {
                                     <td><span>Phòng Xưởng</span>{item.MaPhongXuong || ''}</td>
                                     <td><span>Vai Trò Quản Lý</span>{item.VaiTroQL || ''}</td>
                                     <td><span>Ngành</span>{item.TenNganh || ''}</td>
-                                    <td id="table-function">
+                                    <td id="table-function" style={{display: 'flex'}}>
                                         <abbr title="Edit"><button id="btnEdit"><i class='bx bx-edit'></i></button></abbr>
                                         <abbr title="Save"><button id="btnSave"><i class='bx bxs-save' ></i></button></abbr>
                                         <abbr title="Delete"><button id="btnDel"><i class='bx bxs-x-square' ></i></button></abbr>

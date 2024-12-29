@@ -1,6 +1,24 @@
 #box_table {
+    --color-red-light: rgba(255, 99, 132, 0.3);
+    --color-green-light: rgba(75, 192, 192, 0.3);
+    --color-blue-light: rgba(54, 162, 235, 0.3);
+    --color-orange-light: rgba(255, 159, 64, 0.3);
+    --color-yellow-light: rgba(255, 205, 86, 0.3);
+    --color-violet-light: rgba(153, 102, 255, 0.3);
+    --color-gray-light: rgba(201, 203, 207, 0.3);
+
+    --color-red: rgba(255, 99, 132);
+    --color-green: rgba(75, 192, 192);
+    --color-blue: rgba(54, 162, 235);
+    --color-orange: rgba(255, 159, 64);
+    --color-yellow: rgba(255, 205, 86);
+    --color-violet: rgba(153, 102, 255);
+    --color-gray: rgba(201, 203, 207);
+}
+
+#box_table {
     width: 100%;
-    max-height: calc(100dvh - 4rem);
+    max-height: calc(100dvh - 4rem - 20px);
     /* border: 1px solid; */
     overflow: hidden;
     overflow-y: auto;
@@ -22,6 +40,7 @@
     padding: 0.7rem;
     font-family: roboto_both;
     font-size: 1.2rem;
+    z-index: 1;
 }
 
 #content_table thead tr {
@@ -43,6 +62,7 @@
 #content_table thead {
     position: sticky;
     top: 2.8rem;
+    z-index: 1;
 }
 
 #content_table th,
@@ -65,6 +85,7 @@
 
 #content_table th {
     cursor: pointer;
+    z-index: 1;
 }
 
 #content_table td span {
@@ -123,6 +144,7 @@
     align-items: center;
     flex-direction: row;
     gap: 10px;
+    z-index: 0;
 }
 
 #table-function button {
@@ -137,13 +159,16 @@
 }
 
 #table-function button#btnEdit {
-    background-color: var(--color-light-green);
+    background: var(--color-green-light);
+    color: var(--color-green);
 }
 #table-function button#btnDel {
-    background-color: var(--color-light-red);
+    background-color: var(--color-red-light);
+    color: var(--color-red);
 }
 #table-function button#btnSave {
-    background-color: var(--color-light-blue);
+    background-color: var(--color-blue-light);
+    color: var(--color-blue);
 }
 
 #table-function button:hover {
