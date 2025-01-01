@@ -18,10 +18,11 @@
 
 #box_table {
     width: 100%;
-    max-height: calc(100dvh - 4rem - 20px);
+    max-height: calc(100dvh - 7rem - 30px);
     /* border: 1px solid; */
     overflow: hidden;
     overflow-y: auto;
+    overflow-x: auto;
     box-shadow: 0 0 4px 2px #3333;
 }
 
@@ -180,4 +181,36 @@
     position: relative;
     font-size: 1.2rem;
     padding: 2px;
+}
+
+
+/* input value */
+.input_row_value {
+    position: relative;
+    width: 100%;
+    padding: 5px;
+    border: none;
+    border-bottom: 1px solid var(--color-black-pure-alpha-15);
+    background-color: transparent;
+    transition: all .2s ease;
+}
+
+
+.input_row_value:focus,
+.input_row_value:valid {
+    outline: none;
+}
+
+.input_row_value:focus {
+    border-bottom: 1px solid var(--color-black-pure-alpha-60);
+}
+
+button#btn_done {
+    background: var(--color-green-light);
+    color: var(--color-green);
+}
+
+button#btn_cancel {
+    background-color: var(--color-red-light);
+    color: var(--color-red);
 }

@@ -242,6 +242,8 @@ abbr {
     color: black;
     font-size: 1rem;
     transition: all .3s;
+    font-family: K2D;
+    font-weight: 400;
 }
 
 
@@ -258,6 +260,7 @@ abbr {
     justify-content: flex-start;
     align-items: flex-start;
     flex-direction: column;
+    gap: 10px;
 }
 
 #section__introduce .test {

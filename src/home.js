@@ -1160,7 +1160,7 @@ function Header({ toggleMenu, isMenuActive }) {
             <div className="box__header__login">
                 <ul>
                     <li>
-                        <a href=""> login </a>
+                        <Link to="/login"> login </Link>
                     </li>
                 </ul>
             </div>
@@ -1182,7 +1182,7 @@ function Navigation() {
                 <ul className="box__nav__title">
                     <li>
                         <span className="box__nav__title--hover" style={{ borderBottom: '1px solid' }}>
-                            <Link to="/" className='source_home' style={{ color: '#111' }}>
+                            <Link to="/" className='source_home' onClick={toggleMenu} style={{ color: '#111' }}>
                                 <abbr title="Giới thiệu"> Giới thiệu </abbr>
                             </Link>
                         </span>
@@ -1190,13 +1190,21 @@ function Navigation() {
                     </li>
                     <li>
                         <span className="box__nav__title--hover" style={{ borderBottom: '1px solid' }}>
-                            <Link to="/tong-quan" className='source_home' style={{ color: '#111' }}>
+                            <Link to="/tong-quan" className='source_home'onClick={toggleMenu} style={{ color: '#111' }}>
                                 <abbr title="Tổng quan"> Tổng quan </abbr>
                             </Link>
                         </span>
 
                     </li>
                     <li>
+                        <span className="box__nav__title--hover" style={{ borderBottom: '1px solid' }}>
+                            <Link to="/can-bo" className='source_home' onClick={toggleMenu} style={{ color: '#111' }}>
+                                <abbr title="Cán bộ"> Cán bộ </abbr>
+                            </Link>
+                        </span>
+
+                    </li>
+                    {/* <li>
                         <span className="box__nav__title--hover">
                             <i className="bx bx-chevron-down"></i>
                             <abbr title="Công nghệ Thông tin"> CNTT </abbr>
@@ -1255,7 +1263,7 @@ function Navigation() {
                                 })}
                             </ul>
                         </div>
-                    </li>
+                    </li> */}
                 </ul>
             </nav>
         </>

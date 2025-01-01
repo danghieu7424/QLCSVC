@@ -14,6 +14,7 @@ import { PhongKTCK, TLTaiSanKTCK, TaiSanKTCK } from './ktck.js';
 import './assets/css/style.css';
 import './assets/css/base.css';
 import './assets/css/navigation.css';
+import './assets/css/functions.css';
 import './assets/css/table.css';
 import './assets/fonts/fonts_css/fonts.css';
 
