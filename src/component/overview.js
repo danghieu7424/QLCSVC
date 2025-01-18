@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -9,7 +9,7 @@ import {
     Legend,
     BarController, // Đăng ký controller cho biểu đồ thanh
 } from "chart.js";
-import './assets/css/overview.css';
+import '../assets/css/overview.css';
 
 // Đăng ký các thành phần cần thiết cho Chart.js
 ChartJS.register(
@@ -23,14 +23,52 @@ ChartJS.register(
 );
 
 function Overview() {
+    const [totalQuantity , setTotalQuantity] = useState(0);
+    const [numberOfDevices , setNNumberOfDevices] = useState([]);
+    const [currentStatus , setCurrentStatus] = useState([]);
+    const chartInstanceRef = useRef(null); // Dùng useRef để lưu trữ instance của biểu đồ
+
     useEffect(() => {
+        fetch('https://api-jwgltkza6q-uc.a.run.app/api/select/so-luong-thiet-bi')
+        .then(res => res.json())
+        .then(data => {
+            setTotalQuantity(data[0].SL);
+            console.log(data[0])
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+        fetch('https://api-jwgltkza6q-uc.a.run.app/api/select/so-luong-thiet-bi-nganh')
+        .then(res => res.json())
+        .then(data => {
+            setNNumberOfDevices(data);
+            console.log(data)
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+        fetch('https://api-jwgltkza6q-uc.a.run.app/api/select/hien-trang')
+        .then(res => res.json())
+        .then(data => {
+            setCurrentStatus(data);
+            console.log(data)
+        })
+        .catch((err) => {
+            console.log(err);
+        });
+    }, []);
+
+    useEffect(() => {
+        const dataStatus = currentStatus.map(item => item.SL);
+        const labelsStatus = currentStatus.map(item => item.HienTrang);
+
         // Dữ liệu biểu đồ
         const data = {
-            labels: ["Hoạt động", "Sửa chữa", "Hỏng", "Đã hỏng"],
+            labels: labelsStatus,
             datasets: [
                 {
                     label: "Số lượng",
-                    data: [100, 10, 5, 6],
+                    data: dataStatus,
                     backgroundColor: [
                         "rgba(75, 192, 192, 0.2)",
                         "rgba(255, 206, 86, 0.2)",
@@ -67,14 +105,19 @@ function Overview() {
             },
         };
 
-        // Lấy phần tử canvas và khởi tạo biểu đồ
+        // Hủy biểu đồ cũ nếu tồn tại
+        if (chartInstanceRef.current) {
+            chartInstanceRef.current.destroy();
+        }
+
+        // Tạo biểu đồ mới và lưu trữ instance
         const ctx = document.getElementById('Chart').getContext('2d');
-        new ChartJS(ctx, {
-            type: 'bar', // Loại biểu đồ
+        chartInstanceRef.current = new ChartJS(ctx, {
+            type: 'bar',
             data: data,
             options: options,
         });
-    }, []); // Chỉ chạy khi component được mount
+    }, [currentStatus]); // Chỉ chạy khi currentStatus thay đổi
 
     return (
         <div className='box_overview'>
@@ -82,19 +125,19 @@ function Overview() {
                 <div className='overview_content'>
                     <div className='item'>
                         <h4 >Số thiết bị</h4>
-                        <span>2000</span>
+                        <span>{totalQuantity}</span>
                     </div>
                     <div className='item'>
                         <h4 >Số thiết bị cntt</h4>
-                        <span>500</span>
+                        <span>{numberOfDevices.find(item => item.MaNganh === "7480201")?.SL || "N/A"}</span>
                     </div>
                     <div className='item'>
                         <h4 >Số thiết bị Đ-ĐT</h4>
-                        <span>800</span>
+                        <span>{numberOfDevices.find(item => item.MaNganh === "7510301")?.SL || "N/A"}</span>
                     </div>
                     <div className='item'>
                         <h4 >Số thiết bị KT</h4>
-                        <span>700</span>
+                        <span>{numberOfDevices.find(item => item.MaNganh === "7510201")?.SL || "N/A"}</span>
                     </div>
                 </div>
                 <div className='overview_chart'>

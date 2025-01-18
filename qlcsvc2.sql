@@ -626,3 +626,38 @@ CREATE TRIGGER `after_update_THIETBI` AFTER UPDATE ON `THIETBI` FOR EACH ROW BEG
 END
 $$
 DELIMITER ;
+
+
+CALL UpdateTwoTables('G1.01', 'G101');
+CALL UpdateTwoTables('H1.01', 'H101');
+CALL UpdateTwoTables('G1.06', 'G106');
+CALL UpdateTwoTables('G2.10', 'G210');
+CALL UpdateTwoTables('G2.06', 'G206');
+CALL UpdateTwoTables('H1.02', 'H102');
+CALL UpdateTwoTables('G1.02', 'G102');
+CALL UpdateTwoTables('G1.03', 'G103');
+CALL UpdateTwoTables('G1.05', 'G105');
+CALL UpdateTwoTables('G1.04', 'G104');
+CALL UpdateTwoTables('G2.02', 'G202');
+CALL UpdateTwoTables('G2.03', 'G203');
+CALL UpdateTwoTables('G2.05', 'G205');
+CALL UpdateTwoTables('G2.07', 'G207');
+CALL UpdateTwoTables('G2.08', 'G208');
+CALL UpdateTwoTables('g5.4', 'G504');
+CALL UpdateTwoTables('g4.7', 'G407');
+CALL UpdateTwoTables('g5.1', 'G501');
+CALL UpdateTwoTables('g5.7', 'G507');
+CALL UpdateTwoTables('d1.07', 'D107');
+CALL UpdateTwoTables('d2.6', 'D206');
+CALL UpdateTwoTables('g4.5', 'G405');
+CALL UpdateTwoTables('d2.1', 'D201');
+CALL UpdateTwoTables('d2.10', 'D210');
+CALL UpdateTwoTables('g4.6', 'G406');
+CALL UpdateTwoTables('g4.9', 'G409');
+CALL UpdateTwoTables('d2.7', 'D207');
+CALL UpdateTwoTables('d2.9', 'D209');
+CALL UpdateTwoTables('g4.10', 'G410');
+CALL UpdateTwoTables('g5.5', 'G505');
+CALL UpdateTwoTables('g4.4', 'G404');
+CALL UpdateTwoTables('g4.2', 'G402');
+CALL UpdateTwoTables('g4.1', 'G401');

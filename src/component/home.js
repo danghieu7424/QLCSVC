@@ -1,8 +1,8 @@
 import React from 'react'
 import { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Route, Switch, Link, useLocation, useHistory } from 'react-router-dom';
-import Cryptage from './assets/modules/Cryptage.js';
-import './assets/css/home.css'
+import Cryptage from '../assets/modules/Cryptage.js';
+import '../assets/css/home.css'
 
 // function Home() {
 //     const location = useLocation();
@@ -1004,20 +1004,39 @@ function ListURL({ url = "", className, title, onClick = () => { } }) {
 
 
 
-const listCNTT = [
+const listNganh = [
     {
         page: "/CNTT/phong",
-        title: "Phòng",
+        title: "Phòng CNTT",
     },
     {
-        page: "/CNTT/tai_san",
-        title: "Tài Sản",
+        page: "/D_DT/phong",
+        title: "Phòng Đ-ĐT",
     },
     {
-        page: "/CNTT/thanh_ly_tai_san",
-        title: "Thanh Lý Tài Sản",
+        page: "/KTCK/phong",
+        title: "Phòng KTCK",
     },
 ];
+const listTB = [
+    {
+        page: "/TongThietBi",
+        title: "Thiết Bị",
+    },
+    {
+        page: "/ChuyenThietBi",
+        title: "Chuyển Thiết Bị",
+    },
+    {
+        page: "/MuaThietBi",
+        title: "Mua Thiết Bị",
+    },
+    {
+        page: "/ThanhLyThietBi",
+        title: "Thanh Lý Thiết Bị",
+    },
+];
+
 const listDDTU = [
     {
         page: "/D_DT/phong",
@@ -1093,14 +1112,14 @@ function Header({ toggleMenu, isMenuActive }) {
                             </Link>
                         </span>
                     </li>
-                    {/* <li>
-                        <span href="" className="box__header__title--hover">
-                            <abbr title="Công nghệ Thông tin"> CNTT </abbr>
+                    <li>
+                        <span className="box__header__title--hover">
+                            <abbr title="Ngành"> Ngành </abbr>
                             <i className="bx bx-chevron-down"></i>
                         </span>
                         <div className="more">
                             <ul>
-                                {listCNTT.map((cos, index) => {
+                                {listNganh.map((cos, index) => {
                                     return (
                                         <ListURL
                                             key={index}
@@ -1114,6 +1133,26 @@ function Header({ toggleMenu, isMenuActive }) {
                         </div>
                     </li>
                     <li>
+                        <span className="box__header__title--hover">
+                            <abbr title="Thiết Bị"> Thiết Bị </abbr>
+                            <i className="bx bx-chevron-down"></i>
+                        </span>
+                        <div className="more">
+                            <ul>
+                                {listTB.map((cos, index) => {
+                                    return (
+                                        <ListURL
+                                            key={index}
+                                            url={cos.page}
+                                            className="option"
+                                            title={cos.title}
+                                        />
+                                    );
+                                })}
+                            </ul>
+                        </div>
+                    </li>
+                    {/* <li>
 
                         <span href="" className="box__header__title--hover">
                             <abbr title="Điện - Điện tử"> Đ-ĐT </abbr>
@@ -1204,20 +1243,21 @@ function Navigation() {
                         </span>
 
                     </li>
-                    {/* <li>
+                    <li>
                         <span className="box__nav__title--hover">
                             <i className="bx bx-chevron-down"></i>
-                            <abbr title="Công nghệ Thông tin"> CNTT </abbr>
+                            <abbr title="Ngành"> Ngành </abbr>
                         </span>
                         <div className="more">
                             <ul>
-                                {listCNTT.map((cos, index) => {
+                                {listNganh.map((cos, index) => {
                                     return (
                                         <ListURL
                                             key={index}
                                             url={cos.page}
                                             className="nav__option"
                                             title={cos.title}
+                                            onClick={toggleMenu}
                                         />
                                     );
                                 })}
@@ -1225,6 +1265,27 @@ function Navigation() {
                         </div>
                     </li>
                     <li>
+                        <span className="box__nav__title--hover">
+                            <i className="bx bx-chevron-down"></i>
+                            <abbr title="Ngành"> Ngành </abbr>
+                        </span>
+                        <div className="more">
+                            <ul>
+                                {listNganh.map((cos, index) => {
+                                    return (
+                                        <ListURL
+                                            key={index}
+                                            url={cos.page}
+                                            className="nav__option"
+                                            title={cos.title}
+                                            onClick={toggleMenu}
+                                        />
+                                    );
+                                })}
+                            </ul>
+                        </div>
+                    </li>
+                    {/* <li>
                         <span className="box__nav__title--hover">
                             <i className="bx bx-chevron-down"></i>
                             <abbr title="Điện - Điện tử"> Đ-ĐT </abbr>

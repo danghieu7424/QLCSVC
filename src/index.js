@@ -2,12 +2,14 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { useState, useEffect, useRef } from 'react';
 import { BrowserRouter as Router, Route, Switch, Link, useLocation, useHistory } from 'react-router-dom';
-import { Navigation, Home, Header, Home_p2, Home_p3, Home_p4, Home_p5  } from './home.js';
-import { Overview } from './overview.js';
-import { CanBo } from './canbo.js';
-import { PhongCNTT, TLTaiSanCNTT, TaiSanCNTT } from './cntt.js';
-import { PhongDDTU, TLTaiSanDDTU, TaiSanDDTU } from './ddtu.js';
-import { PhongKTCK, TLTaiSanKTCK, TaiSanKTCK } from './ktck.js';
+import { Navigation, Home, Header, Home_p2, Home_p3, Home_p4, Home_p5  } from './component/home.js';
+import { Overview } from './component/overview.js';
+import { CanBo } from './component/canbo.js';
+import { PhongCNTT, TLTaiSanCNTT, TaiSanCNTT } from './component/cntt.js';
+import { PhongDDTU, TLTaiSanDDTU, TaiSanDDTU } from './component/ddtu.js';
+import { PhongKTCK, TLTaiSanKTCK, TaiSanKTCK } from './component/ktck.js';
+import LoginPage from './component/login.js';
+import thietBi from './component/thietBi.js';
 
 // ------------ CSS ---------------
 // index.js
@@ -45,50 +47,41 @@ function App() {
         // Dọn dẹp
         return () => clearTimeout(timer);
     }, []);
-    return (
-        <Router>
-            <React.Fragment>
-                {loading && <Loader />}
-                {!loading && (
+
+    const Layout = () => {
+        const location = useLocation(); // Lấy thông tin đường dẫn hiện tại
+        const showHeaderAndNavigation = location.pathname !== "/login"; // Điều kiện hiển thị
+
+        return (
+            <>
+                {showHeaderAndNavigation && (
                     <>
                         <Header />
                         <Navigation />
-                        <Switch>
-                            <Route exact path="/" component={Home} />
-                            <Route exact path="/lich-su" component={Home_p2} />
-                            <Route exact path="/nganh-cntt" component={Home_p3} />
-                            <Route exact path="/nganh-ddt" component={Home_p4} />
-                            <Route exact path="/nganh-kt" component={Home_p5} />
-                            {/* Các route khác */}
-                            <Route exact path="/tong-quan" component={Overview} />
-                            <Route exact path="/can-bo" component={CanBo} />
-                            <Route exact path="/CNTT/phong" component={PhongCNTT} />
-                            <Route exact path="/D_DT/phong" component={PhongDDTU} />
-                            <Route exact path="/KTCK/phong" component={PhongKTCK} />
-
-                            <Route exact path="/CNTT/tai_san" component={TaiSanCNTT} />
-                            <Route exact path="/D_DT/tai_san" component={TaiSanDDTU} />
-                            <Route exact path="/KTCK/tai_san" component={TaiSanKTCK} />
-
-                            <Route
-                                exact
-                                path="/CNTT/thanh_ly_tai_san"
-                                component={TLTaiSanCNTT}
-                            />
-                            <Route
-                                exact
-                                path="/D_DT/thanh_ly_tai_san"
-                                component={TLTaiSanDDTU}
-                            />
-                            <Route
-                                exact
-                                path="/KTCK/thanh_ly_tai_san"
-                                component={TLTaiSanKTCK}
-                            />
-                        </Switch>
                     </>
                 )}
-            </React.Fragment>
+                <Switch>
+                    <Route exact path="/login" component={LoginPage} />
+                    <Route exact path="/" component={Home} />
+                    <Route exact path="/lich-su" component={Home_p2} />
+                    <Route exact path="/nganh-cntt" component={Home_p3} />
+                    <Route exact path="/nganh-ddt" component={Home_p4} />
+                    <Route exact path="/nganh-kt" component={Home_p5} />
+                    {/* Các route khác */}
+                    <Route exact path="/tong-quan" component={Overview} />
+                    <Route exact path="/can-bo" component={CanBo} />
+                    <Route exact path="/CNTT/phong" component={PhongCNTT} />
+                    <Route exact path="/D_DT/phong" component={PhongDDTU} />
+                    <Route exact path="/KTCK/phong" component={PhongKTCK} />
+                    <Route exact path="/TongThietBi" component={thietBi} />
+                </Switch>
+            </>
+        );
+    };
+
+    return (
+        <Router>
+            {loading ? <Loader /> : <Layout />}
         </Router>
     );
 }

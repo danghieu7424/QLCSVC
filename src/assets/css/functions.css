@@ -69,3 +69,10 @@
     align-items: center;
     cursor: pointer;
 }
+#functions .box_functions ul li abbr {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
