@@ -354,18 +354,18 @@ function Home() {
                             <li className='selected'><Link to="/">Thông Tin</Link></li>
                             <li><Link to="/lich-su">Lịch Sử</Link></li>
                             <li><Link to="/nganh-cntt">Ngành CNTT</Link></li>
-                            <li><Link to="/nganh-ddt">Ngành Đ-ĐT</Link></li>
-                            <li><Link to="/nganh-kt">Ngành KT</Link></li>
+                            <li><Link to="/nganh-ddt">Ngành Công Nghệ Kỹ Thuật Đ-ĐT</Link></li>
+                            <li><Link to="/nganh-kt">Ngành Công Nghệ Kỹ Thuật Cơ Khí</Link></li>
                         </ul>
                     </header>
                     <div className="home_container">
                         <div className='home_page1'>
                             <div className="box_home_text">
-                                <h1>Quản lý cơ sở vật chất khoa</h1>
-                                <h1>Công nghệ và Kỹ thuật</h1>
+                                <h1>Website quản lý cơ sở vật chất</h1>
+                                <h1>Khoa Công nghệ và Kỹ thuật</h1>
                                 <p>
-                                    Đem lại sự tiện ích, đồng bộ hóa dữ liệu cập nhật thông
-                                    tin nhanh chóng, tiết kiệm thời gian và mang lại hiệu
+                                    Đem lại tiện ích, đồng bộ hóa dữ liệu, cập nhật thông
+                                    tin nhanh chóng, chính xác, tiết kiệm thời gian, chi phí mang lại hiệu
                                     quả khi sử dụng.
                                 </p>
                             </div>
@@ -407,8 +407,9 @@ function Home() {
                 className="box_home_footer"
             >
                 <div className="box_home_text_footer">
-                    <h1>Liên hệ với khoa Công nghệ và Kỹ thuật</h1>
-                    <p>
+                    <h1>Liên hệ với Khoa Công nghệ và Kỹ thuật</h1>
+                    <p>Địa chỉ: Tầng 1 nhà F, Trường Đại học Thái Bình</p>
+                    {/* <p>
                         Chào mừng bạn đến với khoa Công nghệ và Kỹ thuật -
                         Trường Đại học Thái Bình! Chúng tôi sẵn sàng giải đáp
                         mọi thắc mắc và đồng hành cùng bạn trong quá trình sử
@@ -418,7 +419,7 @@ function Home() {
                     <p>
                         Khoa Công nghệ và Kỹ thuật luôn chào đón bạn và cam kết
                         hỗ trợ hết mình.
-                    </p>
+                    </p> */}
                 </div>
                 <div className="box_home_info_footer">
                     <div className="box_home_info-left">
@@ -451,7 +452,7 @@ function Home() {
                 <div className="box_home_end">
                     <i className="bx bx-copyright"></i>
                     <i>
-                        Bản quyền thuộc về khoa Công nghệ và Kỹ thuật | Trường
+                        Bản quyền thuộc về Khoa Công nghệ và Kỹ thuật | Trường
                         Đại Học Thái Bình
                     </i>
                 </div>
@@ -1007,15 +1008,15 @@ function ListURL({ url = "", className, title, onClick = () => { } }) {
 const listNganh = [
     {
         page: "/CNTT/phong",
-        title: "Phòng CNTT",
+        title: "Phòng Máy CNTT",
     },
     {
         page: "/D_DT/phong",
-        title: "Phòng Đ-ĐT",
+        title: "Xưởng CNKT Điện Điện Tử",
     },
     {
         page: "/KTCK/phong",
-        title: "Phòng KTCK",
+        title: "Xưởng CNKT Cơ Khí",
     },
 ];
 const listTB = [
@@ -1114,7 +1115,7 @@ function Header({ toggleMenu, isMenuActive }) {
                     </li>
                     <li>
                         <span className="box__header__title--hover">
-                            <abbr title="Ngành"> Ngành </abbr>
+                            <abbr title="Phòng Xưởng"> Phòng Xưởng </abbr>
                             <i className="bx bx-chevron-down"></i>
                         </span>
                         <div className="more">
@@ -1246,7 +1247,7 @@ function Navigation() {
                     <li>
                         <span className="box__nav__title--hover">
                             <i className="bx bx-chevron-down"></i>
-                            <abbr title="Ngành"> Ngành </abbr>
+                            <abbr title="Phòng Xưởng"> Phòng Xưởng </abbr>
                         </span>
                         <div className="more">
                             <ul>
@@ -1267,11 +1268,11 @@ function Navigation() {
                     <li>
                         <span className="box__nav__title--hover">
                             <i className="bx bx-chevron-down"></i>
-                            <abbr title="Ngành"> Ngành </abbr>
+                            <abbr title="Thiết Bị"> Thiết Bị </abbr>
                         </span>
                         <div className="more">
                             <ul>
-                                {listNganh.map((cos, index) => {
+                                {listTB.map((cos, index) => {
                                     return (
                                         <ListURL
                                             key={index}
