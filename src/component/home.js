@@ -493,8 +493,8 @@ function Home_p2() {
                             <li><Link to="/">Thông Tin</Link></li>
                             <li className='selected'><Link to="/lich-su">Lịch Sử</Link></li>
                             <li><Link to="/nganh-cntt">Ngành CNTT</Link></li>
-                            <li><Link to="/nganh-ddt">Ngành Đ-ĐT</Link></li>
-                            <li><Link to="/nganh-kt">Ngành KT</Link></li>
+                            <li><Link to="/nganh-ddt">Ngành Công Nghệ Kỹ Thuật Đ-ĐT</Link></li>
+                            <li><Link to="/nganh-kt">Ngành Công Nghệ Kỹ Thuật Cơ Khí</Link></li>
                         </ul>
                     </header>
                     <div className="home_container">
@@ -626,8 +626,8 @@ function Home_p3() {
                             <li><Link to="/">Thông Tin</Link></li>
                             <li><Link to="/lich-su">Lịch Sử</Link></li>
                             <li className='selected'><Link to="/nganh-cntt">Ngành CNTT</Link></li>
-                            <li><Link to="/nganh-ddt">Ngành Đ-ĐT</Link></li>
-                            <li><Link to="/nganh-kt">Ngành KT</Link></li>
+                            <li><Link to="/nganh-ddt">Ngành Công Nghệ Kỹ Thuật Đ-ĐT</Link></li>
+                            <li><Link to="/nganh-kt">Ngành Công Nghệ Kỹ Thuật Cơ Khí</Link></li>
                         </ul>
                     </header>
                     <div className="home_container">
@@ -639,7 +639,7 @@ function Home_p3() {
                             <div className="page--document">
                                 <p>
                                     Trong khoa Công nghệ và kỹ thuật của Đại học Thái Bình
-                                    ngành công nghệ thông tin là 1 trong những chuyên ngành
+                                    ngành công nghệ thông tin là 1 trong những ngành
                                     được quan tâm và chú trọng nhất hiện nay. Với trang
                                     thiết bị hiện đại cùng đội ngũ giảng viên giàu kinh
                                     nghiệm tạo lên môi trường chuyên nghiệp với ngành công
@@ -755,8 +755,8 @@ function Home_p4() {
                             <li><Link to="/">Thông Tin</Link></li>
                             <li><Link to="/lich-su">Lịch Sử</Link></li>
                             <li><Link to="/nganh-cntt">Ngành CNTT</Link></li>
-                            <li className='selected'><Link to="/nganh-ddt">Ngành Đ-ĐT</Link></li>
-                            <li><Link to="/nganh-kt">Ngành KT</Link></li>
+                            <li className='selected'><Link to="/nganh-ddt">Ngành Công Nghệ Kỹ Thuật Đ-ĐT</Link></li>
+                            <li><Link to="/nganh-kt">Ngành Công Nghệ Kỹ Thuật Cơ Khí</Link></li>
                         </ul>
                     </header>
                     <div className="home_container">
@@ -887,8 +887,8 @@ function Home_p5() {
                             <li><Link to="/">Thông Tin</Link></li>
                             <li><Link to="/lich-su">Lịch Sử</Link></li>
                             <li><Link to="/nganh-cntt">Ngành CNTT</Link></li>
-                            <li><Link to="/nganh-ddt">Ngành Đ-ĐT</Link></li>
-                            <li className='selected'><Link to="/nganh-kt">Ngành KT</Link></li>
+                            <li><Link to="/nganh-ddt">Ngành Công Nghệ Kỹ Thuật Đ-ĐT</Link></li>
+                            <li className='selected'><Link to="/nganh-kt">Ngành Công Nghệ Kỹ Thuật Cơ Khí</Link></li>
                         </ul>
                     </header>
                     <div className="home_container">
