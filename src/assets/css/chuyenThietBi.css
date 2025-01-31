@@ -1,0 +1,137 @@
+.container_chuyenTB {
+    position: relative;
+    top: 4rem;
+    width: 100%;
+    padding: 10px;
+    height: calc(100dvh - 4rem);
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: 10px;
+    font-family: Roboto_both;
+}
+
+.box_chuyenTB-function {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.box_chuyen,
+.box_nhan {
+    position: relative;
+    padding: 10px;
+    border: 1px solid var(--color-black-pure-alpha-10);
+    border-radius: 6px;
+    max-width: 50%;
+    height: 100%;
+    box-shadow: 1px 1px 1px var(--color-black-pure-alpha-5);
+    background-color: #f1f8ff;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.box_chuyen {
+    flex: 0 0 calc(50% - 10px);
+}
+.box_nhan {
+    flex: 0 0 calc(50%);
+}
+
+.box_chuyen div,
+.box_nhan div {
+    position: relative;
+    width: 100%;
+    padding: 4px;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: row;
+    transition: all .3s ease;
+}
+
+.box_chuyen div span,
+.box_nhan div span {
+    position: relative;
+    min-width: 5rem;
+}
+
+.thietBiInput {
+    width: 100%; /* Chiếm hết chiều rộng container */
+    max-width: 100%; /* Không vượt quá container */
+    box-sizing: border-box; /* Đảm bảo padding không làm thay đổi kích thước */
+    overflow: hidden; /* Tránh hiển thị nội dung tràn */
+}
+
+
+.box_chuyenTB-function select,
+.box_chuyenTB-function input {
+    position: relative;
+    flex: 1;
+    padding: 4px;
+    background-color: transparent;
+    outline: none;
+    border: none;
+    border-bottom: 1px solid var(--color-black-pure-alpha-30);
+    transition: all .3s ease;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+}
+
+.box_chuyenTB-function select option {
+    position: relative;
+    max-width: calc(50% - 10px);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-sizing: border-box;
+}
+
+.box_chuyenTB-function select:focus,
+.box_chuyenTB-function input:focus {
+    border-bottom: 1px solid var(--color-black-pure-alpha-60);
+}
+
+.container_chuyenTB .box_table {
+    width: 100%;
+}
+
+.search-container {
+    position: relative;
+    width: 100%;
+}
+
+.suggestions {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.suggestions li {
+    padding: 8px 12px;
+    cursor: pointer;
+}
+
+.suggestions li:hover {
+    background-color: #f0f0f0;
+}

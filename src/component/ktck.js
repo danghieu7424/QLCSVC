@@ -355,7 +355,7 @@ function PhongKTCK() {
                             <th>Mã Phòng Xưởng</th>
                             <th>Tên Phòng Xưởng</th>
                             <th>Vị Trí</th>
-                            <th>Mã Ngành</th>
+                            {/* <th>Mã Ngành</th> */}
                             <th>Chức Năng</th>
                         </tr>
                     </thead>
@@ -413,7 +413,7 @@ function PhongKTCK() {
                                             />
                                         </td>
 
-                                        <td>
+                                        {/* <td>
                                             <span>Mã Nghành</span>
                                             <select
                                                 className="input_row_value"
@@ -428,7 +428,7 @@ function PhongKTCK() {
                                             >
                                                 <option value="7510201">7510201</option>
                                             </select>
-                                        </td>
+                                        </td> */}
 
                                         <td
                                             id="table-function"
@@ -503,7 +503,7 @@ function PhongKTCK() {
                                                     />
                                                 </td>
 
-                                                <td>
+                                                {/* <td>
                                                     <span>Mã Ngành</span>
                                                     <select
                                                         className="input_row_value"
@@ -518,7 +518,7 @@ function PhongKTCK() {
                                                     >
                                                         <option value="7510201">7510201</option>
                                                     </select>
-                                                </td>
+                                                </td> */}
                                                 <td
                                                     id="table-function"
                                                     style={{ display: "flex" }}
@@ -552,10 +552,10 @@ function PhongKTCK() {
                                                     <span>Vị Trí</span>
                                                     {item.ViTri || ""}
                                                 </td>
-                                                <td>
+                                                {/* <td>
                                                     <span>Mã Ngành</span>
                                                     {item.MaNganh || ""}
-                                                </td>
+                                                </td> */}
                                                 <td
                                                     id="table-function"
                                                     style={{ display: "flex" }}

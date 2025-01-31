@@ -142,7 +142,15 @@ abbr {
     color: black;
 }
 
-
+.box__header__title li:hover .box__header__title--hover {
+    color: var(--color-dark-blue);
+}
+.box__header__title li .box__header__title--hover a {
+    color: #111;
+}
+.box__header__title li:hover .box__header__title--hover a {
+    color: var(--color-dark-blue);
+}
 
 .box__header__title .box__header__title--hover i {
     transition: all .3s;
@@ -222,6 +230,7 @@ abbr {
 
 .box__header__title .more .option:hover {
     background-color: #f0f0f0;
+    color: var(--color-dark-blue);
 }
 
 

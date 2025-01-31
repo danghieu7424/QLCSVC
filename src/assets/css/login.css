@@ -38,14 +38,17 @@
 .login-section h1 {
     font-size: 24px;
     margin-bottom: 20px;
+    color: var(--color-yellow);
 }
 
 .login-section p {
     margin-bottom: 20px;
+    color: var(--color-yellow);
 }
 
 .login-section input[type="mcb"],
-.login-section input[type="password"] {
+.login-section input[type="password"], 
+.login-section input[type="otp"] {
     width: 100%;
     padding: 10px;
     margin-bottom: 20px;
