@@ -8,9 +8,11 @@ import { CanBo } from './component/canbo.js';
 import { PhongCNTT, TLTaiSanCNTT, TaiSanCNTT } from './component/cntt.js';
 import { PhongDDTU, TLTaiSanDDTU, TaiSanDDTU } from './component/ddtu.js';
 import { PhongKTCK, TLTaiSanKTCK, TaiSanKTCK } from './component/ktck.js';
-import {LoginPage, VerifyOTPPage } from './component/login.js';
+import { LoginPage, VerifyOTPPage } from './component/login.js';
 import thietBi from './component/thietBi.js';
 import ChuyenThietBiPage from './component/chuyenThietBi.js';
+
+import { AuthProvider } from './component/authContext.js';
 
 // ------------ CSS ---------------
 // index.js
@@ -48,6 +50,10 @@ function App() {
         // Dọn dẹp
         return () => clearTimeout(timer);
     }, []);
+
+    // localStorage.removeItem("token");
+
+
 
     const Layout = () => {
         const location = useLocation(); // Lấy thông tin đường dẫn hiện tại
@@ -90,4 +96,4 @@ function App() {
 }
 
 // Render ứng dụng React vào phần tử có id 'root'
-ReactDOM.render(<App />, document.getElementById("root"));
+ReactDOM.render(<AuthProvider><App /></AuthProvider>, document.getElementById("root"));

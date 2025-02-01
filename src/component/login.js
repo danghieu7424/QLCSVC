@@ -1,28 +1,42 @@
 import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import { useAuth } from './authContext.js';
 
 import "../assets/css/login.css"
 import tbu1 from "../assets/img/tbu1.png";
 import tbu2 from "../assets/img/tbu2.jpg";
 
 function LoginPage() {
+    const { login } = useAuth();
     const history = useHistory();
+    
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [rememberMe, setRememberMe] = useState(false);
 
-    const login = async (username, password) => {
+
+    const loginRequest = async (username, password, rememberMe) => {
         try {
             const response = await fetch("https://api-jwgltkza6q-uc.a.run.app/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ username, password: password.toString() }),
+                body: JSON.stringify({ username, password: password.toString(), rememberMe }),
             });
 
             if (response.ok) {
                 const data = await response.json();
+
+                if (rememberMe) {
+                    localStorage.setItem("token", data.token); // Lưu token vào localStorage
+                } else {
+                    sessionStorage.setItem("token", data.token); // Lưu token vào sessionStorage
+                }
+
+                login(data.user);
+
                 history.push("/verify-otp", {
                     username: data.username,
                     email: data.email
@@ -38,7 +52,7 @@ function LoginPage() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        login(username, password);
+        loginRequest(username, password, rememberMe);
     };
 
     return (
@@ -62,9 +76,15 @@ function LoginPage() {
                             onChange={(e) => setPassword(e.target.value)}
                         />
                         <div>
-                            <input type="checkbox" id="remember" />
+                            <input
+                                type="checkbox"
+                                id="remember"
+                                checked={rememberMe}
+                                onChange={(e) => setRememberMe(e.target.checked)}
+                            />
                             <label htmlFor="remember">Nhớ tài khoản trong 7 ngày</label>
                         </div>
+
                         <button type="submit" className="login-button">Login</button>
                     </form>
                 </div>
@@ -91,8 +111,7 @@ function VerifyOTPPage({ location }) {
 
             if (response.ok) {
                 const data = await response.json();
-                alert(data.message);
-                history.push("/"); // Điều hướng tới trang home sau khi xác thực thành công
+                history.push("/");
             } else {
                 const data = await response.json();
                 alert(data.message);

@@ -10,6 +10,9 @@ function ChuyenThietBiPage() {
     const [phongChuyen, setPhongChuyen] = useState(""); // Trạng thái cho phòng chuyển
     const [phongNhan, setPhongNhan] = useState("");    // Trạng thái cho phòng nhận
     const [thietBi, setThietBi] = useState("");    // Trạng thái cho thiết bị
+    const [viTriCu, setViTriCu] = useState("");
+    const [viTriMoi, setViTriMoi] = useState("");
+    const [MaThietBi, setMaThietBi] = useState("");
 
     const [showPhongChuyenSuggestions, setShowPhongChuyenSuggestions] = useState(false);
     const [showPhongNhanSuggestions, setShowPhongNhanSuggestions] = useState(false);
@@ -62,6 +65,43 @@ function ChuyenThietBiPage() {
         updateTable();
     }, []);
 
+    useEffect(() => {
+        const createWebSocket = () => {
+            const socket = new WebSocket(
+                "wss://api-jwgltkza6q-uc.a.run.app/ws"
+            );
+
+            socket.onopen = () => {
+                // console.log("Đã kết nối WebSocket!");
+            };
+
+            socket.onmessage = (event) => {
+                const data = JSON.parse(event.data);
+
+                if (
+                    data.action === "INSERT" ||
+                    data.action === "UPDATE" ||
+                    data.action === "DELETE"
+                ) {
+                    updateTable();
+                }
+            };
+
+            socket.onclose = () => {
+                // console.log("WebSocket đã bị đóng!");
+                // console.log("Đang thử kết nối lại...");
+                setTimeout(() => {
+                    createWebSocket();
+                }, 1000);
+            };
+
+            socket.onerror = (error) => {
+                console.error("Lỗi WebSocket:", error);
+            };
+        };
+        createWebSocket();
+        updateTable();
+    }, []);
 
 
     const handlePhongChuyenSearch = (e) => {
@@ -70,6 +110,9 @@ function ChuyenThietBiPage() {
 
         if (searchTerm === "") {
             setFilteredPhongList(phongList);
+            setViTriCu("");
+            setThietBi("");
+            setMaThietBi(null);
         } else {
             setFilteredPhongList(
                 phongList.filter((phong) =>
@@ -109,6 +152,55 @@ function ChuyenThietBiPage() {
         }
     };
 
+    const handleAccept = async () => {
+        const conf = confirm("Xác Nhận chuyển");
+        if (!conf) {
+            return;
+        }
+
+        if (!MaThietBi || !phongChuyen || !phongNhan || !viTriMoi) {
+            alert("Vui lòng điền đây đủ thông tin");
+            return;
+        }
+
+        const data = {
+            MaThietBi: MaThietBi,
+            MaPhongChuyen: phongChuyen,
+            MaPhongNhan: phongNhan,
+            ViTri: viTriMoi,
+            MaCanBo: "01010093"
+        }
+
+        try {
+            const response = await fetch("https://api-jwgltkza6q-uc.a.run.app/api/insert/chuyen-thiet-bi", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(data),
+            });
+
+            if (!response.ok) {
+                const error = await response.json();
+                alert(`Lỗi: ${error.error}`);
+                return;
+            }
+
+            alert("Chuyển thành công");
+            updateTable();
+            setPhongChuyen("");
+            setPhongNhan("");
+            setThietBi("");
+            setViTriCu("");
+            setViTriMoi("");
+            setMaThietBi("");
+        } catch (error) {
+            console.error("Lỗi khi cập nhật:", error);
+            console.log(newEditRow);
+            alert("Đã xảy ra lỗi khi cập nhật");
+        }
+    }
+
     return (
         <div className="container_chuyenTB">
             <div className="box_chuyenTB-function">
@@ -136,6 +228,9 @@ function ChuyenThietBiPage() {
                                                 key={phong.MaPhongXuong}
                                                 onClick={() => {
                                                     setPhongChuyen(phong.MaPhongXuong);
+                                                    setThietBi("");
+                                                    setViTriCu("");
+                                                    setMaThietBi("");
                                                     setShowPhongChuyenSuggestions(false);
                                                 }}
                                             >
@@ -160,11 +255,15 @@ function ChuyenThietBiPage() {
                             />
                             {showThietBiSuggestions && (
                                 <ul className="suggestions">
-                                    {filteredThietBiList.map((tb) => (
+                                    {filteredThietBiList.filter(
+                                        (tb) => tb.MaPhongXuong === phongChuyen
+                                    ).map((tb) => (
                                         <li
                                             key={tb.MaThietBi}
                                             onClick={() => {
                                                 setThietBi(tb.TenThietBi); // Lưu tên thiết bị vào trạng thái
+                                                setMaThietBi(tb.MaThietBi);
+                                                setViTriCu(tb.ViTri);
                                                 setShowThietBiSuggestions(false);
                                             }}
                                         >
@@ -177,7 +276,7 @@ function ChuyenThietBiPage() {
                     </div>
                     <div>
                         <span>Vị Trí Cũ:</span>
-                        <input className="viTri" disabled></input>
+                        <input className="viTri" value={viTriCu} disabled></input>
                     </div>
                 </div>
 
@@ -217,7 +316,19 @@ function ChuyenThietBiPage() {
                     </div>
                     <div>
                         <span>Vị Trí Mới:</span>
-                        <input className="viTri"></input>
+                        <input
+                            className="viTri"
+                            placeholder="Nhập vị trí"
+                            value={viTriMoi} // Liên kết với state
+                            onChange={(e) => setViTriMoi(e.target.value)} // Cập nhật state khi nhập
+                        />
+
+                    </div>
+                    <div>
+                        <button
+                            className="btnAccept"
+                            onClick={handleAccept}
+                        >Xong</button>
                     </div>
                 </div>
             </div>
@@ -266,7 +377,9 @@ function ChuyenThietBiPage() {
                     </thead>
                     <tbody>
                         {
-                            chuyenThietBiList.map((item, index) => {
+                            chuyenThietBiList
+                            .sort((a, b) => b.MaChuyen - a.MaChuyen)
+                            .map((item, index) => {
                                 // Tìm thiết bị trong thietBiList dựa trên MaThietBi
                                 const thietBiItem = thietBiList.find(tb => tb.MaThietBi === item.MaThietBi);
                                 return (
@@ -297,7 +410,7 @@ function ChuyenThietBiPage() {
                                         </td>
                                         <td>
                                             <span>Cán Bộ</span>
-                                            {item.MaCanBo}
+                                            {item.TenCanBo}
                                         </td>
                                     </tr>
                                 );

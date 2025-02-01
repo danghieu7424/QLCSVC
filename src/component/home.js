@@ -437,7 +437,7 @@ function Home() {
                                 </div>
                                 <div className="page--document">
                                     <p>
-                                    Ngành Kỹ thuật Điện - Điện tử cung cấp cho sinh viên các kiến thức về mạch điện, hệ thống điều khiển tự động, điện tử công suất và truyền thông. Sinh viên sẽ được học cách thiết kế, lắp đặt và bảo trì các hệ thống điện - điện tử trong các ngành công nghiệp, dịch vụ và dân dụng, góp phần đáp ứng nhu cầu nhân lực kỹ thuật cao trong xã hội hiện đại.
+                                        Ngành Kỹ thuật Điện - Điện tử cung cấp cho sinh viên các kiến thức về mạch điện, hệ thống điều khiển tự động, điện tử công suất và truyền thông. Sinh viên sẽ được học cách thiết kế, lắp đặt và bảo trì các hệ thống điện - điện tử trong các ngành công nghiệp, dịch vụ và dân dụng, góp phần đáp ứng nhu cầu nhân lực kỹ thuật cao trong xã hội hiện đại.
                                     </p>
                                 </div>
                             </div>
@@ -459,7 +459,7 @@ function Home() {
                                 </div>
                                 <div className="page--document">
                                     <p>
-                                    Ngành Kỹ thuật Cơ khí đào tạo các kỹ sư có khả năng thiết kế, chế tạo và vận hành các thiết bị cơ khí, máy móc công nghiệp. Sinh viên sẽ được học về cơ học, vật liệu, công nghệ chế tạo và kỹ thuật gia công, giúp họ nắm vững các quy trình sản xuất và ứng dụng công nghệ mới vào thực tiễn sản xuất.
+                                        Ngành Kỹ thuật Cơ khí đào tạo các kỹ sư có khả năng thiết kế, chế tạo và vận hành các thiết bị cơ khí, máy móc công nghiệp. Sinh viên sẽ được học về cơ học, vật liệu, công nghệ chế tạo và kỹ thuật gia công, giúp họ nắm vững các quy trình sản xuất và ứng dụng công nghệ mới vào thực tiễn sản xuất.
                                     </p>
                                 </div>
                             </div>
@@ -653,8 +653,36 @@ const listKTCK = [
     },
 ];
 
+import { useAuth } from './authContext.js';
+
 function Header({ toggleMenu, isMenuActive }) {
     const img_logo = '/src/img/Logo-Truong-Dai-hoc-Thai-Binh.png';
+    const avatar = "/src/img/avatar/avatar.jpg"
+    const { userData, login, logout } = useAuth();
+    const [isActive, setIsActive] = useState(false);
+
+    useEffect(() => {
+        const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+        if (token && !userData) {
+            fetch("https://api-jwgltkza6q-uc.a.run.app/protected-route", {
+                method: "GET",
+                headers: { Authorization: token },
+            })
+                .then(res => res.ok ? res.json() : null)
+                .then(data => {
+                    if (data) login(data.user); // Cập nhật userData
+                })
+                .catch(error => {
+                    console.error("Error during token verification: ", error);
+                    localStorage.removeItem("token");
+                    sessionStorage.removeItem("token");
+                });
+        }
+    }, [userData, login]);
+
+    const handleAvatarClick = () => {
+        setIsActive(prevState => !prevState);
+    };
 
     return (
         <header className="box__header">
@@ -784,11 +812,37 @@ function Header({ toggleMenu, isMenuActive }) {
                 </ul>
             </div>
             <div className="box__header__login">
-                <ul>
-                    <li>
-                        <Link to="/login"> login </Link>
-                    </li>
-                </ul>
+                {userData ?
+                    <>
+                        <ul>
+                            <li className="box__avatar" onClick={handleAvatarClick}>
+                                <img src={avatar} alt="avatar" />
+                            </li>
+                        </ul>
+                        <div id="box_info_user" className={isActive ? 'active' : ''}>
+                            <svg className="item-cursor" height="12" viewBox="0 0 21 12" width="21"
+                                fill="var(--color-black-pure-alpha-10)" style={{ transform: 'scale(-1, -1) translate(0px, 0px)' }}>
+                                <path d="M21 0c-2.229.424-4.593 2.034-6.496 3.523L5.4 10.94c-2.026 2.291-5.434.62-5.4-2.648V0h21Z">
+                                </path>
+                            </svg>
+                            <div className="info_user">
+                                <div className="box_img">
+                                    <img src={avatar} alt="avatar" />
+                                </div>
+                                <div className="box_text_user">
+                                    <span id="ID_user">{userData?.id}</span>
+                                    <span className="role_user">{userData?.role}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </>
+                    :
+                    <ul>
+                        <li>
+                            <Link to="/login"> login </Link>
+                        </li>
+                    </ul>
+                }
             </div>
         </header>
     );
