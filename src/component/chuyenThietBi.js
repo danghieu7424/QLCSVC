@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import "../assets/css/chuyenThietBi.css";
 
+import { useAuth } from './authContext.js';
+
 function ChuyenThietBiPage() {
     const [chuyenThietBiList, setChuyenThietBiList] = useState([]);
     const [phongList, setPhongList] = useState([]);
@@ -13,6 +15,7 @@ function ChuyenThietBiPage() {
     const [viTriCu, setViTriCu] = useState("");
     const [viTriMoi, setViTriMoi] = useState("");
     const [MaThietBi, setMaThietBi] = useState("");
+    const { userData } = useAuth();
 
     const [showPhongChuyenSuggestions, setShowPhongChuyenSuggestions] = useState(false);
     const [showPhongNhanSuggestions, setShowPhongNhanSuggestions] = useState(false);
@@ -53,7 +56,7 @@ function ChuyenThietBiPage() {
             .catch(err => {
                 console.log(err);
             });
-        fetch('https://api-jwgltkza6q-uc.a.run.app/api/select/thiet-bi')
+        fetch('https://api-jwgltkza6q-uc.a.run.app/api/select/thiet-bi-all')
             .then(req => req.json())
             .then(data => {
                 setThietBiList(data);
@@ -168,7 +171,7 @@ function ChuyenThietBiPage() {
             MaPhongChuyen: phongChuyen,
             MaPhongNhan: phongNhan,
             ViTri: viTriMoi,
-            MaCanBo: "01010093"
+            MaCanBo: userData.id
         }
 
         try {
@@ -200,6 +203,20 @@ function ChuyenThietBiPage() {
             alert("Đã xảy ra lỗi khi cập nhật");
         }
     }
+
+    const formatDate = (dateString) => {
+        const date = new Date(dateString);
+
+        const hours = String(date.getHours()).padStart(2, '0'); // HH
+        const minutes = String(date.getMinutes()).padStart(2, '0'); // mm
+        const seconds = String(date.getSeconds()).padStart(2, '0'); // ss
+
+        const day = String(date.getDate()).padStart(2, '0'); // dd
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // MM (getMonth() trả về 0-11)
+        const year = date.getFullYear(); // yyyy
+
+        return `${hours}:${minutes}:${seconds} ${day}/${month}/${year}`;
+    };
 
     return (
         <div className="container_chuyenTB">
@@ -378,43 +395,43 @@ function ChuyenThietBiPage() {
                     <tbody>
                         {
                             chuyenThietBiList
-                            .sort((a, b) => b.MaChuyen - a.MaChuyen)
-                            .map((item, index) => {
-                                // Tìm thiết bị trong thietBiList dựa trên MaThietBi
-                                const thietBiItem = thietBiList.find(tb => tb.MaThietBi === item.MaThietBi);
-                                return (
-                                    <tr key={index}>
-                                        <td>
-                                            <span>Mã Chuyển</span>
-                                            {item.MaChuyen}
-                                        </td>
-                                        <td>
-                                            <span>Tên Thiết Bị</span>
-                                            {thietBiItem ? thietBiItem.TenThietBi : "Không tìm thấy tên thiết bị"}
-                                        </td>
-                                        <td>
-                                            <span>Ngày Chuyển</span>
-                                            {item.NgayChuyen}
-                                        </td>
-                                        <td>
-                                            <span>Phòng Chuyển</span>
-                                            {item.MaPhongChuyen}
-                                        </td>
-                                        <td>
-                                            <span></span>
-                                            {'=>'}
-                                        </td>
-                                        <td>
-                                            <span>Phòng Nhận</span>
-                                            {item.MaPhongNhan}
-                                        </td>
-                                        <td>
-                                            <span>Cán Bộ</span>
-                                            {item.TenCanBo}
-                                        </td>
-                                    </tr>
-                                );
-                            })
+                                .sort((a, b) => b.MaChuyen - a.MaChuyen)
+                                .map((item, index) => {
+                                    // Tìm thiết bị trong thietBiList dựa trên MaThietBi
+                                    const thietBiItem = thietBiList.find(tb => tb.MaThietBi === item.MaThietBi);
+                                    return (
+                                        <tr key={index}>
+                                            <td>
+                                                <span>Mã Chuyển</span>
+                                                {item.MaChuyen}
+                                            </td>
+                                            <td>
+                                                <span>Tên Thiết Bị</span>
+                                                {thietBiItem ? thietBiItem.TenThietBi : "Không tìm thấy tên thiết bị"}
+                                            </td>
+                                            <td>
+                                                <span>Ngày Chuyển</span>
+                                                {formatDate(item.NgayChuyen)}
+                                            </td>
+                                            <td>
+                                                <span>Phòng Chuyển</span>
+                                                {item.MaPhongChuyen}
+                                            </td>
+                                            <td className="textAlignStyle">
+                                                <span></span>
+                                                {'=>'}
+                                            </td>
+                                            <td>
+                                                <span>Phòng Nhận</span>
+                                                {item.MaPhongNhan}
+                                            </td>
+                                            <td>
+                                                <span>Cán Bộ</span>
+                                                {item.TenCanBo}
+                                            </td>
+                                        </tr>
+                                    );
+                                })
                         }
                     </tbody>
                 </table>

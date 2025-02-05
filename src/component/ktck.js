@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 
 function PhongKTCK() {
     const [data, setData] = useState([]);
@@ -542,7 +543,7 @@ function PhongKTCK() {
                                             <>
                                                 <td>
                                                     <span>Mã Phòng Xưởng</span>
-                                                    {item.MaPhongXuong}
+                                                    <Link to={`/thiet-bi?p=${item.MaPhongXuong}`}>{item.MaPhongXuong}</Link>
                                                 </td>
                                                 <td>
                                                     <span>Tên Phòng Xưởng</span>

@@ -81,7 +81,7 @@ function App() {
                     <Route exact path="/CNTT/phong" component={PhongCNTT} />
                     <Route exact path="/D_DT/phong" component={PhongDDTU} />
                     <Route exact path="/KTCK/phong" component={PhongKTCK} />
-                    <Route exact path="/TongThietBi" component={thietBi} />
+                    <Route exact path="/thiet-bi" component={thietBi} />
                     <Route exact path="/ChuyenThietBi" component={ChuyenThietBiPage} />
                 </Switch>
             </>

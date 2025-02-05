@@ -111,6 +111,10 @@
     background: rgba(0, 0, 0, 0.01);
 }
 
+.textAlignStyle {
+    text-align: center;
+}
+
 @media (max-width: 700px) {
     th {
         display: none;
@@ -136,6 +140,11 @@
         font-weight: 600;
         text-transform: capitalize;
     }
+
+    .textAlignStyle {
+        text-align: left;
+    }
+    
 }
 
 #table-function {
@@ -213,4 +222,41 @@ button#btn_done {
 button#btn_cancel {
     background-color: var(--color-red-light);
     color: var(--color-red);
+}
+
+.state {
+    position: relative;
+    padding: .2rem .4rem;
+    border-radius: .3rem;
+    text-align: center;
+
+    --color-green: #4CAF50;
+    --color-green-light: #E8F5E9;
+    --color-orange: #FF9800;
+    --color-orange-light: #FFF3E0;
+    --color-red: #F44336;
+    --color-red-light: #FFEBEE;
+    --color-gray: #9E9E9E;
+    --color-gray-light: #F5F5F5;
+
+}
+
+.state.in_use {
+    border: 1px solid var(--color-green);
+    background-color: var(--color-green-light);
+}
+
+.state.repair {
+    border: 1px solid var(--color-orange);
+    background-color: var(--color-orange-light);
+}
+
+.state.error {
+    border: 1px solid var(--color-red);
+    background-color: var(--color-red-light);
+}
+
+.state.broken {
+    border: 1px solid var(--color-gray);
+    background-color: var(--color-gray-light);
 }

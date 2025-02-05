@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
 function thietBi() {
     const [data, setData] = useState([]);
@@ -6,6 +7,7 @@ function thietBi() {
     const [loading, setLoading] = useState(true);
     const [nganhList, setNganhList] = useState([]);
     const [phongXuongList, setPhongXuongList] = useState([]);
+    const [paramPage, setParamPage] = useState("");
 
     // lọc
     const [searchQuery, setSearchQuery] = useState("");
@@ -49,8 +51,23 @@ function thietBi() {
 
     //API
 
+    const location = useLocation();
+    const getQueryParam = (param) => {
+        const params = new URLSearchParams(location.search);
+        return params.get(param);
+    };
+
+
     const updateTable = async () => {
-        fetch("https://api-jwgltkza6q-uc.a.run.app/api/select/thiet-bi")
+        const p = getQueryParam("p");
+        setParamPage(p);
+        fetch("https://api-jwgltkza6q-uc.a.run.app/api/select/thiet-bi", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ phong: p }),
+        })
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -232,27 +249,38 @@ function thietBi() {
 
     // add row
     const [isAdding, setIsAdding] = useState(false);
-    const [newRow, setNewRow] = useState({MaThietBi: "",
+    const [newRow, setNewRow] = useState({
         TenThietBi: "",
-        ThongSoKyThuat: "",
-        NamSanXuat: "",
-        NgayNhap: "",
-        SoLuong: "",
-        DonViTinh: "",
-        NuocSanXuat: "",
-        HienTrang: "",
-        GhiChu: "",
-        MaPhongXuong: ""});
+        ViTri: "",
+        MaPhongXuong: ""
+    });
 
     const handleAddRow = () => {
-        setIsAdding(true); // Hiển thị dòng nhập liệu
+        setIsAdding(true);
     };
+
+    useEffect(() => {
+        if (newRow.MaPhongXuong !== paramPage) {
+            setNewRow((prev) => ({
+                ...prev,
+                MaPhongXuong: paramPage,
+            }));
+        }
+    }, [newRow]);
 
     const handleSaveRow = async () => {
         if (
-            !newRow.MaPhongXuong.trim()
+            !newRow.MaPhongXuong.trim() ||
+            !newRow.TenThietBi ||
+            !newRow.ViTri
         ) {
-            alert("Vui lòng điền đầy đủ các thông tin.");
+            alert("Vui lòng điền đầy đủ các thông tin Tên thiết bi, Vị trí.");
+            return;
+        }
+        if (
+            !newRow.HienTrang
+        ) {
+            alert("Vui lòng Chọn hiện trạng.");
             return;
         }
         try {
@@ -268,17 +296,9 @@ function thietBi() {
 
     const handleCancelRow = () => {
         setNewRow({
-            MaThietBi: "",
             TenThietBi: "",
-            ThongSoKyThuat: "",
-            NamSanXuat: "",
-            NgayNhap: "",
-            SoLuong: "",
-            DonViTinh: "",
-            NuocSanXuat: "",
-            HienTrang: "",
-            GhiChu: "",
-            MaPhongXuong: ""
+            ViTri: "",
+            MaPhongXuong: paramPage
         }); // Reset dữ liệu mới
         setIsAdding(false); // Ẩn dòng nhập liệu
     };
@@ -288,7 +308,7 @@ function thietBi() {
     const [newEditRow, setNewEditRow] = useState({});
 
     const handleEdit = (item) => {
-        setEditingRowId({ MaThietBi: item.MaThietBi }); // Đặt dòng đang chỉnh sửa
+        setEditingRowId({ MaThietBi: item.MaThietBi, MaPhongXuong: paramPage }); // Đặt dòng đang chỉnh sửa
         setNewEditRow({ ...item }); // Copy dữ liệu dòng vào newRow
     };
 
@@ -323,6 +343,21 @@ function thietBi() {
         setEditingRowId([null]);
         setNewEditRow({});
     }
+
+    const getStateClass = (hienTrang) => {
+        switch (hienTrang) {
+            case 'Đang sử dụng':
+                return 'state in_use';
+            case 'Sửa chữa':
+                return 'state repair';
+            case 'Lỗi':
+                return 'state error';
+            case 'Hỏng':
+                return 'state broken';
+            default:
+                return 'state';
+        }
+    };
 
 
     return (
@@ -360,20 +395,19 @@ function thietBi() {
             </div>
             <div id="box_table">
                 <table id="content_table">
-                    <caption>Bảng Thông Tin Thiết Bị Chi Tiết</caption>
+                    <caption>Bảng Thông Tin Thiết Bị Chi Tiết Phòng {paramPage}</caption>
                     <thead>
                         <tr>
                             <th>Mã Thiết Bị</th>
                             <th>Tên Thiết Bị</th>
                             <th>Thông Số Kỹ Thuật</th>
                             <th>Năm Sản Xuất</th>
-                            <th>Ngày Nhập</th>
-                            <th>Số Lượng</th>
                             <th>Đơn Vị Tính</th>
                             <th>Nước Sản Xuất</th>
                             <th>Hiện Trạng</th>
                             <th>Ghi Chú</th>
-                            <th>Mã Phòng</th>
+                            <th>Vi Trí</th>
+                            {/* <th>Mã Phòng</th> */}
                             <th>Chức Năng</th>
                         </tr>
                     </thead>
@@ -444,34 +478,6 @@ function thietBi() {
                                             />
                                         </td>
                                         <td>
-                                            <span>Ngày Nhập</span>
-                                            <input
-                                                className="input_row_value"
-                                                type="text"
-                                                value={newRow.NgayNhap}
-                                                onChange={(e) =>
-                                                    setNewRow((prev) => ({
-                                                        ...prev,
-                                                        NgayNhap: e.target.value,
-                                                    }))
-                                                }
-                                            />
-                                        </td>
-                                        <td>
-                                            <span>Số Lượng</span>
-                                            <input
-                                                className="input_row_value"
-                                                type="text"
-                                                value={newRow.SoLuong}
-                                                onChange={(e) =>
-                                                    setNewRow((prev) => ({
-                                                        ...prev,
-                                                        SoLuong: e.target.value,
-                                                    }))
-                                                }
-                                            />
-                                        </td>
-                                        <td>
                                             <span>Đơn Vị Tính</span>
                                             <input
                                                 className="input_row_value"
@@ -501,9 +507,8 @@ function thietBi() {
                                         </td>
                                         <td>
                                             <span>Hiện Trạng</span>
-                                            <input
+                                            <select
                                                 className="input_row_value"
-                                                type="text"
                                                 value={newRow.HienTrang}
                                                 onChange={(e) =>
                                                     setNewRow((prev) => ({
@@ -511,7 +516,13 @@ function thietBi() {
                                                         HienTrang: e.target.value,
                                                     }))
                                                 }
-                                            />
+                                            >
+                                                <option value="">Trạng thái</option>
+                                                <option value="Đang sử dụng">Đang sử dụng</option>
+                                                <option value="Sửa chữa">Sửa chữa</option>
+                                                <option value="Lỗi">Lỗi</option>
+                                                <option value="Hỏng">Hỏng</option>
+                                            </select>
                                         </td>
                                         <td>
                                             <span>Ghi Chú</span>
@@ -527,8 +538,21 @@ function thietBi() {
                                                 }
                                             />
                                         </td>
-
                                         <td>
+                                            <span>Vị Trí</span>
+                                            <input
+                                                className="input_row_value"
+                                                type="text"
+                                                value={newRow.ViTri}
+                                                onChange={(e) =>
+                                                    setNewRow((prev) => ({
+                                                        ...prev,
+                                                        ViTri: e.target.value,
+                                                    }))
+                                                }
+                                            />
+                                        </td>
+                                        {/* <td>
                                             <span>Mã Phòng</span>
                                             <select
                                                 className="input_row_value"
@@ -547,7 +571,7 @@ function thietBi() {
                                                     </option>
                                                 ))}
                                             </select>
-                                        </td>
+                                        </td> */}
 
                                         <td
                                             id="table-function"
@@ -635,34 +659,6 @@ function thietBi() {
                                                     />
                                                 </td>
                                                 <td>
-                                                    <span>Ngày Nhập</span>
-                                                    <input
-                                                        className="input_row_value"
-                                                        type="text"
-                                                        value={newEditRow.NgayNhap || ""}
-                                                        onChange={(e) =>
-                                                            setNewEditRow((prev) => ({
-                                                                ...prev,
-                                                                NgayNhap: e.target.value,
-                                                            }))
-                                                        }
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <span>Số Lượng</span>
-                                                    <input
-                                                        className="input_row_value"
-                                                        type="text"
-                                                        value={newEditRow.SoLuong || ""}
-                                                        onChange={(e) =>
-                                                            setNewEditRow((prev) => ({
-                                                                ...prev,
-                                                                SoLuong: e.target.value,
-                                                            }))
-                                                        }
-                                                    />
-                                                </td>
-                                                <td>
                                                     <span>Đơn Vị Tính</span>
                                                     <input
                                                         className="input_row_value"
@@ -692,9 +688,8 @@ function thietBi() {
                                                 </td>
                                                 <td>
                                                     <span>Hiện Trạng</span>
-                                                    <input
+                                                    <select
                                                         className="input_row_value"
-                                                        type="text"
                                                         value={newEditRow.HienTrang || ""}
                                                         onChange={(e) =>
                                                             setNewEditRow((prev) => ({
@@ -702,7 +697,12 @@ function thietBi() {
                                                                 HienTrang: e.target.value,
                                                             }))
                                                         }
-                                                    />
+                                                    >
+                                                        <option value="Đang sử dụng">Đang sử dụng</option>
+                                                        <option value="Sửa chữa">Sửa chữa</option>
+                                                        <option value="Lỗi">Lỗi</option>
+                                                        <option value="Hỏng">Hỏng</option>
+                                                    </select>
                                                 </td>
                                                 <td>
                                                     <span>Ghi Chú</span>
@@ -718,8 +718,21 @@ function thietBi() {
                                                         }
                                                     />
                                                 </td>
-
                                                 <td>
+                                                    <span>Vị Trí</span>
+                                                    <input
+                                                        className="input_row_value"
+                                                        type="text"
+                                                        value={newEditRow.ViTri || ""}
+                                                        onChange={(e) =>
+                                                            setNewEditRow((prev) => ({
+                                                                ...prev,
+                                                                ViTri: e.target.value,
+                                                            }))
+                                                        }
+                                                    />
+                                                </td>
+                                                {/* <td>
                                                     <span>Mã Phòng</span>
                                                     <select
                                                         className="input_row_value"
@@ -739,7 +752,7 @@ function thietBi() {
                                                             </option>
                                                         ))}
                                                     </select>
-                                                </td>
+                                                </td> */}
                                                 <td
                                                     id="table-function"
                                                     style={{ display: "flex" }}
@@ -761,7 +774,7 @@ function thietBi() {
                                             </>
                                         ) : (
                                             <>
-                                                <td>
+                                                <td className="textAlignStyle">
                                                     <span>Mã Thiết Bị</span>
                                                     {item.MaThietBi}
                                                 </td>
@@ -773,17 +786,9 @@ function thietBi() {
                                                     <span>Thông Số Kỹ Thuật</span>
                                                     {item.ThongSoKyThuat}
                                                 </td>
-                                                <td>
+                                                <td className="textAlignStyle">
                                                     <span>Năm Sản Xuất</span>
                                                     {item.NamSanXuat}
-                                                </td>
-                                                <td>
-                                                    <span>Ngày Nhập</span>
-                                                    {item.NgayNhap}
-                                                </td>
-                                                <td>
-                                                    <span>Số Lượng</span>
-                                                    {item.SoLuong}
                                                 </td>
                                                 <td>
                                                     <span>Đơn Vị Tính</span>
@@ -795,16 +800,20 @@ function thietBi() {
                                                 </td>
                                                 <td>
                                                     <span>Hiện Trạng</span>
-                                                    {item.HienTrang}
+                                                    <div className={getStateClass(item.HienTrang)}>{item.HienTrang}</div>
                                                 </td>
                                                 <td>
                                                     <span>Ghi Chú</span>
                                                     {item.GhiChu}
                                                 </td>
                                                 <td>
+                                                    <span>Ghi Chú</span>
+                                                    {item.ViTri}
+                                                </td>
+                                                {/* <td>
                                                     <span>Mã Phòng</span>
                                                     {item.MaPhongXuong}
-                                                </td>
+                                                </td> */}
 
                                                 <td
                                                     id="table-function"

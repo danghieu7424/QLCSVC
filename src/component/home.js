@@ -607,10 +607,6 @@ const listNganh = [
 ];
 const listTB = [
     {
-        page: "/TongThietBi",
-        title: "Thiết Bị",
-    },
-    {
         page: "/ChuyenThietBi",
         title: "Chuyển Thiết Bị",
     },
