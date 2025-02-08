@@ -656,6 +656,7 @@ function Header({ toggleMenu, isMenuActive }) {
     const avatar = "/src/img/avatar/avatar.jpg"
     const { userData, login, logout } = useAuth();
     const [isActive, setIsActive] = useState(false);
+    const history = useHistory();
 
     useEffect(() => {
         const token = localStorage.getItem("token") || sessionStorage.getItem("token");
@@ -679,6 +680,15 @@ function Header({ toggleMenu, isMenuActive }) {
     const handleAvatarClick = () => {
         setIsActive(prevState => !prevState);
     };
+
+    const handleSignOut = () => {
+        logout();
+        window.location.reload();
+    };
+
+    const handleChangePassword = () => {
+        history.push("/change-password");
+    }
 
     return (
         <header className="box__header">
@@ -826,9 +836,19 @@ function Header({ toggleMenu, isMenuActive }) {
                                     <img src={avatar} alt="avatar" />
                                 </div>
                                 <div className="box_text_user">
-                                    <span id="ID_user">{userData?.id}</span>
+                                    <span id="ID_user">{userData?.name}</span>
                                     <span className="role_user">{userData?.role}</span>
                                 </div>
+                            </div>
+                            <div className='sign_out'>
+                                <button onClick={handleChangePassword}>
+                                    <i className='bx bx-edit-alt' ></i>
+                                    Change password
+                                </button>
+                                <button onClick={handleSignOut}>
+                                    <i className='bx bx-log-out'></i>
+                                    Sign out
+                                </button>
                             </div>
                         </div>
                     </>

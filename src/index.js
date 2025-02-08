@@ -8,9 +8,11 @@ import { CanBo } from './component/canbo.js';
 import { PhongCNTT, TLTaiSanCNTT, TaiSanCNTT } from './component/cntt.js';
 import { PhongDDTU, TLTaiSanDDTU, TaiSanDDTU } from './component/ddtu.js';
 import { PhongKTCK, TLTaiSanKTCK, TaiSanKTCK } from './component/ktck.js';
-import { LoginPage, VerifyOTPPage } from './component/login.js';
+import { LoginPage, VerifyOTPPage , ChangePasswordPage } from './component/login.js';
 import thietBi from './component/thietBi.js';
 import ChuyenThietBiPage from './component/chuyenThietBi.js';
+import MuaThietBiPage from './component/muaThietBi.js';
+import TextEditor from './component/doc.js';
 
 import { AuthProvider } from './component/authContext.js';
 
@@ -57,11 +59,11 @@ function App() {
 
     const Layout = () => {
         const location = useLocation(); // Lấy thông tin đường dẫn hiện tại
-        const showHeaderAndNavigation = location.pathname !== "/login" || location.pathname !== "/verify-otp"; // Điều kiện hiển thị
+        const showHeaderAndNavigation = location.pathname === "/login" || location.pathname === "/verify-otp" || location.pathname === "/change-password" || location.pathname === "/doc" ; // Điều kiện hiển thị
 
         return (
             <>
-                {showHeaderAndNavigation && (
+                {!showHeaderAndNavigation && (
                     <>
                         <Header />
                         <Navigation />
@@ -70,6 +72,7 @@ function App() {
                 <Switch>
                     <Route exact path="/login" component={LoginPage} />
                     <Route exact path="/verify-otp" component={VerifyOTPPage} />
+                    <Route exact path="/change-password" component={ChangePasswordPage} />
                     <Route exact path="/" component={Home} />
                     <Route exact path="/lich-su" component={Home} />
                     <Route exact path="/nganh-cntt" component={Home} />
@@ -83,6 +86,8 @@ function App() {
                     <Route exact path="/KTCK/phong" component={PhongKTCK} />
                     <Route exact path="/thiet-bi" component={thietBi} />
                     <Route exact path="/ChuyenThietBi" component={ChuyenThietBiPage} />
+                    <Route exact path="/MuaThietBi" component={MuaThietBiPage} />
+                    <Route exact path="/doc" component={TextEditor} />
                 </Switch>
             </>
         );

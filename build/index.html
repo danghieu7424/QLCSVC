@@ -95,4 +95,36 @@
             left: 0;
             right: 0;
             padding: 5%
-        }</style><script defer="defer" src="/src/js/main.js"></script></head><body><div id="root"></div></body></html>
+        }</style><script defer="defer" src="/src/js/main.js"></script></head><body><div id="root"></div><script>function addRow(btn) {
+          let table = btn.closest("table");
+          let newRow = table.insertRow(table.rows.length - 1);
+          let cellCount = table.rows[0].cells.length - 1; 
+      
+          for (let i = 0; i < cellCount; i++) {
+            let cell = newRow.insertCell(i);
+            cell.contentEditable = "true";
+            cell.innerHTML = "Ô mới";
+            cell.style.padding = "5px";
+            cell.style.border = "1px solid black";
+          }
+      
+          let addCell = newRow.insertCell(cellCount);
+          addCell.innerHTML = "➕";
+          addCell.className = "add-row-btn";
+          addCell.onclick = function () {
+            addRow(this);
+          };
+        }
+      
+        function addColumn(th) {
+          let table = th.closest("table");
+          let colIndex = th.cellIndex;
+      
+          for (let i = 0; i < table.rows.length; i++) {
+            let cell = table.rows[i].insertCell(colIndex + 1);
+            cell.contentEditable = "true";
+            cell.innerHTML = "Ô mới";
+            cell.style.padding = "5px";
+            cell.style.border = "1px solid black";
+          }
+        }</script></body></html>
