@@ -50,7 +50,7 @@ function MuaThietBiPage() {
             headers: {
                 "Content-Type": "application/json",
               },
-              body: JSON.stringify({ id, TenVanBan: 'Tờ Trình' }),
+              body: JSON.stringify({ id, TenVanBan: 'Tờ Trình Thanh Lý' }),
         })
             .then(response => response.json())
             .then(data => {
@@ -70,11 +70,11 @@ function MuaThietBiPage() {
     }, [userData]);
 
     const handleAdd = () => {
-        history.push("/doc", { status: 'new', TenVanBan: 'Tờ Trình' });
+        history.push("/doc", { status: 'new', TenVanBan: 'Tờ Trình Thanh Lý' });
     }
 
     const handleEdit = (SoVanBan) => {
-        history.push("/doc", { status: 'old', SoVanBan, TenVanBan: 'Tờ Trình' });
+        history.push("/doc", { status: 'old', SoVanBan, TenVanBan: 'Tờ Trình Thanh Lý' });
     }
 
     const handleSend = (SoVanBan) => {

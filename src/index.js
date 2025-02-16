@@ -12,6 +12,7 @@ import { LoginPage, VerifyOTPPage , ChangePasswordPage } from './component/login
 import thietBi from './component/thietBi.js';
 import ChuyenThietBiPage from './component/chuyenThietBi.js';
 import MuaThietBiPage from './component/muaThietBi.js';
+import ThanhLyThietBiPage from './component/thanhLyThietBi.js';
 import TextEditor from './component/doc.js';
 
 import { AuthProvider } from './component/authContext.js';
@@ -87,6 +88,7 @@ function App() {
                     <Route exact path="/thiet-bi" component={thietBi} />
                     <Route exact path="/ChuyenThietBi" component={ChuyenThietBiPage} />
                     <Route exact path="/MuaThietBi" component={MuaThietBiPage} />
+                    <Route exact path="/ThanhLyThietBi" component={ThanhLyThietBiPage} />
                     <Route exact path="/doc" component={TextEditor} />
                 </Switch>
             </>

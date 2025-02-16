@@ -13,7 +13,7 @@ const TextEditor = ({ location }) => {
   const [toolbarPosition, setToolbarPosition] = useState({ top: 0, left: 0 });
   const { userData, login } = useAuth();
   const history = useHistory();
-  const { status, SoVanBan } = location.state || {};
+  const { status, SoVanBan, TenVanBan } = location.state || {};
 
   // history.push("/doc", { status: 'new' });
 
@@ -44,18 +44,27 @@ const TextEditor = ({ location }) => {
       alert("Ban chưa đăng nhập");
       return;
     }
+    if(!TenVanBan) {
+      alert('rỗng');
+      return;
+    }
     if (status === 'new') {
       fetch('https://api-jwgltkza6q-uc.a.run.app/api/insert/van-ban', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ MaCanBo: userData.id, TextData: editorRef.current.innerHTML }),
+        body: JSON.stringify({ MaCanBo: userData.id, TenVanBan, TextData: editorRef.current.innerHTML }),
       })
         .then(request => request.json())
         .then(data => {
           alert(data.message)
-          history.push('/MuaThietBi');
+          if (TenVanBan === 'Tờ Trình') {
+            history.push('/MuaThietBi');
+          }
+          else {
+            history.push('/ThanhLyThietBi');
+          }
         })
         .catch(err => {
           console.log(err.message, err.error);
@@ -67,12 +76,17 @@ const TextEditor = ({ location }) => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ SoVanBan, MaCanBo: userData.id, TextData: editorRef.current.innerHTML }),
+        body: JSON.stringify({ SoVanBan, MaCanBo: userData.id, TenVanBan, TextData: editorRef.current.innerHTML }),
       })
         .then(request => request.json())
         .then(data => {
           alert(data.message);
-          history.push('/MuaThietBi');
+          if (TenVanBan === 'Tờ Trình') {
+            history.push('/MuaThietBi');
+          }
+          else {
+            history.push('/ThanhLyThietBi');
+          }
         })
         .catch(err => {
           console.log(err.message, err.error);
@@ -271,7 +285,12 @@ const TextEditor = ({ location }) => {
   };
 
   const handleExit = () => {
-    history.push('./MuaThietBi')
+    if (TenVanBan === 'Tờ Trình') {
+      history.push('/MuaThietBi');
+    }
+    else {
+      history.push('/ThanhLyThietBi');
+    }
   }
 
   const [initialContent, setInitialContent] = useState(`
@@ -290,8 +309,8 @@ const TextEditor = ({ location }) => {
 
   <h2 style="text-align: center; margin-top: 8px; margin-bottom: 8px;">TỜ TRÌNH</h2>
   <h4 style="text-align: center; margin-top: 8px; margin-bottom: 24px;">
-    V/v sửa chữa các phòng thực hành máy tính phục vụ cho công tác giảng dạy, học tập <br>
-    và phục vụ kỳ thi đánh giá năng lực của ĐH QGHN, kỳ thi đánh giá tư duy của ĐH BKHN
+    V/v sửa chữa các phòng thực hành máy tính phục vụ cho công tác giảng dạy, học tập và<br>
+    phục vụ kỳ thi đánh giá năng lực của ĐH QGHN, kỳ thi đánh giá tư duy của ĐH BKHN.
   </h4>
   <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 2.2cm;">
   <b>Kính gửi:</b> <b>Ban Giám hiệu trường Đại học Thái Bình.</b>
@@ -355,19 +374,105 @@ const TextEditor = ({ location }) => {
     </tr>
   </table>
 `);
+  const [initialContentThanhLy, setInitialContentThanhLy] = useState(`
+  <table style="width: 100%; border-collapse: collapse; border: none; margin-bottom: 16px;">
+    <tr>
+        <th style=" text-align: center; border: none; background: transparent;">
+            TRƯỜNG ĐẠI HỌC THÁI BÌNH<br>
+            KHOA CÔNG NGHỆ & KỸ THUẬT
+        </th>
+        <th style=" text-align: center; border: none; background: transparent;">
+            CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM<br>
+            Độc lập – Tự do – Hạnh phúc
+        </th>
+    </tr>
+  </table>
+
+  <h2 style="text-align: center; margin-top: 8px; margin-bottom: 8px;">TỜ TRÌNH</h2>
+  <h4 style="text-align: center; margin-top: 8px; margin-bottom: 24px;">
+    V/v bán cá thiết bị đã cũ, hỏng hóc để tạo ngân sách phụ cho các thiết bị mới.
+  </h4>
+  <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 2.2cm;">
+  <b>Kính gửi:</b> <b>Ban Giám hiệu trường Đại học Thái Bình.</b>
+  </p>
+  <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 2cm;">
+    Căn cứ theo tình hình kiểm tra thực tế các phòng thực hành máy tính.
+  </p>
+  <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 2cm;">
+    Khoa Công nghệ & Kỹ thuật xin trình lên Ban Giám hiệu dự trù thanh lý các thiết bị cho các phòng thực hành máy tính, cụ thể như sau:
+  </p>
+
+  <table id="table-request" border="1" style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+  <tr>
+    <th style="">STT</th>
+    <th style="">Tên thiết bị - Thông số kỹ thuật</th>
+    <th style="">ĐVT</th>
+    <th style="">Số lượng</th>
+    <th style="">Đơn giá</th>
+    <th style="">Thành tiền</th>
+  </tr>
+  
+  <tr>
+    <td style=" text-align: center;">1</td>
+    <td style=""></td>
+    <td style=" text-align: center;"></td>
+    <td style=" text-align: center;"></td>
+    <td style=" text-align: center;">đ</td>
+    <td style=" text-align: center;">đ</td>
+  </tr>
+
+  <tr>
+    <td colspan="5" style=" text-align: center;"><b>Tổng cộng:</b></td>
+    <td style=" text-align: center;"><b> đ</b></td>
+  </tr>
+  <tr>
+    <td colspan="6" style=" text-align: center;"><b>Bằng chữ:</b></td>
+  </tr>
+</table>
+
+
+  // <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 1cm;"><i>Ghi chú: Đơn giá trên chưa bao gồm thuế VAT.</i></p>
+  <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 1cm;">Kính mong nhận được sự chấp thuận từ Ban Giám hiệu nhà trường.</p>
+  <p style="text-align: right; margin-top: 8px; margin-bottom: 16px;">Ngày ... tháng ... năm 20...</p>
+
+  <table style="width: 100%; border-collapse: collapse; border: none; margin-bottom: 16px;">
+    <tr>
+        <th style="text-align: center; border: none; background: transparent;">
+            TRƯỞNG ĐƠN VỊ
+        </th>
+        <th style="text-align: center; border: none; background: transparent;">
+            TRƯỞNG NGÀNH CNTT
+        </th>
+        <th style="text-align: center; border: none; background: transparent;">
+            NGƯỜI ĐỀ XUẤT
+        </th>
+    </tr>
+    <tr>
+      <td style=" text-align: center; border: none; height: 4rem"></td>
+      <td style=" text-align: center; border: none; height: 4rem"></td>
+      <td style=" text-align: center; border: none; height: 4rem"></td>
+    </tr>
+  </table>
+`);
 
   useEffect(() => {
-    if (userData?.id) {
+    if (userData?.id && SoVanBan) {
       fetch('https://api-jwgltkza6q-uc.a.run.app/api/select/so-van-ban', {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id: userData.id, SoVanBan }),
+        body: JSON.stringify({ id: userData.id, SoVanBan, TenVanBan }),
       })
         .then(request => request.json())
         .then(data => {
-          setInitialContent(data.data.TextData);
+          if (TenVanBan === 'Tờ Trình') {
+            setInitialContent(data.data.TextData);
+          }
+          else {
+
+            setInitialContentThanhLy(data.data.TextData);
+          }
         })
         .catch(err => {
           console.error("Lỗi tải dữ liệu:", err);
@@ -439,7 +544,9 @@ const TextEditor = ({ location }) => {
           contentEditable
           onMouseUp={handleSelectionChange}
           onKeyUp={handleSelectionChange}
-          dangerouslySetInnerHTML={{ __html: initialContent }}
+          dangerouslySetInnerHTML={{
+            __html: TenVanBan === 'Tờ Trình' ? initialContent : initialContentThanhLy
+          }}
         >
         </div>
       </div>
