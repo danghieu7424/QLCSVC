@@ -14,3 +14,93 @@
 .container_muaTB .box_table {
     width: 100%;
 }
+
+.box_add-tb {
+    position: absolute;
+    inset: 50% 0 0 50%;
+    transform: translate(-50%, -50%);
+    width: min(700px, 90%);
+    height: min(500px, 90%);
+    padding: 1rem;
+    border: 1px solid #3333;
+    border-radius: 6px;
+    background-color: #fff;
+    overflow: hidden;
+    overflow-y: scroll;
+    overflow-x: scroll;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    inset: 1000;
+}
+
+.box_add-tb::-webkit-scrollbar {
+    scrollbar-width: none;
+}
+
+.box_add-tb table {
+    position: relative;
+    width: 100%;
+}
+
+.box_add-tb table input {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    border: none;
+    background: transparent;
+}
+.box_add-tb table input:valid, 
+.box_add-tb table input:focus {
+    position: relative;
+    outline: none;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    border: none;
+    background: transparent;
+}
+
+.box_add-tb table button {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    padding: 10px;
+    border: 1px solid;
+    border-radius: 3px;
+    background: transparent;
+    cursor: pointer;
+}
+
+.box_add-tb table tr th, 
+.box_add-tb table tr td {
+    position: relative;
+    width: 100%;
+    padding: 10px;
+    width: auto;
+}
+
+.btn-function-set-table {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-function-set-table button {
+    padding: 1rem;
+    width: min(5rem);
+    background: #eee;
+    border: 1px solid;
+    border-radius: 4px;
+}
+
+@media (max-width: 700px) {
+    .box_add-tb table tr th {
+        display: table-cell !important;
+    }
+}
+

@@ -13,7 +13,7 @@ const TextEditor = ({ location }) => {
   const [toolbarPosition, setToolbarPosition] = useState({ top: 0, left: 0 });
   const { userData, login } = useAuth();
   const history = useHistory();
-  const { status, SoVanBan, TenVanBan } = location.state || {};
+  const { status, SoVanBan, TenVanBan, tableData } = location.state || {};
 
   // history.push("/doc", { status: 'new' });
 
@@ -44,7 +44,7 @@ const TextEditor = ({ location }) => {
       alert("Ban chưa đăng nhập");
       return;
     }
-    if(!TenVanBan) {
+    if (!TenVanBan) {
       alert('rỗng');
       return;
     }
@@ -454,6 +454,54 @@ const TextEditor = ({ location }) => {
     </tr>
   </table>
 `);
+
+  useEffect(() => {
+    if (tableData) {
+      let tableContent = `
+    <table id="table-request" border="1" style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+      <tr>
+        <th>STT</th>
+        <th>Tên thiết bị - Thông số kỹ thuật</th>
+        <th>ĐVT</th>
+        <th>Số lượng</th>
+        <th>Đơn giá</th>
+        <th>Thành tiền</th>
+      </tr>`;
+
+      tableData.forEach(row => {
+        if (row.TenThietBi === "Tổng cộng") {
+          // Hàng Tổng cộng
+          tableContent += `
+        <tr>
+          <td colspan="5" style="text-align: center;"><b>${row.TenThietBi}:</b></td>
+          <td style="text-align: center;"><b>${new Intl.NumberFormat("vi-VN").format(row.ThanhTien)} đ</b></td>
+        </tr>`;
+        } else if (row.TenThietBi.startsWith("Bằng chữ:")) {
+          // Hàng Bằng chữ
+          tableContent += `
+        <tr>
+          <td colspan="6" style="text-align: center;"><b>${row.TenThietBi}</b></td>
+        </tr>`;
+        } else {
+          // Hàng bình thường
+          tableContent += `
+        <tr>
+          <td style="text-align: center;">${row.STT}</td>
+          <td>${row.TenThietBi}</td>
+          <td style="text-align: center;">${row.DVT}</td>
+          <td style="text-align: center;">${row.SoLuong}</td>
+          <td style="text-align: center;">${new Intl.NumberFormat("vi-VN").format(row.DonGia)} đ</td>
+          <td style="text-align: center;">${new Intl.NumberFormat("vi-VN").format(row.ThanhTien)} đ</td>
+        </tr>`;
+        }
+      });
+
+      tableContent += `</table>`;
+
+      setInitialContent(prev => prev.replace(/<table id="table-request".*?<\/table>/s, tableContent));
+    }
+  }, [tableData]);
+
 
   useEffect(() => {
     if (userData?.id && SoVanBan) {

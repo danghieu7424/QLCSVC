@@ -611,43 +611,21 @@ const listTB = [
         title: "Chuyển Thiết Bị",
     },
     {
-        page: "/MuaThietBi",
         title: "Mua Thiết Bị",
+        subItems: [
+            { page: "/MuaThietBi/Kho", title: "Kho" },
+            { page: "/MuaThietBi/VanBan", title: "Văn bản" },
+        ],
     },
     {
-        page: "/ThanhLyThietBi",
         title: "Thanh Lý Thiết Bị",
+        subItems: [
+            { page: "/ThanhLyThietBi/ThongKe", title: "Thống kê" },
+            { page: "/ThanhLyThietBi/VanBan", title: "Văn bản" },
+        ],
     },
 ];
 
-const listDDTU = [
-    {
-        page: "/D_DT/phong",
-        title: "Phòng",
-    },
-    {
-        page: "/CNTT/tai_san",
-        title: "Tài Sản",
-    },
-    {
-        page: "/CNTT/thanh_ly_tai_san",
-        title: "Thanh Lý Tài Sản",
-    },
-];
-const listKTCK = [
-    {
-        page: "/KTCK/phong",
-        title: "Phòng",
-    },
-    {
-        page: "/CNTT/tai_san",
-        title: "Tài Sản",
-    },
-    {
-        page: "/CNTT/thanh_ly_tai_san",
-        title: "Thanh Lý Tài Sản",
-    },
-];
 
 import { useAuth } from './authContext.js';
 
@@ -760,19 +738,35 @@ function Header({ toggleMenu, isMenuActive }) {
                         </span>
                         <div className="more">
                             <ul>
-                                {listTB.map((cos, index) => {
-                                    return (
-                                        <ListURL
-                                            key={index}
-                                            url={cos.page}
-                                            className="option"
-                                            title={cos.title}
-                                        />
-                                    );
-                                })}
+                                {listTB.map((cos, index) => (
+                                    <li key={index}>
+                                        {cos.page ? (
+                                            <Link to={cos.page} className="option">{cos.title}</Link>
+                                        ) : (
+                                            <>
+                                                <span className="has-submenu option" >{cos.title}</span>
+                                                {cos.subItems && (
+                                                    <ul className="sub-menu">
+                                                        {cos.subItems.map((sub, subIndex) => (
+                                                            <ListURL
+                                                            key={subIndex}
+                                                            url={sub.page}
+                                                            className="option"
+                                                            title={sub.title}
+                                                        />
+                                                        ))}
+                                                    </ul>
+                                                )}
+                                            </>
+                                        )}
+                                    </li>
+                                ))}
                             </ul>
                         </div>
                     </li>
+
+
+
                     {/* <li>
 
                         <span href="" className="box__header__title--hover">

@@ -87,8 +87,8 @@ function App() {
                     <Route exact path="/KTCK/phong" component={PhongKTCK} />
                     <Route exact path="/thiet-bi" component={thietBi} />
                     <Route exact path="/ChuyenThietBi" component={ChuyenThietBiPage} />
-                    <Route exact path="/MuaThietBi" component={MuaThietBiPage} />
-                    <Route exact path="/ThanhLyThietBi" component={ThanhLyThietBiPage} />
+                    <Route exact path="/MuaThietBi/VanBan" component={MuaThietBiPage} />
+                    <Route exact path="/ThanhLyThietBi/VanBan" component={ThanhLyThietBiPage} />
                     <Route exact path="/doc" component={TextEditor} />
                 </Switch>
             </>

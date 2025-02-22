@@ -387,9 +387,9 @@ function thietBi() {
                         <li id="add_info" onClick={handleAddRow}>
                             <abbr title="Add"><i className="bx bxs-plus-square"></i></abbr>
                         </li>
-                        <li id="import_file">
+                        {/* <li id="import_file">
                             <abbr title="Import"><i className="bx bxs-file-plus"></i></abbr>
-                        </li>
+                        </li> */}
                     </ul>
                 </div>
             </div>
@@ -398,7 +398,7 @@ function thietBi() {
                     <caption>Bảng Thông Tin Thiết Bị Chi Tiết Phòng {paramPage}</caption>
                     <thead>
                         <tr>
-                            <th>Mã Thiết Bị</th>
+                            {/* <th>Mã Thiết Bị</th> */}
                             <th>Tên Thiết Bị</th>
                             <th>Thông Số Kỹ Thuật</th>
                             <th>Năm Sản Xuất</th>
@@ -598,10 +598,10 @@ function thietBi() {
                                     </tr>
                                 )}
                                 {data.map((item, index) => (
-                                    <tr key={index}>
+                                    <tr key={index} data-id={item.MaThietBi}>
                                         {(editingRowId.MaThietBi === item.MaThietBi) ? (
                                             <>
-                                                <td>
+                                                {/* <td>
                                                     <span>Mã Thiết Bị</span>
                                                     <input
                                                         className="input_row_value"
@@ -615,7 +615,7 @@ function thietBi() {
                                                         }
                                                         disabled // Không cho phép sửa mã cán bộ
                                                     />
-                                                </td>
+                                                </td> */}
                                                 <td>
                                                     <span>Tên Thiết Bị</span>
                                                     <input
@@ -774,10 +774,10 @@ function thietBi() {
                                             </>
                                         ) : (
                                             <>
-                                                <td className="textAlignStyle">
+                                                {/* <td className="textAlignStyle">
                                                     <span>Mã Thiết Bị</span>
                                                     {item.MaThietBi}
-                                                </td>
+                                                </td> */}
                                                 <td>
                                                     <span>Tên Thiết Bị</span>
                                                     {item.TenThietBi}
