@@ -1,8 +1,6 @@
-import React from 'react'
-import { useState, useEffect, useRef } from 'react';
-import { BrowserRouter as Router, Route, Switch, Link, useLocation, useHistory } from 'react-router-dom';
-import Cryptage from '../assets/modules/Cryptage.js';
-import '../assets/css/home.css'
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useHistory, useLocation } from 'react-router-dom';
+import '../assets/css/home.css';
 
 // function Home() {
 //     const location = useLocation();
@@ -611,43 +609,21 @@ const listTB = [
         title: "Chuyển Thiết Bị",
     },
     {
-        page: "/MuaThietBi",
         title: "Mua Thiết Bị",
+        subItems: [
+            { page: "/MuaThietBi/Kho", title: "Kho" },
+            { page: "/MuaThietBi/VanBan", title: "Văn bản" },
+        ],
     },
     {
-        page: "/ThanhLyThietBi",
         title: "Thanh Lý Thiết Bị",
+        subItems: [
+            { page: "/ThanhLyThietBi/ThongKe", title: "Thống kê" },
+            { page: "/ThanhLyThietBi/VanBan", title: "Văn bản" },
+        ],
     },
 ];
 
-const listDDTU = [
-    {
-        page: "/D_DT/phong",
-        title: "Phòng",
-    },
-    {
-        page: "/CNTT/tai_san",
-        title: "Tài Sản",
-    },
-    {
-        page: "/CNTT/thanh_ly_tai_san",
-        title: "Thanh Lý Tài Sản",
-    },
-];
-const listKTCK = [
-    {
-        page: "/KTCK/phong",
-        title: "Phòng",
-    },
-    {
-        page: "/CNTT/tai_san",
-        title: "Tài Sản",
-    },
-    {
-        page: "/CNTT/thanh_ly_tai_san",
-        title: "Thanh Lý Tài Sản",
-    },
-];
 
 import { useAuth } from './authContext.js';
 
@@ -760,19 +736,35 @@ function Header({ toggleMenu, isMenuActive }) {
                         </span>
                         <div className="more">
                             <ul>
-                                {listTB.map((cos, index) => {
-                                    return (
-                                        <ListURL
-                                            key={index}
-                                            url={cos.page}
-                                            className="option"
-                                            title={cos.title}
-                                        />
-                                    );
-                                })}
+                                {listTB.map((cos, index) => (
+                                    <li key={index}>
+                                        {cos.page ? (
+                                            <Link to={cos.page} className="option">{cos.title}</Link>
+                                        ) : (
+                                            <>
+                                                <span className="has-submenu option" >{cos.title}</span>
+                                                {cos.subItems && (
+                                                    <ul className="sub-menu">
+                                                        {cos.subItems.map((sub, subIndex) => (
+                                                            <ListURL
+                                                            key={subIndex}
+                                                            url={sub.page}
+                                                            className="option"
+                                                            title={sub.title}
+                                                        />
+                                                        ))}
+                                                    </ul>
+                                                )}
+                                            </>
+                                        )}
+                                    </li>
+                                ))}
                             </ul>
                         </div>
                     </li>
+
+
+
                     {/* <li>
 
                         <span href="" className="box__header__title--hover">
@@ -925,20 +917,34 @@ function Navigation() {
                         <span className="box__nav__title--hover">
                             <i className="bx bx-chevron-down"></i>
                             <abbr title="Thiết Bị"> Thiết Bị </abbr>
+                            
                         </span>
                         <div className="more">
                             <ul>
-                                {listTB.map((cos, index) => {
-                                    return (
-                                        <ListURL
-                                            key={index}
-                                            url={cos.page}
-                                            className="nav__option"
-                                            title={cos.title}
-                                            onClick={toggleMenu}
-                                        />
-                                    );
-                                })}
+                                {listTB.map((cos, index) => (
+                                    <li key={index}>
+                                        {cos.page ? (
+                                            <Link to={cos.page} className="nav__option" style={{zIndex: '100'}}>{cos.title}</Link>
+                                        ) : (
+                                            <>
+                                                <span className="has-submenu nav__option" >{cos.title}</span>
+                                                {cos.subItems && (
+                                                    <ul className="sub-menu">
+                                                        {cos.subItems.map((sub, subIndex) => (
+                                                            <ListURL
+                                                            key={subIndex}
+                                                            url={sub.page}
+                                                            className="nav__option"
+                                                            title={sub.title}
+                                                            onClick={toggleMenu}
+                                                        />
+                                                        ))}
+                                                    </ul>
+                                                )}
+                                            </>
+                                        )}
+                                    </li>
+                                ))}
                             </ul>
                         </div>
                     </li>
@@ -988,4 +994,4 @@ function Navigation() {
     );
 }
 
-export { Navigation, Home, Header }
+export { Header, Home, Navigation };

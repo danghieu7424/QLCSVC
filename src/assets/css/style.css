@@ -145,9 +145,11 @@ abbr {
 .box__header__title li:hover .box__header__title--hover {
     color: var(--color-dark-blue);
 }
+
 .box__header__title li .box__header__title--hover a {
     color: #111;
 }
+
 .box__header__title li:hover .box__header__title--hover a {
     color: var(--color-dark-blue);
 }
@@ -177,9 +179,27 @@ abbr {
     z-index: 1000;
 }
 
+.box__header__title .more .sub-menu {
+    position: absolute;
+    top: -3rem;
+    left: 100%;
+    margin-top: 3rem;
+    background-color: #FFF;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    display: none;
+    z-index: 1000;
+    transition: all .3s;
+}
+
 .box__header__title li:hover .more {
     display: block;
     transition: all .3s;
+}
+
+.box__header__title li .more li:hover .sub-menu {
+    display: block;
 }
 
 .box__header__title li:hover .more::before {
@@ -539,6 +559,7 @@ abbr {
     .nganh {
         gap: 1rem;
     }
+
     .nganh .page--title {
         font-size: .8rem;
     }

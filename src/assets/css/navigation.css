@@ -188,6 +188,7 @@ nav.navigation.active {
     height: auto;
 }
 
+
 .box__nav__title .more ul {
     position: relative;
     width: 100%;
@@ -199,6 +200,50 @@ nav.navigation.active {
 .box__nav__title .more li {
     position: relative;
 }
+.box__nav__title .more li span {
+    position: relative;
+    z-index: 1000;
+}
+.box__nav__title .more .sub-menu {
+    height: 0;
+    padding-left: 2rem;
+    display: none;
+    background-color: #fff;
+}
+.box__nav__title li .more li:hover .sub-menu {
+    height: auto;
+    display: block;
+}
+.box__nav__title .more .sub-menu.nav__option {
+    width: 100%;
+    padding: 0.8rem 2.5rem;
+    background-color: #fff;
+    color: black;
+    text-decoration: none;
+    font-size: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    flex-direction: column;
+    user-select: none;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+}
+.box__nav__title .more .sub-menu.nav__option::after {
+    content: "";
+    position: absolute;
+    bottom: 50%;
+    left: 1rem;
+    width: 1rem;
+    height: 3.5rem;
+    background-color: transparent;
+    border-bottom: 2px solid var(--color-line);
+    border-left: 2px solid var(--color-line);
+    border-bottom-left-radius: 9px;
+    z-index: 0;
+}
+
 
 .box__nav__title .more .nav__option {
     width: 100%;
@@ -223,7 +268,7 @@ nav.navigation.active {
     bottom: 50%;
     left: 1rem;
     width: 1rem;
-    height: 3.5rem;
+    height: 10rem;
     background-color: transparent;
     border-bottom: 2px solid var(--color-line);
     border-left: 2px solid var(--color-line);

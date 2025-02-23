@@ -95,7 +95,7 @@ function LoginPage() {
                                 checked={rememberMe}
                                 onChange={(e) => setRememberMe(e.target.checked)}
                             />
-                            <label htmlFor="remember">Nhớ tài khoản trong 7 ngày</label>
+                            <label htmlFor="remember">Nhớ tôi</label>
                         </div>
 
                         <button type="submit" className="login-button">Login</button>

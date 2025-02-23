@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { useAuth } from "./authContext.js";
 
-function PhongDDTU() {
+function KhoPage() {
+    const { userData, login } = useAuth();
     const [data, setData] = useState([]);
     const [tempData, setTempTempData] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [nganhList, setNganhList] = useState([]);
-    const [phongXuongList, setPhongXuongList] = useState([]);
+    const [tempList, setTempList] = useState([]);
+    const [paramPage, setParamPage] = useState("");
 
     // lọc
     const [searchQuery, setSearchQuery] = useState("");
@@ -21,16 +23,36 @@ function PhongDDTU() {
         setData(filtered); // Lọc dữ liệu theo từ khóa
     };
 
-    const handleDelete = async (MaPhongXuong) => {
+    useEffect(() => {
+        const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+        if (token && !userData) {
+            fetch("https://api-jwgltkza6q-uc.a.run.app/protected-route", {
+                method: "GET",
+                headers: { Authorization: token },
+            })
+                .then(res => res.ok ? res.json() : null)
+                .then(data => {
+                    if (data) login(data.user);
+                })
+                .catch(error => {
+                    console.error("Error during token verification: ", error);
+                    localStorage.removeItem("token");
+                    sessionStorage.removeItem("token");
+                });
+        }
+    }, [userData, login]);
+
+
+    const handleDelete = async (ID) => {
         if (!window.confirm("Bạn có chắc chắn muốn xóa phòng này?")) return;
 
         try {
-            const response = await fetch("https://api-jwgltkza6q-uc.a.run.app/api/delete/phong", {
+            const response = await fetch("https://api-jwgltkza6q-uc.a.run.app/api/delete/thiet-bi", {
                 method: "DELETE",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ MaPhongXuong }),
+                body: JSON.stringify({ ID }),
             });
 
             if (!response.ok) {
@@ -50,8 +72,20 @@ function PhongDDTU() {
 
     //API
 
+    const location = useLocation();
+    const getQueryParam = (param) => {
+        const params = new URLSearchParams(location.search);
+        return params.get(param);
+    };
+
+
     const updateTable = async () => {
-        fetch("https://api-jwgltkza6q-uc.a.run.app/api/select/phong-d-dt")
+        fetch("https://api-jwgltkza6q-uc.a.run.app/api/select/kho", {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -59,7 +93,6 @@ function PhongDDTU() {
                 return response.json();
             })
             .then((jsonData) => {
-                console.log("API Response:", jsonData); // Log dữ liệu từ API
                 setData(jsonData); // Lưu dữ liệu vào state
                 setTempTempData(jsonData); // Lưu dữ liệu vào state
                 setLoading(false); // Dừng trạng thái loading
@@ -73,7 +106,7 @@ function PhongDDTU() {
     const insertTable = async (data) => {
         try {
             const response = await fetch(
-                "https://api-jwgltkza6q-uc.a.run.app/api/insert/phong",
+                "https://api-jwgltkza6q-uc.a.run.app/api/insert/kho",
                 {
                     method: "POST", // Sử dụng POST
                     headers: {
@@ -95,7 +128,7 @@ function PhongDDTU() {
     };
 
     const fetchAPI = async () => {
-        fetch("https://api-jwgltkza6q-uc.a.run.app/api/select/nganh")
+        fetch("https://api-jwgltkza6q-uc.a.run.app/api/select/can-bo")
             .then((response) => {
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
@@ -103,24 +136,8 @@ function PhongDDTU() {
                 return response.json();
             })
             .then((jsonData) => {
-                setNganhList(jsonData); // Lưu dữ liệu vào state
-                setLoading(false); // Dừng trạng thái loading
-            })
-            .catch((error) => {
-                console.error("Error fetching data:", error);
+                setTempList(jsonData[0]);
                 setLoading(false);
-            });
-
-        fetch("https://api-jwgltkza6q-uc.a.run.app/api/select/phong-xuong")
-            .then((response) => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then((jsonData) => {
-                setPhongXuongList(jsonData); // Lưu dữ liệu vào state
-                setLoading(false); // Dừng trạng thái loading
             })
             .catch((error) => {
                 console.error("Error fetching data:", error);
@@ -233,32 +250,65 @@ function PhongDDTU() {
 
     // add row
     const [isAdding, setIsAdding] = useState(false);
-    const [newRow, setNewRow] = useState({});
+    const [newRow, setNewRow] = useState({
+        TenThietBi: "",
+        SoLuongMua: 0,
+        GiaMua: 0,
+        TongTien: 0,
+        MaCanBo: userData?.id,
+        NgayMua: ''
+    });
+
+    useEffect(() => {
+        if (userData?.id) {
+            setNewRow(prev => ({
+                ...prev,
+                MaCanBo: userData.id
+            }));
+        }
+    }, [userData]);
 
     const handleAddRow = () => {
-        setIsAdding(true); // Hiển thị dòng nhập liệu
+        setIsAdding(true);
     };
 
     const handleSaveRow = async () => {
+        if (!userData?.id) {
+            alert("chưa đăng nhập");
+            return;
+        }
         if (
-            !newRow.MaPhongXuong.trim() || 
-            !newRow.TenPhongXuong.trim() ||
-            !newRow.ViTri.trim() ||
-            !newRow.MaNganh.trim()
+            !newRow.TenThietBi.trim() ||
+            !newRow.SoLuongMua ||
+            !newRow.GiaMua ||
+            !newRow.NgayMua
         ) {
             alert("Vui lòng điền đầy đủ các thông tin.");
             return;
         }
-        newRow.MaPhongXuong = newRow.MaPhongXuong.toUpperCase();
-        const regex = /^[A-Z][0-9]{3}$/; // Regex kiểm tra ký tự đầu là a-z và 3 ký số
-        if (!regex.test(newRow.MaPhongXuong)) {
-            alert('ký tự đầu là a-z và 3 ký số!')
+
+        // Kiểm tra ngày thanh lý phải nhỏ hơn ngày hiện tại
+        const NgayMua = new Date(newRow.NgayMua);
+        const ngayHienTai = new Date();
+        ngayHienTai.setHours(0, 0, 0, 0); // Đặt giờ về 00:00:00 để so sánh chính xác
+
+        if (NgayMua >= ngayHienTai) {
+            alert("Ngày thanh lý phải nhỏ hơn ngày hiện tại.");
             return;
         }
+
         try {
             setIsAdding(false);
+            console.log(newRow)
             await insertTable(newRow); // Gửi dữ liệu lên server
-            setNewRow({}); // Reset dữ liệu mới
+            setNewRow({
+                TenThietBi: "",
+                SoLuongMua: 0,
+                GiaMua: 0,
+                TongTien: 0,
+                MaCanBo: userData.id,
+                NgayMua: ''
+            }); // Reset dữ liệu mới
         } catch (error) {
             console.error("Error saving row:", error);
         }
@@ -267,8 +317,6 @@ function PhongDDTU() {
 
     const handleCancelRow = () => {
         setNewRow({
-            TenPhongXuong: "",
-            ViTri: "",
         }); // Reset dữ liệu mới
         setIsAdding(false); // Ẩn dòng nhập liệu
     };
@@ -278,13 +326,14 @@ function PhongDDTU() {
     const [newEditRow, setNewEditRow] = useState({});
 
     const handleEdit = (item) => {
-        setEditingRowId({ MaPhongXuong: item.MaPhongXuong }); // Đặt dòng đang chỉnh sửa
+        setEditingRowId({MaMua: item.MaMua}); // Đặt dòng đang chỉnh sửa
         setNewEditRow({ ...item }); // Copy dữ liệu dòng vào newRow
     };
 
     const handleSave = async () => {
+        console.log(newEditRow)
         try {
-            const response = await fetch("https://api-jwgltkza6q-uc.a.run.app/api/update/phong", {
+            const response = await fetch("https://api-jwgltkza6q-uc.a.run.app/api/update/kho", {
                 method: "PUT",
                 headers: {
                     "Content-Type": "application/json",
@@ -350,13 +399,18 @@ function PhongDDTU() {
             </div>
             <div id="box_table">
                 <table id="content_table">
-                    <caption>Bảng Thông Tin Phòng Đ-ĐT</caption>
+                    <caption>Bảng Thông Tin Thiết Bị Chi Tiết Kho</caption>
                     <thead>
                         <tr>
-                            <th>Mã Phòng Xưởng</th>
-                            <th>Tên Phòng Xưởng</th>
-                            <th>Vị Trí</th>
-                            {/* <th>Mã Ngành</th> */}
+                            <th>Mã Mua</th>
+                            <th>Tên Thiết Bị</th>
+                            <th>Số Lượng</th>
+                            <th>Số Lượng Mua</th>
+                            <th>Đơn Giá</th>
+                            <th>Ngày Mua</th>
+                            <th>Nhà Cung Cấp</th>
+                            <th>Tổng Tiền</th>
+                            <th>Cán Bộ</th>
                             <th>Chức Năng</th>
                         </tr>
                     </thead>
@@ -370,67 +424,132 @@ function PhongDDTU() {
                                 {isAdding && (
                                     <tr>
                                         <td>
-                                            <span>Mã Phòng Xưởng</span>
+                                            <span>Mã Mua</span>
                                             <input
                                                 className="input_row_value"
                                                 type="text"
-                                                value={newRow.MaPhongXuong}
+                                                value={newRow.MaMua}
                                                 onChange={(e) =>
                                                     setNewRow((prev) => ({
                                                         ...prev,
-                                                        MaPhongXuong: e.target.value,
-                                                    }))
-                                                }
-                                            />
-                                        </td>
-                                        <td>
-                                            <span>Tên Phòng Xưởng</span>
-                                            <input
-                                                className="input_row_value"
-                                                type="text"
-                                                value={newRow.TenPhongXuong}
-                                                onChange={(e) =>
-                                                    setNewRow((prev) => ({
-                                                        ...prev,
-                                                        TenPhongXuong:
-                                                            e.target.value,
-                                                    }))
-                                                }
-                                            />
-                                        </td>
-                                        <td>
-                                            <span>Vị Trí</span>
-                                            <input
-                                                className="input_row_value"
-                                                type="text"
-                                                value={newRow.ViTri}
-                                                onChange={(e) =>
-                                                    setNewRow((prev) => ({
-                                                        ...prev,
-                                                        ViTri:
-                                                            e.target.value,
-                                                    }))
-                                                }
-                                            />
-                                        </td>
-
-                                        {/* <td>
-                                            <span>Mã Nghành</span>
-                                            <select
-                                                className="input_row_value"
-                                                value={newRow.MaNganh}
-                                                onChange={(e) =>
-                                                    setNewRow((prev) => ({
-                                                        ...prev,
-                                                        MaNganh: e.target.value, // Lưu mã ngành được chọn
+                                                        MaMua: e.target.value,
                                                     }))
                                                 }
                                                 disabled
-                                            >
-                                                <option value="7510301">7510301</option>
-                                            </select>
-                                        </td> */}
-
+                                            />
+                                        </td>
+                                        <td>
+                                            <span>Tên Thiết Bị</span>
+                                            <input
+                                                className="input_row_value"
+                                                type="text"
+                                                value={newRow.TenThietBi}
+                                                onChange={(e) =>
+                                                    setNewRow((prev) => ({
+                                                        ...prev,
+                                                        TenThietBi: e.target.value,
+                                                    }))
+                                                }
+                                            />
+                                        </td>
+                                        <td>
+                                            <span>Số Lượng</span>
+                                            <input
+                                                className="input_row_value"
+                                                type="number"
+                                                value={newRow.SoLuong}
+                                                onChange={(e) =>
+                                                    setNewRow((prev) => ({
+                                                        ...prev,
+                                                        SoLuong: e.target.value,
+                                                    }))
+                                                }
+                                                disabled
+                                            />
+                                        </td>
+                                        <td>
+                                            <span>Số Lượng Mua</span>
+                                            <input
+                                                className="input_row_value"
+                                                type="number"
+                                                value={newRow.SoLuongMua || ''}
+                                                onChange={(e) => {
+                                                    const value = Number(e.target.value);
+                                                    setNewRow((prev) => ({
+                                                        ...prev,
+                                                        SoLuongMua: value,
+                                                        TongTien: value * prev.GiaMua, // Cập nhật ngay
+                                                    }));
+                                                }}
+                                            />
+                                        </td>
+                                        <td>
+                                            <span>Đơn Giá</span>
+                                            <input
+                                                className="input_row_value"
+                                                type="number"
+                                                value={newRow.GiaMua || ''}
+                                                onChange={(e) => {
+                                                    const value = Number(e.target.value);
+                                                    setNewRow((prev) => ({
+                                                        ...prev,
+                                                        GiaMua: value,
+                                                        TongTien: prev.SoLuongMua * value, // Cập nhật ngay
+                                                    }));
+                                                }}
+                                            />
+                                        </td>
+                                        <td>
+                                            <span>Ngày Mua</span>
+                                            <input
+                                                className="input_row_value"
+                                                type="date"
+                                                value={newRow.NgayMua}
+                                                onChange={(e) =>
+                                                    setNewRow((prev) => ({
+                                                        ...prev,
+                                                        NgayMua: e.target.value,
+                                                    }))
+                                                }
+                                            />
+                                        </td>
+                                        <td>
+                                            <span>Nhà Cung Cấp</span>
+                                            <input
+                                                className="input_row_value"
+                                                value={newRow.NhaCungCap}
+                                                onChange={(e) =>
+                                                    setNewRow((prev) => ({
+                                                        ...prev,
+                                                        NhaCungCap: e.target.value,
+                                                    }))
+                                                }
+                                            />
+                                        </td>
+                                        <td>
+                                            <span>Tổng Tiền</span>
+                                            <input
+                                                className="input_row_value"
+                                                type="number"
+                                                value={newRow.TongTien}
+                                                disabled
+                                            />
+                                        </td>
+                                        <td>
+                                            <span>Cán Bộ</span>
+                                            <input
+                                                className="input_row_value"
+                                                type="text"
+                                                value={newRow.MaCanBo}
+                                                onChange={(e) =>
+                                                    setNewRow((prev) => ({
+                                                        ...prev,
+                                                        MaCanBo: userData?.id,
+                                                    }))
+                                                }
+                                                disabled
+                                            />
+                                        </td>
                                         <td
                                             id="table-function"
                                             style={{ display: "flex" }}
@@ -456,70 +575,142 @@ function PhongDDTU() {
                                     </tr>
                                 )}
                                 {data.map((item, index) => (
-                                    <tr key={index}>
-                                        {(editingRowId.MaPhongXuong === item.MaPhongXuong) ? (
+                                    <tr key={index} data-id={item.MaMua}>
+                                        {(editingRowId.MaMua === item.MaMua) ? (
                                             <>
                                                 <td>
-                                                    <span>Mã Phòng Xưởng</span>
+                                                    <span>Mã Mua</span>
                                                     <input
                                                         className="input_row_value"
                                                         type="text"
-                                                        value={newEditRow.MaPhongXuong || ""}
+                                                        value={newEditRow.MaMua || ""}
                                                         onChange={(e) =>
                                                             setNewEditRow((prev) => ({
                                                                 ...prev,
-                                                                MaPhongXuong: e.target.value,
+                                                                MaMua: e.target.value,
                                                             }))
                                                         }
                                                         disabled // Không cho phép sửa mã cán bộ
                                                     />
                                                 </td>
                                                 <td>
-                                                    <span>Tên Phòng Xưởng</span>
+                                                    <span>Tên Thiết Bị</span>
                                                     <input
                                                         className="input_row_value"
                                                         type="text"
-                                                        value={newEditRow.TenPhongXuong || ""}
+                                                        value={newEditRow.TenThietBi || ""}
                                                         onChange={(e) =>
                                                             setNewEditRow((prev) => ({
                                                                 ...prev,
-                                                                TenPhongXuong: e.target.value,
+                                                                TenThietBi: e.target.value,
                                                             }))
                                                         }
                                                     />
                                                 </td>
                                                 <td>
-                                                    <span>Vị Trí</span>
+                                                    <span>Số Lượng</span>
                                                     <input
                                                         className="input_row_value"
                                                         type="text"
-                                                        value={newEditRow.ViTri || ""}
+                                                        value={newEditRow.SoLuong || ""}
                                                         onChange={(e) =>
                                                             setNewEditRow((prev) => ({
                                                                 ...prev,
-                                                                ViTri:
-                                                                    e.target.value,
+                                                                SoLuong: e.target.value,
+                                                            }))
+                                                        }
+                                                        disabled
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <span>Số Lượng Mua</span>
+                                                    <input
+                                                        className="input_row_value"
+                                                        type="text"
+                                                        value={newEditRow.SoLuongMua || ""}
+                                                        onChange={(e) =>
+                                                            setNewEditRow((prev) => ({
+                                                                ...prev,
+                                                                SoLuongMua: e.target.value,
+                                                            }))
+                                                        }
+                                                        disabled
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <span>Đơn Giá</span>
+                                                    <input
+                                                        className="input_row_value"
+                                                        type="text"
+                                                        value={newEditRow.GiaMua || ""}
+                                                        onChange={(e) =>
+                                                            setNewEditRow((prev) => ({
+                                                                ...prev,
+                                                                GiaMua: e.target.value,
+                                                            }))
+                                                        }
+                                                        disabled
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <span>Ngày Mua</span>
+                                                    <input
+                                                        className="input_row_value"
+                                                        type="date"
+                                                        value={newEditRow.NgayMua || ""}
+                                                        onChange={(e) =>
+                                                            setNewEditRow((prev) => ({
+                                                                ...prev,
+                                                                NgayMua: e.target.value,
+                                                            }))
+                                                        }
+                                                        disabled
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <span>Nhà Cung Cấp</span>
+                                                    <input
+                                                        className="input_row_value"
+                                                        type='text'
+                                                        value={newEditRow.NhaCungCap || ""}
+                                                        onChange={(e) =>
+                                                            setNewEditRow((prev) => ({
+                                                                ...prev,
+                                                                NhaCungCap: e.target.value,
                                                             }))
                                                         }
                                                     />
                                                 </td>
-
-                                                {/* <td>
-                                                    <span>Mã Ngành</span>
-                                                    <select
+                                                <td>
+                                                    <span>Tổng Tiền</span>
+                                                    <input
                                                         className="input_row_value"
-                                                        value={newEditRow.MaNganh || ""}
+                                                        type="text"
+                                                        value={newEditRow.TongTien || ""}
                                                         onChange={(e) =>
                                                             setNewEditRow((prev) => ({
                                                                 ...prev,
-                                                                MaNganh: e.target.value, // Lưu mã ngành được chọn
+                                                                TongTien: e.target.value,
                                                             }))
                                                         }
                                                         disabled
-                                                    >
-                                                        <option value="7510301">7510301</option>
-                                                    </select>
-                                                </td> */}
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <span>Cán Bộ</span>
+                                                    <input
+                                                        className="input_row_value"
+                                                        type="text"
+                                                        value={newEditRow.MaCanBo || ""}
+                                                        onChange={(e) =>
+                                                            setNewEditRow((prev) => ({
+                                                                ...prev,
+                                                                MaCanBo: e.target.value,
+                                                            }))
+                                                        }
+                                                        disabled
+                                                    />
+                                                </td>
                                                 <td
                                                     id="table-function"
                                                     style={{ display: "flex" }}
@@ -541,22 +732,43 @@ function PhongDDTU() {
                                             </>
                                         ) : (
                                             <>
-                                                <td>
-                                                    <span>Mã Phòng Xưởng</span>
-                                                    <Link to={`/thiet-bi?p=${item.MaPhongXuong}`}>{item.MaPhongXuong}</Link>
+                                                <td className="textAlignStyle">
+                                                    <span>Mã Mua</span>
+                                                    {item.MaMua}
                                                 </td>
                                                 <td>
-                                                    <span>Tên Phòng Xưởng</span>
-                                                    {item.TenPhongXuong || ""}
+                                                    <span>Tên Thiết Bị</span>
+                                                    {item.TenThietBi}
                                                 </td>
                                                 <td>
-                                                    <span>Vị Trí</span>
-                                                    {item.ViTri || ""}
+                                                    <span>Số Lượng</span>
+                                                    {item.SoLuong}
                                                 </td>
-                                                {/* <td>
-                                                    <span>Mã Ngành</span>
-                                                    {item.MaNganh || ""}
-                                                </td> */}
+                                                <td className="textAlignStyle">
+                                                    <span>Số Lượng Mua</span>
+                                                    {item.SoLuongMua}
+                                                </td>
+                                                <td>
+                                                    <span>Đơn Giá</span>
+                                                    {`${Number(item.GiaMua).toLocaleString("vi-VN", { maximumFractionDigits: 0 })} đ`}
+                                                </td>
+                                                <td>
+                                                    <span>Ngày Mua</span>
+                                                    {new Date(item.NgayMua).toLocaleDateString("vi-VN")}
+                                                </td>
+                                                <td>
+                                                    <span>Nhà Cung Cấp</span>
+                                                    {item.NhaCungCap}
+                                                </td>
+                                                <td>
+                                                    <span>Tổng Tiền</span>
+                                                    {`${Number(item.TongTien).toLocaleString("vi-VN", { maximumFractionDigits: 0 })} đ`}
+                                                </td>
+
+                                                <td>
+                                                    <span>Cán Bộ</span>
+                                                    {tempList.find(temp => temp.MaCanBo === item.MaCanBo)?.TenCanBo || "Không xác định"}
+                                                </td>
                                                 <td
                                                     id="table-function"
                                                     style={{ display: "flex" }}
@@ -569,14 +781,14 @@ function PhongDDTU() {
                                                             <i className="bx bx-edit"></i>
                                                         </button>
                                                     </abbr>
-                                                    <abbr title="Delete">
+                                                    {/* <abbr title="Delete">
                                                         <button
                                                             id="btnDel"
-                                                            onClick={() => handleDelete(item.MaPhongXuong)}
+                                                            onClick={() => handleDelete(item.MaThietBi)}
                                                         >
                                                             <i className="bx bxs-x-square"></i>
                                                         </button>
-                                                    </abbr>
+                                                    </abbr> */}
                                                 </td>
                                             </>
                                         )}
@@ -591,4 +803,4 @@ function PhongDDTU() {
     );
 }
 
-export { PhongDDTU };
+export default KhoPage;

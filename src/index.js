@@ -14,6 +14,8 @@ import ChuyenThietBiPage from './component/chuyenThietBi.js';
 import MuaThietBiPage from './component/muaThietBi.js';
 import ThanhLyThietBiPage from './component/thanhLyThietBi.js';
 import TextEditor from './component/doc.js';
+import KhoPage from './component/khoPage.js';
+import ThanhLyPage from './component/thanhLyPage.js';
 
 import { AuthProvider } from './component/authContext.js';
 
@@ -87,8 +89,10 @@ function App() {
                     <Route exact path="/KTCK/phong" component={PhongKTCK} />
                     <Route exact path="/thiet-bi" component={thietBi} />
                     <Route exact path="/ChuyenThietBi" component={ChuyenThietBiPage} />
-                    <Route exact path="/MuaThietBi" component={MuaThietBiPage} />
-                    <Route exact path="/ThanhLyThietBi" component={ThanhLyThietBiPage} />
+                    <Route exact path="/MuaThietBi/VanBan" component={MuaThietBiPage} />
+                    <Route exact path="/MuaThietBi/Kho" component={KhoPage} />
+                    <Route exact path="/ThanhLyThietBi/VanBan" component={ThanhLyThietBiPage} />
+                    <Route exact path="/ThanhLyThietBi/ThongKe" component={ThanhLyPage} />
                     <Route exact path="/doc" component={TextEditor} />
                 </Switch>
             </>

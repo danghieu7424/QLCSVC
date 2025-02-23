@@ -7,6 +7,86 @@ function MuaThietBiPage() {
     const { userData, login } = useAuth();
     const history = useHistory();
     const [dataTable, setDataTable] = useState([]); // Giá trị mặc định là []
+    const [showAddDevice, setShowAddDevice] = useState(false);
+    const [devices, setDevices] = useState([]);
+    const [newDevice, setNewDevice] = useState({ name: "", quantity: "", price: "" });
+
+    const formatCurrency = (value) => {
+        return value.replace(/\D/g, "") // Loại bỏ ký tự không phải số
+            .replace(/\B(?=(\d{3})+(?!\d))/g, "."); // Thêm dấu chấm phân cách hàng nghìn
+    };
+
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+
+        setNewDevice((prev) => ({
+            ...prev,
+            [name]: name === "price" ? formatCurrency(value) : value, // Chỉ format giá tiền
+        }));
+    };
+
+
+    const handleAddDevice = () => {
+        if (!newDevice.name || !newDevice.quantity || !newDevice.price) {
+            alert("Vui lòng nhập đầy đủ thông tin!");
+            return;
+        }
+
+        const newEntry = {
+            id: devices.length + 1,
+            name: newDevice.name,
+            quantity: parseInt(newDevice.quantity),
+            price: parseInt(newDevice.price.replace(/\./g, "")), // Chuyển lại về số nguyên
+        };
+
+        setDevices([...devices, newEntry]);
+
+        setNewDevice({ name: "", quantity: "", price: "" });
+    };
+
+    const numberToWords = (num) => {
+        const units = ["", "một", "hai", "ba", "bốn", "năm", "sáu", "bảy", "tám", "chín"];
+        const teens = ["mười", "mười một", "mười hai", "mười ba", "mười bốn", "mười lăm", "mười sáu", "mười bảy", "mười tám", "mười chín"];
+        const tens = ["", "", "hai mươi", "ba mươi", "bốn mươi", "năm mươi", "sáu mươi", "bảy mươi", "tám mươi", "chín mươi"];
+        const thousands = ["", "nghìn", "triệu", "tỷ"];
+
+        if (num === 0) return "không";
+
+        const chunkNumber = (n) => {
+            let result = "";
+            if (n >= 100) {
+                result += units[Math.floor(n / 100)] + " trăm ";
+                n %= 100;
+            }
+            if (n >= 10 && n < 20) {
+                result += teens[n - 10] + " ";
+            } else {
+                if (n >= 20) {
+                    result += tens[Math.floor(n / 10)] + " ";
+                }
+                if (n % 10 > 0) {
+                    result += units[n % 10] + " ";
+                }
+            }
+            return result.trim();
+        };
+
+        let parts = [];
+        let unitIndex = 0;
+
+        while (num > 0) {
+            let chunk = num % 1000;
+            if (chunk > 0) {
+                parts.unshift(chunkNumber(chunk) + " " + thousands[unitIndex]);
+            }
+            num = Math.floor(num / 1000);
+            unitIndex++;
+        }
+
+        return parts.join(" ").replace(/\s+/g, " ").trim();
+    };
+
+    const totalPrice = devices.reduce((sum, device) => sum + device.quantity * device.price, 0);
 
     const [searchQuery, setSearchQuery] = useState("");
     const [tempData, setTempTempData] = useState([]);
@@ -49,8 +129,8 @@ function MuaThietBiPage() {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ id, TenVanBan: 'Tờ Trình' }),
+            },
+            body: JSON.stringify({ id, TenVanBan: 'Tờ Trình' }),
         })
             .then(response => response.json())
             .then(data => {
@@ -69,9 +149,142 @@ function MuaThietBiPage() {
         }
     }, [userData]);
 
+    const dsThietBi = () => {
+        return (
+            <div className="box_add-tb">
+                <h2>Danh sách thiết bị</h2>
+                <table border="1" style={{ width: "100%", borderCollapse: "collapse" }}>
+                    <thead>
+                        <tr>
+                            <th>Tên thiết bị</th>
+                            <th>Số lượng</th>
+                            <th>Đơn giá</th>
+                            <th>Chức năng</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {devices.map((device, index) => (
+                            <tr key={device.id}>
+                                <td>{device.name}</td>
+                                <td style={{ textAlign: "center" }}>{device.quantity}</td>
+                                <td style={{ textAlign: "center" }}>{device.price} đ</td>
+                                <td style={{ textAlign: "center" }}>
+                                    <button onClick={() => handleDelete(device.id)}>Xóa</button>
+                                </td>
+                            </tr>
+                        ))}
+                        <tr>
+                            <td>
+                                <input type="text" name="name" value={newDevice.name} onChange={handleInputChange} />
+                            </td>
+                            <td>
+                                <input type="text" name="quantity" value={newDevice.quantity} onChange={handleInputChange} />
+                            </td>
+                            <td>
+                                <input type="text" name="price" value={newDevice.price} onChange={handleInputChange} />
+                            </td>
+                            <td>
+                                <button onClick={handleAddDevice}>Thêm</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h2>Bảng yêu cầu</h2>
+                <table id="table-request" border="1" style={{ width: "100%", borderCollapse: "collapse", marginBottom: "16px" }}>
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên thiết bị - Thông số kỹ thuật</th>
+                            <th>ĐVT</th>
+                            <th>Số lượng</th>
+                            <th>Đơn giá</th>
+                            <th>Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {devices.map((device, index) => (
+                            <tr key={device.id}>
+                                <td style={{ textAlign: "center" }}>{index + 1}</td>
+                                <td>{device.name}</td>
+                                <td style={{ textAlign: "center" }}>Cái</td>
+                                <td style={{ textAlign: "center" }}>{device.quantity}</td>
+                                <td style={{ textAlign: "center" }}>{new Intl.NumberFormat("vi-VN").format(device.price)} đ</td>
+                                <td style={{ textAlign: "center" }}>{new Intl.NumberFormat("vi-VN").format(device.quantity * device.price)} đ</td>
+                            </tr>
+                        ))}
+                        <tr>
+                            <td colSpan="5" style={{ textAlign: "center" }}>
+                                <b>Tổng cộng:</b>
+                            </td>
+                            <td style={{ textAlign: "center" }}>
+                                <b>{new Intl.NumberFormat("vi-VN").format(devices.reduce((sum, device) => sum + device.quantity * device.price, 0))} đ</b>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colSpan="6" style={{ textAlign: "center" }}>
+                                <b>{`Bằng chữ: ${numberToWords(totalPrice).charAt(0).toUpperCase() + numberToWords(totalPrice).slice(1)} đồng`}</b> 
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div className="btn-function-set-table">
+                    <button onClick={handleDone}>Xong</button>
+                    <button onClick={handleCancel}>Hủy</button>
+                </div>
+            </div>
+        );
+    };
+
+
     const handleAdd = () => {
-        history.push("/doc", { status: 'new', TenVanBan: 'Tờ Trình' });
+        setShowAddDevice(true);
     }
+
+    const handleDone = () => {
+        const tableData = devices.map((device, index) => ({
+            STT: index + 1,
+            TenThietBi: device.name,
+            DVT: "Cái",
+            SoLuong: device.quantity,
+            DonGia: device.price,
+            ThanhTien: device.quantity * device.price
+        }));
+    
+        const totalPrice = devices.reduce((sum, device) => sum + device.quantity * device.price, 0);
+    
+        const totalRow = {
+            STT: "",
+            TenThietBi: "Tổng cộng",
+            DVT: "",
+            SoLuong: "",
+            DonGia: "",
+            ThanhTien: totalPrice
+        };
+    
+        const textRow = {
+            STT: "",
+            TenThietBi: `Bằng chữ: ${numberToWords(totalPrice).charAt(0).toUpperCase() + numberToWords(totalPrice).slice(1)} đồng`,
+            DVT: "",
+            SoLuong: "",
+            DonGia: "",
+            ThanhTien: ""
+        };
+    
+        history.push("/doc", {
+            status: "new",
+            TenVanBan: "Tờ Trình",
+            tableData: [...tableData, totalRow, textRow] // Gửi cả tổng cộng và dòng bằng chữ
+        });
+    
+        setShowAddDevice(false);
+    };    
+
+    const handleCancel = () => {
+        setShowAddDevice(false);
+        setDevices([]);
+    };
+
 
     const handleEdit = (SoVanBan) => {
         history.push("/doc", { status: 'old', SoVanBan, TenVanBan: 'Tờ Trình' });
@@ -186,6 +399,8 @@ function MuaThietBiPage() {
                     </tbody>
                 </table>
             </div>
+            {showAddDevice && dsThietBi()}
+
         </div>
     );
 }

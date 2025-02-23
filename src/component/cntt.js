@@ -342,9 +342,9 @@ function PhongCNTT() {
                         <li id="add_info" onClick={handleAddRow}>
                             <abbr title="Add"><i className="bx bxs-plus-square"></i></abbr>
                         </li>
-                        <li id="import_file">
+                        {/* <li id="import_file">
                             <abbr title="Import"><i className="bx bxs-file-plus"></i></abbr>
-                        </li>
+                        </li> */}
                     </ul>
                 </div>
             </div>
