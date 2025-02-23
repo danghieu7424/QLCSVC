@@ -60,10 +60,10 @@ const TextEditor = ({ location }) => {
         .then(data => {
           alert(data.message)
           if (TenVanBan === 'Tờ Trình') {
-            history.push('/MuaThietBi');
+            history.push('/MuaThietBi/VanBan');
           }
           else {
-            history.push('/ThanhLyThietBi');
+            history.push('/ThanhLyThietBi/VanBan');
           }
         })
         .catch(err => {
@@ -82,10 +82,10 @@ const TextEditor = ({ location }) => {
         .then(data => {
           alert(data.message);
           if (TenVanBan === 'Tờ Trình') {
-            history.push('/MuaThietBi');
+            history.push('/MuaThietBi/VanBan');
           }
           else {
-            history.push('/ThanhLyThietBi');
+            history.push('/ThanhLyThietBi/VanBan');
           }
         })
         .catch(err => {
@@ -286,10 +286,10 @@ const TextEditor = ({ location }) => {
 
   const handleExit = () => {
     if (TenVanBan === 'Tờ Trình') {
-      history.push('/MuaThietBi');
+      history.push('/MuaThietBi/VanBan');
     }
     else {
-      history.push('/ThanhLyThietBi');
+      history.push('/ThanhLyThietBi/VanBan');
     }
   }
 
