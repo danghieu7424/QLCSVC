@@ -39,7 +39,10 @@ function LoginPage() {
                     storage.setItem("token", data.token);
                     login({ id: data.username, role: data.role });
 
-                    history.push("/");
+                    setTimeout(() => {
+                        history.push("/");
+                        window.location.reload();
+                    }, 1000);
                 }
             } else {
                 alert(data.error);
@@ -129,7 +132,10 @@ function VerifyOTPPage({ location }) {
                 storage.setItem("token", data.token);
                 login(data.user);
                 console.log(data)
-                history.push("/");
+                setTimeout(() => {
+                    history.push("/");
+                    window.location.reload()
+                }, 1000);
             } else {
                 const data = await response.json();
                 alert(data.message);
@@ -218,7 +224,10 @@ function ChangePasswordPage() {
             if (response.ok) {
                 const data = await response.json();
                 alert(data.message);
-                history.push("/");
+                setTimeout(() => {
+                    history.push("/");
+                    window.location.reload()
+                }, 1000);
             } else {
                 const data = await response.json();
                 alert(data.message);

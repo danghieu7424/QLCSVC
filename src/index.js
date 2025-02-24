@@ -76,7 +76,7 @@ function App() {
                     <Route exact path="/login" component={LoginPage} />
                     <Route exact path="/verify-otp" component={VerifyOTPPage} />
                     <Route exact path="/change-password" component={ChangePasswordPage} />
-                    <Route exact path="/" component={Home} />
+                    <Route exact path="/" render={() => <Home key={Date.now()} />} />
                     <Route exact path="/lich-su" component={Home} />
                     <Route exact path="/nganh-cntt" component={Home} />
                     <Route exact path="/nganh-ddt" component={Home} />
