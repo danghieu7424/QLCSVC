@@ -132,7 +132,7 @@ function MuaThietBiPage() {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ id, TenVanBan: ['Tờ Trình Thanh Lý', 'Văn Bản Thanh Lý'] }),
+            body: JSON.stringify({ id, TenVanBan: ['Tờ Trình Thanh Lý', 'Báo Cáo Thanh Lý'] }),
         })
             .then(response => response.json())
             .then(data => {
@@ -246,11 +246,11 @@ function MuaThietBiPage() {
                         <input
                             type="radio"
                             name="loaiVanBan"
-                            value="Văn Bản Thanh Lý"
-                            checked={loaiVanBan === "Văn Bản Thanh Lý"}
+                            value="Báo Cáo Thanh Lý"
+                            checked={loaiVanBan === "Báo Cáo Thanh Lý"}
                             onChange={(e) => setLoaiVanBan(e.target.value)}
                         />
-                        Văn Bản
+                        Báo Cáo
                     </label>
                 </div>
                 <div className="btn-function-set-table">
