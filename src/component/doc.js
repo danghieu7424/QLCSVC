@@ -81,7 +81,7 @@ const TextEditor = ({ location }) => {
         .then(request => request.json())
         .then(data => {
           alert(data.message);
-          if (TenVanBan === 'Tờ Trình'  || TenVanBan === 'Văn Bản') {
+          if (TenVanBan === 'Tờ Trình'  || TenVanBan === 'Báo Cáo') {
             history.push('/MuaThietBi/VanBan');
           }
           else {
@@ -285,7 +285,7 @@ const TextEditor = ({ location }) => {
   };
 
   const handleExit = () => {
-    if (TenVanBan === 'Tờ Trình' || TenVanBan === 'Văn Bản') {
+    if (TenVanBan === 'Tờ Trình' || TenVanBan === 'Báo Cáo') {
       history.push('/MuaThietBi/VanBan');
     }
     else {
@@ -499,6 +499,7 @@ const TextEditor = ({ location }) => {
       tableContent += `</table>`;
 
       setInitialContent(prev => prev.replace(/<table id="table-request".*?<\/table>/s, tableContent));
+      setInitialContentThanhLy(prev => prev.replace(/<table id="table-request".*?<\/table>/s, tableContent));
     }
   }, [tableData]);
 
@@ -514,7 +515,7 @@ const TextEditor = ({ location }) => {
       })
         .then(request => request.json())
         .then(data => {
-          if (TenVanBan === 'Tờ Trình' || TenVanBan === 'Văn Bản') {
+          if (TenVanBan === 'Tờ Trình' || TenVanBan === 'Báo Cáo') {
             setInitialContent(data.data.TextData);
           }
           else {
@@ -593,7 +594,7 @@ const TextEditor = ({ location }) => {
           onMouseUp={handleSelectionChange}
           onKeyUp={handleSelectionChange}
           dangerouslySetInnerHTML={{
-            __html: TenVanBan === 'Tờ Trình'  || TenVanBan === 'Văn Bản' ? initialContent : initialContentThanhLy
+            __html: TenVanBan === 'Tờ Trình'  || TenVanBan === 'Báo Cáo' ? initialContent : initialContentThanhLy
           }}
         >
         </div>
