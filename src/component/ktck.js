@@ -350,7 +350,7 @@ function PhongKTCK() {
             </div>
             <div id="box_table">
                 <table id="content_table">
-                    <caption>Bảng Thông Tin Phòng KTCK</caption>
+                    <caption>Bảng Thông Tin Phòng Công Nghệ Kỹ Thuật Cơ Khí</caption>
                     <thead>
                         <tr>
                             <th>Mã Phòng Xưởng</th>

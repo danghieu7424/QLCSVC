@@ -15,6 +15,7 @@ import MuaThietBiPage from './component/muaThietBi.js';
 import ThanhLyThietBiPage from './component/thanhLyThietBi.js';
 import TextEditor from './component/doc.js';
 import KhoPage from './component/khoPage.js';
+import ThanhLyPage from './component/thanhLyPage.js';
 
 import { AuthProvider } from './component/authContext.js';
 
@@ -75,7 +76,7 @@ function App() {
                     <Route exact path="/login" component={LoginPage} />
                     <Route exact path="/verify-otp" component={VerifyOTPPage} />
                     <Route exact path="/change-password" component={ChangePasswordPage} />
-                    <Route exact path="/" component={Home} />
+                    <Route exact path="/" render={() => <Home key={Date.now()} />} />
                     <Route exact path="/lich-su" component={Home} />
                     <Route exact path="/nganh-cntt" component={Home} />
                     <Route exact path="/nganh-ddt" component={Home} />
@@ -91,6 +92,7 @@ function App() {
                     <Route exact path="/MuaThietBi/VanBan" component={MuaThietBiPage} />
                     <Route exact path="/MuaThietBi/Kho" component={KhoPage} />
                     <Route exact path="/ThanhLyThietBi/VanBan" component={ThanhLyThietBiPage} />
+                    <Route exact path="/ThanhLyThietBi/ThongKe" component={ThanhLyPage} />
                     <Route exact path="/doc" component={TextEditor} />
                 </Switch>
             </>

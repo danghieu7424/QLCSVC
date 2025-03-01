@@ -60,10 +60,10 @@ const TextEditor = ({ location }) => {
         .then(data => {
           alert(data.message)
           if (TenVanBan === 'Tờ Trình') {
-            history.push('/MuaThietBi');
+            history.push('/MuaThietBi/VanBan');
           }
           else {
-            history.push('/ThanhLyThietBi');
+            history.push('/ThanhLyThietBi/VanBan');
           }
         })
         .catch(err => {
@@ -81,11 +81,11 @@ const TextEditor = ({ location }) => {
         .then(request => request.json())
         .then(data => {
           alert(data.message);
-          if (TenVanBan === 'Tờ Trình') {
-            history.push('/MuaThietBi');
+          if (TenVanBan === 'Tờ Trình'  || TenVanBan === 'Văn Bản') {
+            history.push('/MuaThietBi/VanBan');
           }
           else {
-            history.push('/ThanhLyThietBi');
+            history.push('/ThanhLyThietBi/VanBan');
           }
         })
         .catch(err => {
@@ -285,11 +285,11 @@ const TextEditor = ({ location }) => {
   };
 
   const handleExit = () => {
-    if (TenVanBan === 'Tờ Trình') {
-      history.push('/MuaThietBi');
+    if (TenVanBan === 'Tờ Trình' || TenVanBan === 'Văn Bản') {
+      history.push('/MuaThietBi/VanBan');
     }
     else {
-      history.push('/ThanhLyThietBi');
+      history.push('/ThanhLyThietBi/VanBan');
     }
   }
 
@@ -307,7 +307,7 @@ const TextEditor = ({ location }) => {
     </tr>
   </table>
 
-  <h2 style="text-align: center; margin-top: 8px; margin-bottom: 8px;">TỜ TRÌNH</h2>
+  <h2 style="text-align: center; margin-top: 8px; margin-bottom: 8px;">${TenVanBan.toUpperCase()}</h2>
   <h4 style="text-align: center; margin-top: 8px; margin-bottom: 24px;">
     V/v sửa chữa các phòng thực hành máy tính phục vụ cho công tác giảng dạy, học tập và<br>
     phục vụ kỳ thi đánh giá năng lực của ĐH QGHN, kỳ thi đánh giá tư duy của ĐH BKHN.
@@ -361,7 +361,7 @@ const TextEditor = ({ location }) => {
             TRƯỞNG ĐƠN VỊ
         </th>
         <th style="text-align: center; border: none; background: transparent;">
-            TRƯỞNG NGÀNH CNTT
+            TRƯỞNG NGÀNH
         </th>
         <th style="text-align: center; border: none; background: transparent;">
             NGƯỜI ĐỀ XUẤT
@@ -388,7 +388,7 @@ const TextEditor = ({ location }) => {
     </tr>
   </table>
 
-  <h2 style="text-align: center; margin-top: 8px; margin-bottom: 8px;">TỜ TRÌNH</h2>
+  <h2 style="text-align: center; margin-top: 8px; margin-bottom: 8px;">${TenVanBan.replace(' Thanh Lý', '').toUpperCase()}</h2>
   <h4 style="text-align: center; margin-top: 8px; margin-bottom: 24px;">
     V/v bán cá thiết bị đã cũ, hỏng hóc để tạo ngân sách phụ cho các thiết bị mới.
   </h4>
@@ -431,7 +431,7 @@ const TextEditor = ({ location }) => {
 </table>
 
 
-  // <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 1cm;"><i>Ghi chú: Đơn giá trên chưa bao gồm thuế VAT.</i></p>
+  <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 1cm;"><i>Ghi chú: Đơn giá trên chưa bao gồm thuế VAT.</i></p>
   <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 1cm;">Kính mong nhận được sự chấp thuận từ Ban Giám hiệu nhà trường.</p>
   <p style="text-align: right; margin-top: 8px; margin-bottom: 16px;">Ngày ... tháng ... năm 20...</p>
 
@@ -441,7 +441,7 @@ const TextEditor = ({ location }) => {
             TRƯỞNG ĐƠN VỊ
         </th>
         <th style="text-align: center; border: none; background: transparent;">
-            TRƯỞNG NGÀNH CNTT
+            TRƯỞNG NGÀNH
         </th>
         <th style="text-align: center; border: none; background: transparent;">
             NGƯỜI ĐỀ XUẤT
@@ -514,7 +514,7 @@ const TextEditor = ({ location }) => {
       })
         .then(request => request.json())
         .then(data => {
-          if (TenVanBan === 'Tờ Trình') {
+          if (TenVanBan === 'Tờ Trình' || TenVanBan === 'Văn Bản') {
             setInitialContent(data.data.TextData);
           }
           else {
@@ -593,7 +593,7 @@ const TextEditor = ({ location }) => {
           onMouseUp={handleSelectionChange}
           onKeyUp={handleSelectionChange}
           dangerouslySetInnerHTML={{
-            __html: TenVanBan === 'Tờ Trình' ? initialContent : initialContentThanhLy
+            __html: TenVanBan === 'Tờ Trình'  || TenVanBan === 'Văn Bản' ? initialContent : initialContentThanhLy
           }}
         >
         </div>

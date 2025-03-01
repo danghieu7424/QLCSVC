@@ -1,8 +1,6 @@
-import React from 'react'
-import { useState, useEffect, useRef } from 'react';
-import { BrowserRouter as Router, Route, Switch, Link, useLocation, useHistory } from 'react-router-dom';
-import Cryptage from '../assets/modules/Cryptage.js';
-import '../assets/css/home.css'
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useHistory, useLocation } from 'react-router-dom';
+import '../assets/css/home.css';
 
 // function Home() {
 //     const location = useLocation();
@@ -655,6 +653,8 @@ function Header({ toggleMenu, isMenuActive }) {
         }
     }, [userData, login]);
 
+
+
     const handleAvatarClick = () => {
         setIsActive(prevState => !prevState);
     };
@@ -704,66 +704,73 @@ function Header({ toggleMenu, isMenuActive }) {
                             </Link>
                         </span>
                     </li>
-                    <li>
-                        <span className="box__header__title--hover">
-                            <Link to="/can-bo" >
-                                <abbr title="Cán bộ"> Cán bộ </abbr>
-                            </Link>
-                        </span>
-                    </li>
-                    <li>
-                        <span className="box__header__title--hover">
-                            <abbr title="Phòng Xưởng"> Phòng Xưởng </abbr>
-                            <i className="bx bx-chevron-down"></i>
-                        </span>
-                        <div className="more">
-                            <ul>
-                                {listNganh.map((cos, index) => {
-                                    return (
-                                        <ListURL
-                                            key={index}
-                                            url={cos.page}
-                                            className="option"
-                                            title={cos.title}
-                                        />
-                                    );
-                                })}
-                            </ul>
-                        </div>
-                    </li>
-                    <li>
-                        <span className="box__header__title--hover">
-                            <abbr title="Thiết Bị"> Thiết Bị </abbr>
-                            <i className="bx bx-chevron-down"></i>
-                        </span>
-                        <div className="more">
-                            <ul>
-                                {listTB.map((cos, index) => (
-                                    <li key={index}>
-                                        {cos.page ? (
-                                            <Link to={cos.page} className="option">{cos.title}</Link>
-                                        ) : (
-                                            <>
-                                                <span className="has-submenu option" >{cos.title}</span>
-                                                {cos.subItems && (
-                                                    <ul className="sub-menu">
-                                                        {cos.subItems.map((sub, subIndex) => (
-                                                            <ListURL
-                                                            key={subIndex}
-                                                            url={sub.page}
-                                                            className="option"
-                                                            title={sub.title}
-                                                        />
-                                                        ))}
-                                                    </ul>
-                                                )}
-                                            </>
-                                        )}
-                                    </li>
-                                ))}
-                            </ul>
-                        </div>
-                    </li>
+                    {userData?.role ?
+                        (
+                            <>
+                                <li>
+                                    <span className="box__header__title--hover">
+                                        <Link to="/can-bo" >
+                                            <abbr title="Cán bộ"> Cán bộ </abbr>
+                                        </Link>
+                                    </span>
+                                </li>
+                                <li>
+                                    <span className="box__header__title--hover">
+                                        <abbr title="Phòng Xưởng"> Phòng Xưởng </abbr>
+                                        <i className="bx bx-chevron-down"></i>
+                                    </span>
+                                    <div className="more">
+                                        <ul>
+                                            {listNganh.map((cos, index) => {
+                                                return (
+                                                    <ListURL
+                                                        key={index}
+                                                        url={cos.page}
+                                                        className="option"
+                                                        title={cos.title}
+                                                    />
+                                                );
+                                            })}
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span className="box__header__title--hover">
+                                        <abbr title="Thiết Bị"> Thiết Bị </abbr>
+                                        <i className="bx bx-chevron-down"></i>
+                                    </span>
+                                    <div className="more">
+                                        <ul>
+                                            {listTB.map((cos, index) => (
+                                                <li key={index}>
+                                                    {cos.page ? (
+                                                        <Link to={cos.page} className="option">{cos.title}</Link>
+                                                    ) : (
+                                                        <>
+                                                            <span className="has-submenu option" >{cos.title}</span>
+                                                            {cos.subItems && (
+                                                                <ul className="sub-menu">
+                                                                    {cos.subItems.map((sub, subIndex) => (
+                                                                        <ListURL
+                                                                        key={subIndex}
+                                                                        url={sub.page}
+                                                                        className="option"
+                                                                        title={sub.title}
+                                                                    />
+                                                                    ))}
+                                                                </ul>
+                                                            )}
+                                                        </>
+                                                    )}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </li>
+                            </>
+                        )
+                    : ''}
+                    
 
 
 
@@ -860,6 +867,25 @@ function Header({ toggleMenu, isMenuActive }) {
 
 function Navigation() {
     const [isMenuActive, setIsMenuActive] = useState(false);
+    const { userData, login } = useAuth();
+    useEffect(() => {
+            const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+            if (token && !userData) {
+                fetch("https://api-jwgltkza6q-uc.a.run.app/protected-route", {
+                    method: "GET",
+                    headers: { Authorization: token },
+                })
+                    .then(res => res.ok ? res.json() : null)
+                    .then(data => {
+                        if (data) login(data.user); // Cập nhật userData
+                    })
+                    .catch(error => {
+                        console.error("Error during token verification: ", error);
+                        localStorage.removeItem("token");
+                        sessionStorage.removeItem("token");
+                    });
+            }
+        }, [userData, login]);
 
     const toggleMenu = () => {
         setIsMenuActive((prevState) => !prevState);
@@ -886,56 +912,77 @@ function Navigation() {
                         </span>
 
                     </li>
-                    <li>
-                        <span className="box__nav__title--hover" style={{ borderBottom: '1px solid' }}>
-                            <Link to="/can-bo" className='source_home' onClick={toggleMenu} style={{ color: '#111' }}>
-                                <abbr title="Cán bộ"> Cán bộ </abbr>
-                            </Link>
-                        </span>
+                    
+                    {userData?.role ?
+                        (
+                            <>
+                                <li>
+                                    <span className="box__nav__title--hover" style={{ borderBottom: '1px solid' }}>
+                                        <Link to="/can-bo" className='source_home' onClick={toggleMenu} style={{ color: '#111' }}>
+                                            <abbr title="Cán bộ"> Cán bộ </abbr>
+                                        </Link>
+                                    </span>
 
-                    </li>
-                    <li>
-                        <span className="box__nav__title--hover">
-                            <i className="bx bx-chevron-down"></i>
-                            <abbr title="Phòng Xưởng"> Phòng Xưởng </abbr>
-                        </span>
-                        <div className="more">
-                            <ul>
-                                {listNganh.map((cos, index) => {
-                                    return (
-                                        <ListURL
-                                            key={index}
-                                            url={cos.page}
-                                            className="nav__option"
-                                            title={cos.title}
-                                            onClick={toggleMenu}
-                                        />
-                                    );
-                                })}
-                            </ul>
-                        </div>
-                    </li>
-                    <li>
-                        <span className="box__nav__title--hover">
-                            <i className="bx bx-chevron-down"></i>
-                            <abbr title="Thiết Bị"> Thiết Bị </abbr>
-                        </span>
-                        <div className="more">
-                            <ul>
-                                {listTB.map((cos, index) => {
-                                    return (
-                                        <ListURL
-                                            key={index}
-                                            url={cos.page}
-                                            className="nav__option"
-                                            title={cos.title}
-                                            onClick={toggleMenu}
-                                        />
-                                    );
-                                })}
-                            </ul>
-                        </div>
-                    </li>
+                                </li>
+                                <li>
+                                    <span className="box__nav__title--hover">
+                                        <i className="bx bx-chevron-down"></i>
+                                        <abbr title="Phòng Xưởng"> Phòng Xưởng </abbr>
+                                    </span>
+                                    <div className="more">
+                                        <ul>
+                                            {listNganh.map((cos, index) => {
+                                                return (
+                                                    <ListURL
+                                                        key={index}
+                                                        url={cos.page}
+                                                        className="nav__option"
+                                                        title={cos.title}
+                                                        onClick={toggleMenu}
+                                                    />
+                                                );
+                                            })}
+                                        </ul>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span className="box__nav__title--hover">
+                                        <i className="bx bx-chevron-down"></i>
+                                        <abbr title="Thiết Bị"> Thiết Bị </abbr>
+                                        
+                                    </span>
+                                    <div className="more">
+                                        <ul>
+                                            {listTB.map((cos, index) => (
+                                                <li key={index}>
+                                                    {cos.page ? (
+                                                        <Link to={cos.page} className="nav__option" style={{zIndex: '100'}}>{cos.title}</Link>
+                                                    ) : (
+                                                        <>
+                                                            <span className="has-submenu nav__option" >{cos.title}</span>
+                                                            {cos.subItems && (
+                                                                <ul className="sub-menu">
+                                                                    {cos.subItems.map((sub, subIndex) => (
+                                                                        <ListURL
+                                                                        key={subIndex}
+                                                                        url={sub.page}
+                                                                        className="nav__option"
+                                                                        title={sub.title}
+                                                                        onClick={toggleMenu}
+                                                                    />
+                                                                    ))}
+                                                                </ul>
+                                                            )}
+                                                        </>
+                                                    )}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                </li>
+                            </>
+                        )
+                    : ''}
                     {/* <li>
                         <span className="box__nav__title--hover">
                             <i className="bx bx-chevron-down"></i>
@@ -982,4 +1029,4 @@ function Navigation() {
     );
 }
 
-export { Navigation, Home, Header }
+export { Header, Home, Navigation };

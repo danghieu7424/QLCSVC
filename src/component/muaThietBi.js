@@ -9,6 +9,7 @@ function MuaThietBiPage() {
     const [dataTable, setDataTable] = useState([]); // Giá trị mặc định là []
     const [showAddDevice, setShowAddDevice] = useState(false);
     const [devices, setDevices] = useState([]);
+    const [loaiVanBan, setLoaiVanBan] = useState('');
     const [newDevice, setNewDevice] = useState({ name: "", quantity: "", price: "" });
 
     const formatCurrency = (value) => {
@@ -130,7 +131,7 @@ function MuaThietBiPage() {
             headers: {
                 "Content-Type": "application/json",
             },
-            body: JSON.stringify({ id, TenVanBan: 'Tờ Trình' }),
+            body: JSON.stringify({ id, TenVanBan: ['Tờ Trình', 'Văn Bản'] }),
         })
             .then(response => response.json())
             .then(data => {
@@ -223,11 +224,34 @@ function MuaThietBiPage() {
                         </tr>
                         <tr>
                             <td colSpan="6" style={{ textAlign: "center" }}>
-                                <b>{`Bằng chữ: ${numberToWords(totalPrice).charAt(0).toUpperCase() + numberToWords(totalPrice).slice(1)} đồng`}</b> 
+                                <b>{`Bằng chữ: ${numberToWords(totalPrice).charAt(0).toUpperCase() + numberToWords(totalPrice).slice(1)} đồng`}</b>
                             </td>
                         </tr>
                     </tbody>
                 </table>
+                <h2>Loại văn bản</h2>
+                <div>
+                    <label>
+                        <input
+                            type="radio"
+                            name="loaiVanBan"
+                            value="Tờ Trình"
+                            checked={loaiVanBan === "Tờ Trình"}
+                            onChange={(e) => setLoaiVanBan(e.target.value)}
+                        />
+                        Tờ Trình
+                    </label>
+                    <label style={{ marginLeft: "20px" }}>
+                        <input
+                            type="radio"
+                            name="loaiVanBan"
+                            value="Văn Bản"
+                            checked={loaiVanBan === "Văn Bản"}
+                            onChange={(e) => setLoaiVanBan(e.target.value)}
+                        />
+                        Văn Bản
+                    </label>
+                </div>
                 <div className="btn-function-set-table">
                     <button onClick={handleDone}>Xong</button>
                     <button onClick={handleCancel}>Hủy</button>
@@ -242,6 +266,10 @@ function MuaThietBiPage() {
     }
 
     const handleDone = () => {
+        if(!loaiVanBan) {
+            alert('Vui lòng chọn lại văn bản.');
+            return;
+        }
         const tableData = devices.map((device, index) => ({
             STT: index + 1,
             TenThietBi: device.name,
@@ -250,9 +278,9 @@ function MuaThietBiPage() {
             DonGia: device.price,
             ThanhTien: device.quantity * device.price
         }));
-    
+
         const totalPrice = devices.reduce((sum, device) => sum + device.quantity * device.price, 0);
-    
+
         const totalRow = {
             STT: "",
             TenThietBi: "Tổng cộng",
@@ -261,7 +289,7 @@ function MuaThietBiPage() {
             DonGia: "",
             ThanhTien: totalPrice
         };
-    
+
         const textRow = {
             STT: "",
             TenThietBi: `Bằng chữ: ${numberToWords(totalPrice).charAt(0).toUpperCase() + numberToWords(totalPrice).slice(1)} đồng`,
@@ -270,15 +298,15 @@ function MuaThietBiPage() {
             DonGia: "",
             ThanhTien: ""
         };
-    
+
         history.push("/doc", {
             status: "new",
-            TenVanBan: "Tờ Trình",
+            TenVanBan: loaiVanBan,
             tableData: [...tableData, totalRow, textRow] // Gửi cả tổng cộng và dòng bằng chữ
         });
-    
+
         setShowAddDevice(false);
-    };    
+    };
 
     const handleCancel = () => {
         setShowAddDevice(false);
@@ -286,8 +314,8 @@ function MuaThietBiPage() {
     };
 
 
-    const handleEdit = (SoVanBan) => {
-        history.push("/doc", { status: 'old', SoVanBan, TenVanBan: 'Tờ Trình' });
+    const handleEdit = (SoVanBan, TenVanBan) => {
+        history.push("/doc", { status: 'old', SoVanBan, TenVanBan });
     }
 
     const handleSend = (SoVanBan) => {
@@ -346,11 +374,12 @@ function MuaThietBiPage() {
             </div>
             <div className="box_table">
                 <table id="content_table">
-                    <caption>Bảng danh sách tờ trình</caption>
+                    <caption>Bảng danh sách Văn Bản</caption>
                     <thead>
                         <tr style={{ textAlign: 'center' }}>
                             <th>Số Văn Bản</th>
                             <th>Tên Văn Bản</th>
+                            <th>Ngày Tạo</th>
                             <th>Trạng Thái</th>
                             <th>Chức Năng</th>
                         </tr>
@@ -370,6 +399,10 @@ function MuaThietBiPage() {
                                             {item.TenVanBan}
                                         </td>
                                         <td style={{ textAlign: 'center' }}>
+                                            <span>Tên Văn Bản</span>
+                                            {new Date(item.NgayTao).toLocaleDateString("vi-VN")}
+                                        </td>
+                                        <td style={{ textAlign: 'center' }}>
                                             <span>Trạng Thái</span>
                                             <div className={getStateClass(item.Status)}>{item.Status}</div>
                                         </td>
@@ -379,13 +412,13 @@ function MuaThietBiPage() {
                                                 <button
                                                     className="btn-edit"
                                                     disabled={!(item.Status === 'Chỉnh sửa')}
-                                                    onClick={() => handleEdit(item.SoVanBan)}
+                                                    onClick={() => handleEdit(item.SoVanBan, item.TenVanBan)}
                                                 ><i className='bx bx-edit'></i></button>
-                                                <button
+                                                {/* <button
                                                     className="btn-send"
                                                     disabled={!(item.Status === 'Chỉnh sửa')}
                                                     onClick={handleSend}
-                                                ><i className='bx bx-send'></i></button>
+                                                ><i className='bx bx-send'></i></button> */}
                                             </div>
 
                                         </td>

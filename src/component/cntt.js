@@ -350,7 +350,7 @@ function PhongCNTT() {
             </div>
             <div id="box_table">
                 <table id="content_table">
-                    <caption>Bảng Thông Tin Phòng CNTT</caption>
+                    <caption>Bảng Thông Tin Phòng Công Nghệ Thông Tin</caption>
                     <thead>
                         <tr>
                             <th>Mã Phòng Xưởng</th>

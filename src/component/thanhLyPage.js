@@ -2,12 +2,13 @@ import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useAuth } from "./authContext.js";
 
-function KhoPage() {
+function ThanhLyPage() {
     const { userData, login } = useAuth();
     const [data, setData] = useState([]);
     const [tempData, setTempTempData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [tempList, setTempList] = useState([]);
+    const [tempList1, setTempList1] = useState([]);
     const [paramPage, setParamPage] = useState("");
 
     // lọc
@@ -24,51 +25,24 @@ function KhoPage() {
     };
 
     useEffect(() => {
-        const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+        const token =
+            localStorage.getItem("token") || sessionStorage.getItem("token");
         if (token && !userData) {
             fetch("https://api-jwgltkza6q-uc.a.run.app/protected-route", {
                 method: "GET",
                 headers: { Authorization: token },
             })
-                .then(res => res.ok ? res.json() : null)
-                .then(data => {
+                .then((res) => (res.ok ? res.json() : null))
+                .then((data) => {
                     if (data) login(data.user);
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error("Error during token verification: ", error);
                     localStorage.removeItem("token");
                     sessionStorage.removeItem("token");
                 });
         }
     }, [userData, login]);
-
-
-    const handleDelete = async (ID) => {
-        if (!window.confirm("Bạn có chắc chắn muốn xóa phòng này?")) return;
-
-        try {
-            const response = await fetch("https://api-jwgltkza6q-uc.a.run.app/api/delete/thiet-bi", {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ ID }),
-            });
-
-            if (!response.ok) {
-                const error = await response.json();
-                alert(`Lỗi: ${error.error}`);
-                return;
-            }
-
-            updateTable();
-            alert("Xóa thành công");
-        } catch (error) {
-            console.error("Lỗi khi gọi API xóa:", error);
-            alert("Đã xảy ra lỗi khi xóa");
-        }
-    };
-
 
     //API
 
@@ -78,13 +52,12 @@ function KhoPage() {
         return params.get(param);
     };
 
-
     const updateTable = async () => {
-        fetch("https://api-jwgltkza6q-uc.a.run.app/api/select/kho", {
+        fetch("https://api-jwgltkza6q-uc.a.run.app/api/select/thanh-ly", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-            }
+            },
         })
             .then((response) => {
                 if (!response.ok) {
@@ -106,7 +79,7 @@ function KhoPage() {
     const insertTable = async (data) => {
         try {
             const response = await fetch(
-                "https://api-jwgltkza6q-uc.a.run.app/api/insert/kho",
+                "https://api-jwgltkza6q-uc.a.run.app/api/insert/thanh-ly",
                 {
                     method: "POST", // Sử dụng POST
                     headers: {
@@ -123,7 +96,7 @@ function KhoPage() {
             updateTable();
         } catch (error) {
             console.error("Error inserting data:", error);
-            alert(error)
+            alert(error);
         }
     };
 
@@ -137,6 +110,22 @@ function KhoPage() {
             })
             .then((jsonData) => {
                 setTempList(jsonData[0]);
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+                setLoading(false);
+            });
+        fetch("https://api-jwgltkza6q-uc.a.run.app/api/select/thiet-bi-all")
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((jsonData) => {
+                console.log(jsonData);
+                setTempList1(jsonData);
                 setLoading(false);
             })
             .catch((error) => {
@@ -252,18 +241,16 @@ function KhoPage() {
     const [isAdding, setIsAdding] = useState(false);
     const [newRow, setNewRow] = useState({
         TenThietBi: "",
-        SoLuongMua: 0,
-        GiaMua: 0,
-        TongTien: 0,
         MaCanBo: userData?.id,
-        NgayMua: ''
+        NgayThanhLy: "",
+        ThanhTien: 0,
     });
 
     useEffect(() => {
         if (userData?.id) {
-            setNewRow(prev => ({
+            setNewRow((prev) => ({
                 ...prev,
-                MaCanBo: userData.id
+                MaCanBo: userData.id,
             }));
         }
     }, [userData]);
@@ -279,45 +266,39 @@ function KhoPage() {
         }
         if (
             !newRow.TenThietBi.trim() ||
-            !newRow.SoLuongMua ||
-            !newRow.GiaMua ||
-            !newRow.NgayMua
+            !newRow.NgayThanhLy ||
+            !newRow.ThanhTien
         ) {
             alert("Vui lòng điền đầy đủ các thông tin.");
             return;
         }
-
         // Kiểm tra ngày thanh lý phải nhỏ hơn ngày hiện tại
-        const NgayMua = new Date(newRow.NgayMua);
+        const ngayThanhLy = new Date(newRow.NgayThanhLy);
         const ngayHienTai = new Date();
         ngayHienTai.setHours(0, 0, 0, 0); // Đặt giờ về 00:00:00 để so sánh chính xác
 
-        if (NgayMua >= ngayHienTai) {
+        if (ngayThanhLy >= ngayHienTai) {
             alert("Ngày thanh lý phải nhỏ hơn ngày hiện tại.");
             return;
         }
 
         try {
             setIsAdding(false);
-            console.log(newRow)
+            console.log(newRow);
             await insertTable(newRow); // Gửi dữ liệu lên server
             setNewRow({
                 TenThietBi: "",
-                SoLuongMua: 0,
-                GiaMua: 0,
-                TongTien: 0,
-                MaCanBo: userData.id,
-                NgayMua: ''
+                MaCanBo: userData?.id,
+                NgayThanhLy: "",
+                ThanhTien: 0,
             }); // Reset dữ liệu mới
         } catch (error) {
             console.error("Error saving row:", error);
         }
     };
 
-
     const handleCancelRow = () => {
-        setNewRow({
-        }); // Reset dữ liệu mới
+        setNewRow({}); // Reset dữ liệu mới
         setIsAdding(false); // Ẩn dòng nhập liệu
     };
 
@@ -326,20 +307,23 @@ function KhoPage() {
     const [newEditRow, setNewEditRow] = useState({});
 
     const handleEdit = (item) => {
-        setEditingRowId({MaMua: item.MaMua}); // Đặt dòng đang chỉnh sửa
+        setEditingRowId({ MaMua: item.MaMua }); // Đặt dòng đang chỉnh sửa
         setNewEditRow({ ...item }); // Copy dữ liệu dòng vào newRow
     };
 
     const handleSave = async () => {
-        console.log(newEditRow)
+        console.log(newEditRow);
         try {
-            const response = await fetch("https://api-jwgltkza6q-uc.a.run.app/api/update/kho", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(newEditRow),
-            });
+            const response = await fetch(
+                "https://api-jwgltkza6q-uc.a.run.app/api/update/kho",
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(newEditRow),
+                }
+            );
 
             if (!response.ok) {
                 const error = await response.json();
@@ -361,8 +345,38 @@ function KhoPage() {
     const handleCancelSave = () => {
         setEditingRowId([null]);
         setNewEditRow({});
-    }
+    };
 
+    const [filteredList, setFilteredList] = useState([]);
+    const [showDropdown, setShowDropdown] = useState(false);
+
+    const handleInputChange = (e) => {
+        const inputValue = e.target.value;
+        setNewRow((prev) => ({ ...prev, TenThietBi: inputValue }));
+
+        // Lọc theo cả TenThietBi, ViTri và MaPhongXuong
+        if (inputValue.trim() === "") {
+            setFilteredList([]);
+            setShowDropdown(false);
+        } else {
+            const filtered = tempList1.filter((item) =>
+                `${item.TenThietBi} ${item.ViTri} ${item.MaPhongXuong}`
+                    .toLowerCase()
+                    .includes(inputValue.toLowerCase())
+            );
+            setFilteredList(filtered);
+            setShowDropdown(true);
+        }
+    };
+
+    const handleSelectItem = (selectedItem) => {
+        setNewRow((prev) => ({
+            ...prev,
+            MaThietBi: selectedItem.MaThietBi,
+            MaThietBi: selectedItem.MaThietBi,
+        }));
+        setShowDropdown(false);
+    };
 
     return (
         <section id="section__introduce">
@@ -389,7 +403,9 @@ function KhoPage() {
                 <div className="box_functions">
                     <ul>
                         <li id="add_info" onClick={handleAddRow}>
-                            <abbr title="Add"><i className="bx bxs-plus-square"></i></abbr>
+                            <abbr title="Add">
+                                <i className="bx bxs-plus-square"></i>
+                            </abbr>
                         </li>
                         {/* <li id="import_file">
                             <abbr title="Import"><i className="bx bxs-file-plus"></i></abbr>
@@ -399,18 +415,16 @@ function KhoPage() {
             </div>
             <div id="box_table">
                 <table id="content_table">
-                    <caption>Bảng Thông Tin Thiết Bị Chi Tiết Kho</caption>
+                    <caption>
+                        Bảng Thông Tin Thiết Bị Chi Tiết Thanh Lý Thiết Bị
+                    </caption>
                     <thead>
                         <tr>
-                            <th>Mã Mua</th>
+                            <th>Mã Thanh Lý</th>
                             <th>Tên Thiết Bị</th>
-                            <th>Số Lượng</th>
-                            <th>Số Lượng Mua</th>
-                            <th>Đơn Giá</th>
-                            <th>Ngày Mua</th>
-                            <th>Nhà Cung Cấp</th>
-                            <th>Tổng Tiền</th>
                             <th>Cán Bộ</th>
+                            <th>Ngày Thanh Lý</th>
+                            <th>Thành Tiền</th>
                             <th>Chức Năng</th>
                         </tr>
                     </thead>
@@ -424,116 +438,86 @@ function KhoPage() {
                                 {isAdding && (
                                     <tr>
                                         <td>
-                                            <span>Mã Mua</span>
+                                            <span>Mã Thanh Lý</span>
                                             <input
                                                 className="input_row_value"
                                                 type="text"
-                                                value={newRow.MaMua}
+                                                value={newRow.MaThanhLy}
                                                 onChange={(e) =>
                                                     setNewRow((prev) => ({
                                                         ...prev,
-                                                        MaMua: e.target.value,
+                                                        MaThanhLy:
+                                                            e.target.value,
                                                     }))
                                                 }
                                                 disabled
                                             />
                                         </td>
-                                        <td>
+                                        <td style={{ position: "relative" }}>
                                             <span>Tên Thiết Bị</span>
                                             <input
-                                                className="input_row_value"
                                                 type="text"
-                                                value={newRow.TenThietBi}
-                                                onChange={(e) =>
-                                                    setNewRow((prev) => ({
-                                                        ...prev,
-                                                        TenThietBi: e.target.value,
-                                                    }))
+                                                className="input_row_value"
+                                                value={newRow.TenThietBi || ""}
+                                                onChange={handleInputChange}
+                                                onFocus={() =>
+                                                    setShowDropdown(true)
                                                 }
-                                            />
-                                        </td>
-                                        <td>
-                                            <span>Số Lượng</span>
-                                            <input
-                                                className="input_row_value"
-                                                type="number"
-                                                value={newRow.SoLuong}
-                                                onChange={(e) =>
-                                                    setNewRow((prev) => ({
-                                                        ...prev,
-                                                        SoLuong: e.target.value,
-                                                    }))
+                                                onBlur={() =>
+                                                    setTimeout(
+                                                        () =>
+                                                            setShowDropdown(
+                                                                false
+                                                            ),
+                                                        200
+                                                    )
                                                 }
-                                                disabled
+                                                placeholder="Nhập tên thiết bị..."
                                             />
-                                        </td>
-                                        <td>
-                                            <span>Số Lượng Mua</span>
-                                            <input
-                                                className="input_row_value"
-                                                type="number"
-                                                value={newRow.SoLuongMua || ''}
-                                                onChange={(e) => {
-                                                    const value = Number(e.target.value);
-                                                    setNewRow((prev) => ({
-                                                        ...prev,
-                                                        SoLuongMua: value,
-                                                        TongTien: value * prev.GiaMua, // Cập nhật ngay
-                                                    }));
-                                                }}
-                                            />
-                                        </td>
-                                        <td>
-                                            <span>Đơn Giá</span>
-                                            <input
-                                                className="input_row_value"
-                                                type="number"
-                                                value={newRow.GiaMua || ''}
-                                                onChange={(e) => {
-                                                    const value = Number(e.target.value);
-                                                    setNewRow((prev) => ({
-                                                        ...prev,
-                                                        GiaMua: value,
-                                                        TongTien: prev.SoLuongMua * value, // Cập nhật ngay
-                                                    }));
-                                                }}
-                                            />
-                                        </td>
-                                        <td>
-                                            <span>Ngày Mua</span>
-                                            <input
-                                                className="input_row_value"
-                                                type="date"
-                                                value={newRow.NgayMua}
-                                                onChange={(e) =>
-                                                    setNewRow((prev) => ({
-                                                        ...prev,
-                                                        NgayMua: e.target.value,
-                                                    }))
-                                                }
-                                            />
-                                        </td>
-                                        <td>
-                                            <span>Nhà Cung Cấp</span>
-                                            <input
-                                                className="input_row_value"
-                                                value={newRow.NhaCungCap}
-                                                onChange={(e) =>
-                                                    setNewRow((prev) => ({
-                                                        ...prev,
-                                                        NhaCungCap: e.target.value,
-                                                    }))
-                                                }
-                                            />
-                                        </td>
-                                        <td>
-                                            <span>Tổng Tiền</span>
-                                            <input
-                                                className="input_row_value"
-                                                type="number"
-                                                value={newRow.TongTien}
-                                                disabled
-                                            />
+                                            {showDropdown &&
+                                                filteredList.length > 0 && (
+                                                    <ul
+                                                        style={{
+                                                            position:
+                                                                "absolute",
+                                                            top: "100%",
+                                                            left: 0,
+                                                            width: "100%",
+                                                            background: "white",
+                                                            border: "1px solid #ccc",
+                                                            listStyle: "none",
+                                                            padding: "5px",
+                                                            margin: 0,
+                                                            maxHeight: "150px",
+                                                            overflowY: "auto",
+                                                            zIndex: 10,
+                                                        }}
+                                                    >
+                                                        {filteredList.map(
+                                                            (item) => (
+                                                                <li
+                                                                    key={
+                                                                        item.MaThietBi
+                                                                    }
+                                                                    onMouseDown={() =>
+                                                                        handleSelectItem(
+                                                                            item
+                                                                        )
+                                                                    }
+                                                                    style={{
+                                                                        padding:
+                                                                            "5px",
+                                                                        cursor: "pointer",
+                                                                        borderBottom:
+                                                                            "1px solid #ddd",
+                                                                    }}
+                                                                >
+                                                                    {`${item.TenThietBi} - ${item.ViTri} - ${item.MaPhongXuong}`}
+                                                                </li>
+                                                            )
+                                                        )}
+                                                    </ul>
+                                                )}
                                         </td>
                                         <td>
                                             <span>Cán Bộ</span>
@@ -544,12 +528,43 @@ function KhoPage() {
                                                 onChange={(e) =>
                                                     setNewRow((prev) => ({
                                                         ...prev,
-                                                        MaCanBo: userData?.id,
+                                                        MaCanBo: e.target.value,
                                                     }))
                                                 }
                                                 disabled
                                             />
                                         </td>
+                                        <td>
+                                            <span>Ngày Thanh Lý</span>
+                                            <input
+                                                className="input_row_value"
+                                                type="date"
+                                                value={newRow.NgayThanhLy || ""}
+                                                onChange={(e) => {
+                                                    setNewRow((prev) => ({
+                                                        ...prev,
+                                                        NgayThanhLy:
+                                                            e.target.value,
+                                                    }));
+                                                }}
+                                            />
+                                        </td>
+                                        <td>
+                                            <span>Thành Tiền</span>
+                                            <input
+                                                className="input_row_value"
+                                                type="number"
+                                                value={newRow.ThanhTien || ""}
+                                                onChange={(e) => {
+                                                    setNewRow((prev) => ({
+                                                        ...prev,
+                                                        ThanhTien:
+                                                            e.target.value,
+                                                    }));
+                                                }}
+                                            />
+                                        </td>
+
                                         <td
                                             id="table-function"
                                             style={{ display: "flex" }}
@@ -570,27 +585,34 @@ function KhoPage() {
                                                     <i className="bx bx-x"></i>
                                                 </button>
                                             </abbr>
-
                                         </td>
                                     </tr>
                                 )}
                                 {data.map((item, index) => (
-                                    <tr key={index} data-id={item.MaMua}>
-                                        {(editingRowId.MaMua === item.MaMua) ? (
+                                    <tr key={index} data-id={item.MaThanhLy}>
+                                        {editingRowId.MaThanhLy ===
+                                        item.MaThanhLy ? (
                                             <>
                                                 <td>
-                                                    <span>Mã Mua</span>
+                                                    <span>Mã Thanh Lý</span>
                                                     <input
                                                         className="input_row_value"
                                                         type="text"
-                                                        value={newEditRow.MaMua || ""}
-                                                        onChange={(e) =>
-                                                            setNewEditRow((prev) => ({
-                                                                ...prev,
-                                                                MaMua: e.target.value,
-                                                            }))
+                                                        value={
+                                                            newEditRow.MaThanhLy ||
+                                                            ""
                                                         }
-                                                        disabled // Không cho phép sửa mã cán bộ
+                                                        onChange={(e) =>
+                                                            setNewEditRow(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    MaThanhLy:
+                                                                        e.target
+                                                                            .value,
+                                                                })
+                                                            )
+                                                        }
+                                                        disabled
                                                     />
                                                 </td>
                                                 <td>
@@ -598,100 +620,19 @@ function KhoPage() {
                                                     <input
                                                         className="input_row_value"
                                                         type="text"
-                                                        value={newEditRow.TenThietBi || ""}
-                                                        onChange={(e) =>
-                                                            setNewEditRow((prev) => ({
-                                                                ...prev,
-                                                                TenThietBi: e.target.value,
-                                                            }))
+                                                        value={
+                                                            newEditRow.MaThietBi ||
+                                                            ""
                                                         }
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <span>Số Lượng</span>
-                                                    <input
-                                                        className="input_row_value"
-                                                        type="text"
-                                                        value={newEditRow.SoLuong || ""}
                                                         onChange={(e) =>
-                                                            setNewEditRow((prev) => ({
-                                                                ...prev,
-                                                                SoLuong: e.target.value,
-                                                            }))
-                                                        }
-                                                        disabled
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <span>Số Lượng Mua</span>
-                                                    <input
-                                                        className="input_row_value"
-                                                        type="text"
-                                                        value={newEditRow.SoLuongMua || ""}
-                                                        onChange={(e) =>
-                                                            setNewEditRow((prev) => ({
-                                                                ...prev,
-                                                                SoLuongMua: e.target.value,
-                                                            }))
-                                                        }
-                                                        disabled
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <span>Đơn Giá</span>
-                                                    <input
-                                                        className="input_row_value"
-                                                        type="text"
-                                                        value={newEditRow.GiaMua || ""}
-                                                        onChange={(e) =>
-                                                            setNewEditRow((prev) => ({
-                                                                ...prev,
-                                                                GiaMua: e.target.value,
-                                                            }))
-                                                        }
-                                                        disabled
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <span>Ngày Mua</span>
-                                                    <input
-                                                        className="input_row_value"
-                                                        type="date"
-                                                        value={newEditRow.NgayMua || ""}
-                                                        onChange={(e) =>
-                                                            setNewEditRow((prev) => ({
-                                                                ...prev,
-                                                                NgayMua: e.target.value,
-                                                            }))
-                                                        }
-                                                        disabled
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <span>Nhà Cung Cấp</span>
-                                                    <input
-                                                        className="input_row_value"
-                                                        type='text'
-                                                        value={newEditRow.NhaCungCap || ""}
-                                                        onChange={(e) =>
-                                                            setNewEditRow((prev) => ({
-                                                                ...prev,
-                                                                NhaCungCap: e.target.value,
-                                                            }))
-                                                        }
-                                                    />
-                                                </td>
-                                                <td>
-                                                    <span>Tổng Tiền</span>
-                                                    <input
-                                                        className="input_row_value"
-                                                        type="text"
-                                                        value={newEditRow.TongTien || ""}
-                                                        onChange={(e) =>
-                                                            setNewEditRow((prev) => ({
-                                                                ...prev,
-                                                                TongTien: e.target.value,
-                                                            }))
+                                                            setNewEditRow(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    MaThietBi:
+                                                                        e.target
+                                                                            .value,
+                                                                })
+                                                            )
                                                         }
                                                         disabled
                                                     />
@@ -701,29 +642,86 @@ function KhoPage() {
                                                     <input
                                                         className="input_row_value"
                                                         type="text"
-                                                        value={newEditRow.MaCanBo || ""}
+                                                        value={
+                                                            newEditRow.MaCanBo ||
+                                                            ""
+                                                        }
                                                         onChange={(e) =>
-                                                            setNewEditRow((prev) => ({
-                                                                ...prev,
-                                                                MaCanBo: e.target.value,
-                                                            }))
+                                                            setNewEditRow(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    MaCanBo:
+                                                                        e.target
+                                                                            .value,
+                                                                })
+                                                            )
                                                         }
                                                         disabled
                                                     />
                                                 </td>
+                                                <td>
+                                                    <span>Ngày Thanh Lý</span>
+                                                    <input
+                                                        className="input_row_value"
+                                                        type="text"
+                                                        value={
+                                                            newEditRow.NgayThanhLy ||
+                                                            ""
+                                                        }
+                                                        onChange={(e) =>
+                                                            setNewEditRow(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    NgayThanhLy:
+                                                                        e.target
+                                                                            .value,
+                                                                })
+                                                            )
+                                                        }
+                                                        disabled
+                                                    />
+                                                </td>
+                                                <td>
+                                                    <span>Thành Tiền</span>
+                                                    <input
+                                                        className="input_row_value"
+                                                        type="text"
+                                                        value={
+                                                            newEditRow.ThanhTien ||
+                                                            ""
+                                                        }
+                                                        onChange={(e) =>
+                                                            setNewEditRow(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    ThanhTien:
+                                                                        e.target
+                                                                            .value,
+                                                                })
+                                                            )
+                                                        }
+                                                        disabled
+                                                    />
+                                                </td>
+
                                                 <td
                                                     id="table-function"
                                                     style={{ display: "flex" }}
                                                 >
                                                     <abbr title="Save">
-                                                        <button id="btnSave" onClick={handleSave}>
+                                                        <button
+                                                            id="btnSave"
+                                                            onClick={handleSave}
+                                                        >
                                                             <i className="bx bxs-save"></i>
                                                         </button>
                                                     </abbr>
                                                     <abbr title="Cancel">
                                                         <button
                                                             id="btn_cancel"
-                                                            onClick={handleCancelSave}
+                                                            onClick={
+                                                                handleCancelSave
+                                                            }
                                                         >
                                                             <i className="bx bx-x"></i>
                                                         </button>
@@ -733,54 +731,56 @@ function KhoPage() {
                                         ) : (
                                             <>
                                                 <td className="textAlignStyle">
-                                                    <span>Mã Mua</span>
-                                                    {item.MaMua}
+                                                    <span>Mã Thanh Lý</span>
+                                                    {item.MaThanhLy}
                                                 </td>
                                                 <td>
                                                     <span>Tên Thiết Bị</span>
-                                                    {item.TenThietBi}
+                                                    {tempList1.find(
+                                                        (temp) =>
+                                                            temp.MaThietBi ===
+                                                            item.MaThietBi
+                                                    )?.TenThietBi ||
+                                                        "Không xác định"}
                                                 </td>
-                                                <td>
-                                                    <span>Số Lượng</span>
-                                                    {item.SoLuong}
-                                                </td>
-                                                <td className="textAlignStyle">
-                                                    <span>Số Lượng Mua</span>
-                                                    {item.SoLuongMua}
-                                                </td>
-                                                <td>
-                                                    <span>Đơn Giá</span>
-                                                    {`${Number(item.GiaMua).toLocaleString("vi-VN", { maximumFractionDigits: 0 })} đ`}
-                                                </td>
-                                                <td>
-                                                    <span>Ngày Mua</span>
-                                                    {new Date(item.NgayMua).toLocaleDateString("vi-VN")}
-                                                </td>
-                                                <td>
-                                                    <span>Nhà Cung Cấp</span>
-                                                    {item.NhaCungCap}
-                                                </td>
-                                                <td>
-                                                    <span>Tổng Tiền</span>
-                                                    {`${Number(item.TongTien).toLocaleString("vi-VN", { maximumFractionDigits: 0 })} đ`}
-                                                </td>
-
                                                 <td>
                                                     <span>Cán Bộ</span>
-                                                    {tempList.find(temp => temp.MaCanBo === item.MaCanBo)?.TenCanBo || "Không xác định"}
+                                                    {tempList.find(
+                                                        (temp) =>
+                                                            temp.MaCanBo ===
+                                                            item.MaCanBo
+                                                    )?.TenCanBo ||
+                                                        "Không xác định"}
                                                 </td>
+                                                <td className="textAlignStyle">
+                                                    <span>Ngày Thanh Lý</span>
+                                                    {new Date(
+                                                        item.NgayThanhLy
+                                                    ).toLocaleDateString(
+                                                        "vi-VN"
+                                                    )}
+                                                </td>
+                                                <td>
+                                                    <span>Thành Tiền</span>
+                                                    {`${Number(
+                                                        item.ThanhTien
+                                                    ).toLocaleString("vi-VN", {
+                                                        maximumFractionDigits: 0,
+                                                    })} đ`}
+                                                </td>
+
                                                 <td
                                                     id="table-function"
                                                     style={{ display: "flex" }}
                                                 >
-                                                    <abbr title="Edit">
+                                                    {/* <abbr title="Edit">
                                                         <button
                                                             id="btnEdit"
                                                             onClick={() => handleEdit(item)}
                                                         >
                                                             <i className="bx bx-edit"></i>
                                                         </button>
-                                                    </abbr>
+                                                    </abbr> */}
                                                     {/* <abbr title="Delete">
                                                         <button
                                                             id="btnDel"
@@ -803,4 +803,4 @@ function KhoPage() {
     );
 }
 
-export default KhoPage;
+export default ThanhLyPage;

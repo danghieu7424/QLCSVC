@@ -59,8 +59,9 @@ function Overview() {
     }, []);
 
     useEffect(() => {
-        const dataStatus = currentStatus.map(item => item.SL);
-        const labelsStatus = currentStatus.map(item => item.HienTrang);
+        const filteredStatus = currentStatus.filter(item => item.HienTrang !== "Thanh Lý");
+        const dataStatus = filteredStatus.map(item => item.SL);
+        const labelsStatus = filteredStatus.map(item => item.HienTrang);
 
         // Dữ liệu biểu đồ
         const data = {
@@ -74,12 +75,14 @@ function Overview() {
                         "rgba(255, 206, 86, 0.2)",
                         "rgba(255, 99, 132, 0.2)",
                         "rgba(54, 162, 235, 0.2)",
+                        "rgba(232, 54, 235, 0.2)",
                     ],
                     borderColor: [
                         "rgba(75, 192, 192, 1)",
                         "rgba(255, 206, 86, 1)",
                         "rgba(255, 99, 132, 1)",
                         "rgba(54, 162, 235, 1)",
+                        "rgba(232, 54, 235, 1)",
                     ],
                     borderWidth: 1,
                 },

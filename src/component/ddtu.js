@@ -350,7 +350,7 @@ function PhongDDTU() {
             </div>
             <div id="box_table">
                 <table id="content_table">
-                    <caption>Bảng Thông Tin Phòng Đ-ĐT</caption>
+                    <caption>Bảng Thông Tin Phòng Công Nghệ Kỹ Thuật Điện - Điện Tử</caption>
                     <thead>
                         <tr>
                             <th>Mã Phòng Xưởng</th>

@@ -6,6 +6,7 @@ function thietBi() {
     const [tempData, setTempTempData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [nganhList, setNganhList] = useState([]);
+    const [muaThietBiList, setMuaThietBiList] = useState([]);
     const [phongXuongList, setPhongXuongList] = useState([]);
     const [paramPage, setParamPage] = useState("");
 
@@ -26,13 +27,16 @@ function thietBi() {
         if (!window.confirm("Bạn có chắc chắn muốn xóa phòng này?")) return;
 
         try {
-            const response = await fetch("https://api-jwgltkza6q-uc.a.run.app/api/delete/thiet-bi", {
-                method: "DELETE",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ ID }),
-            });
+            const response = await fetch(
+                "https://api-jwgltkza6q-uc.a.run.app/api/delete/thiet-bi",
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ ID }),
+                }
+            );
 
             if (!response.ok) {
                 const error = await response.json();
@@ -48,7 +52,6 @@ function thietBi() {
         }
     };
 
-
     //API
 
     const location = useLocation();
@@ -56,7 +59,6 @@ function thietBi() {
         const params = new URLSearchParams(location.search);
         return params.get(param);
     };
-
 
     const updateTable = async () => {
         const p = getQueryParam("p");
@@ -106,8 +108,27 @@ function thietBi() {
             updateTable();
         } catch (error) {
             console.error("Error inserting data:", error);
-            alert(error)
+            alert(error);
         }
+    };
+
+    const updateMTB = () => {
+        fetch("https://api-jwgltkza6q-uc.a.run.app/api/select/mua-thiet-bi-all")
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then((jsonData) => {
+                console.log(jsonData);
+                setMuaThietBiList(jsonData); // Lưu dữ liệu vào state
+                setLoading(false); // Dừng trạng thái loading
+            })
+            .catch((error) => {
+                console.error("Error fetching data:", error);
+                setLoading(false);
+            });
     };
 
     const fetchAPI = async () => {
@@ -142,6 +163,7 @@ function thietBi() {
                 console.error("Error fetching data:", error);
                 setLoading(false);
             });
+        updateMTB();
     };
 
     useEffect(() => {
@@ -252,10 +274,11 @@ function thietBi() {
     const [newRow, setNewRow] = useState({
         TenThietBi: "",
         ViTri: "",
-        MaPhongXuong: ""
+        MaPhongXuong: "",
     });
 
     const handleAddRow = () => {
+        updateMTB();
         setIsAdding(true);
     };
 
@@ -277,15 +300,13 @@ function thietBi() {
             alert("Vui lòng điền đầy đủ các thông tin Tên thiết bi, Vị trí.");
             return;
         }
-        if (
-            !newRow.HienTrang
-        ) {
+        if (!newRow.HienTrang) {
             alert("Vui lòng Chọn hiện trạng.");
             return;
         }
         try {
             setIsAdding(false);
-            console.log(newRow)
+            console.log(newRow);
             await insertTable(newRow); // Gửi dữ liệu lên server
             setNewRow({}); // Reset dữ liệu mới
         } catch (error) {
@@ -293,12 +314,11 @@ function thietBi() {
         }
     };
 
-
     const handleCancelRow = () => {
         setNewRow({
             TenThietBi: "",
             ViTri: "",
-            MaPhongXuong: paramPage
+            MaPhongXuong: paramPage,
         }); // Reset dữ liệu mới
         setIsAdding(false); // Ẩn dòng nhập liệu
     };
@@ -314,13 +334,16 @@ function thietBi() {
 
     const handleSave = async () => {
         try {
-            const response = await fetch("https://api-jwgltkza6q-uc.a.run.app/api/update/thiet-bi", {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(newEditRow),
-            });
+            const response = await fetch(
+                "https://api-jwgltkza6q-uc.a.run.app/api/update/thiet-bi",
+                {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify(newEditRow),
+                }
+            );
 
             if (!response.ok) {
                 const error = await response.json();
@@ -342,23 +365,22 @@ function thietBi() {
     const handleCancelSave = () => {
         setEditingRowId([null]);
         setNewEditRow({});
-    }
+    };
 
     const getStateClass = (hienTrang) => {
         switch (hienTrang) {
-            case 'Đang sử dụng':
-                return 'state in_use';
-            case 'Sửa chữa':
-                return 'state repair';
-            case 'Lỗi':
-                return 'state error';
-            case 'Hỏng':
-                return 'state broken';
+            case "Đang sử dụng":
+                return "state in_use";
+            case "Sửa chữa":
+                return "state repair";
+            case "Lỗi":
+                return "state error";
+            case "Hỏng":
+                return "state broken";
             default:
-                return 'state';
+                return "state";
         }
     };
-
 
     return (
         <section id="section__introduce">
@@ -385,7 +407,9 @@ function thietBi() {
                 <div className="box_functions">
                     <ul>
                         <li id="add_info" onClick={handleAddRow}>
-                            <abbr title="Add"><i className="bx bxs-plus-square"></i></abbr>
+                            <abbr title="Add">
+                                <i className="bx bxs-plus-square"></i>
+                            </abbr>
                         </li>
                         {/* <li id="import_file">
                             <abbr title="Import"><i className="bx bxs-file-plus"></i></abbr>
@@ -395,7 +419,9 @@ function thietBi() {
             </div>
             <div id="box_table">
                 <table id="content_table">
-                    <caption>Bảng Thông Tin Thiết Bị Chi Tiết Phòng {paramPage}</caption>
+                    <caption>
+                        Bảng Thông Tin Thiết Bị Chi Tiết Phòng {paramPage}
+                    </caption>
                     <thead>
                         <tr>
                             {/* <th>Mã Thiết Bị</th> */}
@@ -420,7 +446,7 @@ function thietBi() {
                             <>
                                 {isAdding && (
                                     <tr>
-                                        <td>
+                                        {/* <td>
                                             <span>Mã Thiết Bị</span>
                                             <input
                                                 className="input_row_value"
@@ -434,21 +460,46 @@ function thietBi() {
                                                 }
                                                 disabled
                                             />
-                                        </td>
+                                        </td> */}
                                         <td>
                                             <span>Tên Thiết Bị</span>
-                                            <input
+                                            <select
                                                 className="input_row_value"
-                                                type="text"
-                                                value={newRow.TenThietBi}
-                                                onChange={(e) =>
+                                                value={newRow.MaMua || ""}
+                                                onChange={(e) => {
+                                                    const selectedMaMua =
+                                                        e.target.value;
+                                                    const selectedThietBi =
+                                                        muaThietBiList.find(
+                                                            (item) =>
+                                                                item.MaMua.toString() ===
+                                                                selectedMaMua
+                                                        );
+
                                                     setNewRow((prev) => ({
                                                         ...prev,
-                                                        TenThietBi: e.target.value,
-                                                    }))
-                                                }
-                                            />
+                                                        MaMua: selectedMaMua,
+                                                        TenThietBi:
+                                                            selectedThietBi
+                                                                ? selectedThietBi.TenThietBi
+                                                                : "",
+                                                    }));
+                                                }}
+                                            >
+                                                <option value="">
+                                                    Chọn thiết bị
+                                                </option>
+                                                {muaThietBiList.map((item) => (
+                                                    <option
+                                                        key={item.MaMua}
+                                                        value={item.MaMua}
+                                                    >
+                                                        {`${item.TenThietBi} - Còn ${item.SoLuong}`}
+                                                    </option>
+                                                ))}
+                                            </select>
                                         </td>
+
                                         <td>
                                             <span>Thông Số Kỹ Thuật</span>
                                             <input
@@ -458,7 +509,8 @@ function thietBi() {
                                                 onChange={(e) =>
                                                     setNewRow((prev) => ({
                                                         ...prev,
-                                                        ThongSoKyThuat: e.target.value,
+                                                        ThongSoKyThuat:
+                                                            e.target.value,
                                                     }))
                                                 }
                                             />
@@ -472,7 +524,8 @@ function thietBi() {
                                                 onChange={(e) =>
                                                     setNewRow((prev) => ({
                                                         ...prev,
-                                                        NamSanXuat: e.target.value,
+                                                        NamSanXuat:
+                                                            e.target.value,
                                                     }))
                                                 }
                                             />
@@ -486,7 +539,8 @@ function thietBi() {
                                                 onChange={(e) =>
                                                     setNewRow((prev) => ({
                                                         ...prev,
-                                                        DonViTinh: e.target.value,
+                                                        DonViTinh:
+                                                            e.target.value,
                                                     }))
                                                 }
                                             />
@@ -500,7 +554,8 @@ function thietBi() {
                                                 onChange={(e) =>
                                                     setNewRow((prev) => ({
                                                         ...prev,
-                                                        NuocSanXuat: e.target.value,
+                                                        NuocSanXuat:
+                                                            e.target.value,
                                                     }))
                                                 }
                                             />
@@ -513,15 +568,24 @@ function thietBi() {
                                                 onChange={(e) =>
                                                     setNewRow((prev) => ({
                                                         ...prev,
-                                                        HienTrang: e.target.value,
+                                                        HienTrang:
+                                                            e.target.value,
                                                     }))
                                                 }
                                             >
-                                                <option value="">Trạng thái</option>
-                                                <option value="Đang sử dụng">Đang sử dụng</option>
-                                                <option value="Sửa chữa">Sửa chữa</option>
+                                                <option value="">
+                                                    Trạng thái
+                                                </option>
+                                                <option value="Đang sử dụng">
+                                                    Đang sử dụng
+                                                </option>
+                                                <option value="Sửa chữa">
+                                                    Sửa chữa
+                                                </option>
                                                 <option value="Lỗi">Lỗi</option>
-                                                <option value="Hỏng">Hỏng</option>
+                                                <option value="Hỏng">
+                                                    Hỏng
+                                                </option>
                                             </select>
                                         </td>
                                         <td>
@@ -593,13 +657,13 @@ function thietBi() {
                                                     <i className="bx bx-x"></i>
                                                 </button>
                                             </abbr>
-
                                         </td>
                                     </tr>
                                 )}
                                 {data.map((item, index) => (
                                     <tr key={index} data-id={item.MaThietBi}>
-                                        {(editingRowId.MaThietBi === item.MaThietBi) ? (
+                                        {editingRowId.MaThietBi ===
+                                        item.MaThietBi ? (
                                             <>
                                                 {/* <td>
                                                     <span>Mã Thiết Bị</span>
@@ -621,26 +685,42 @@ function thietBi() {
                                                     <input
                                                         className="input_row_value"
                                                         type="text"
-                                                        value={newEditRow.TenThietBi || ""}
+                                                        value={
+                                                            newEditRow.TenThietBi ||
+                                                            ""
+                                                        }
                                                         onChange={(e) =>
-                                                            setNewEditRow((prev) => ({
-                                                                ...prev,
-                                                                TenThietBi: e.target.value,
-                                                            }))
+                                                            setNewEditRow(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    TenThietBi:
+                                                                        e.target
+                                                                            .value,
+                                                                })
+                                                            )
                                                         }
                                                     />
                                                 </td>
                                                 <td>
-                                                    <span>Thông Số Kỹ Thuật</span>
+                                                    <span>
+                                                        Thông Số Kỹ Thuật
+                                                    </span>
                                                     <input
                                                         className="input_row_value"
                                                         type="text"
-                                                        value={newEditRow.ThongSoKyThuat || ""}
+                                                        value={
+                                                            newEditRow.ThongSoKyThuat ||
+                                                            ""
+                                                        }
                                                         onChange={(e) =>
-                                                            setNewEditRow((prev) => ({
-                                                                ...prev,
-                                                                ThongSoKyThuat: e.target.value,
-                                                            }))
+                                                            setNewEditRow(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    ThongSoKyThuat:
+                                                                        e.target
+                                                                            .value,
+                                                                })
+                                                            )
                                                         }
                                                     />
                                                 </td>
@@ -649,12 +729,19 @@ function thietBi() {
                                                     <input
                                                         className="input_row_value"
                                                         type="text"
-                                                        value={newEditRow.NamSanXuat || ""}
+                                                        value={
+                                                            newEditRow.NamSanXuat ||
+                                                            ""
+                                                        }
                                                         onChange={(e) =>
-                                                            setNewEditRow((prev) => ({
-                                                                ...prev,
-                                                                NamSanXuat: e.target.value,
-                                                            }))
+                                                            setNewEditRow(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    NamSanXuat:
+                                                                        e.target
+                                                                            .value,
+                                                                })
+                                                            )
                                                         }
                                                     />
                                                 </td>
@@ -663,12 +750,19 @@ function thietBi() {
                                                     <input
                                                         className="input_row_value"
                                                         type="text"
-                                                        value={newEditRow.DonViTinh || ""}
+                                                        value={
+                                                            newEditRow.DonViTinh ||
+                                                            ""
+                                                        }
                                                         onChange={(e) =>
-                                                            setNewEditRow((prev) => ({
-                                                                ...prev,
-                                                                DonViTinh: e.target.value,
-                                                            }))
+                                                            setNewEditRow(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    DonViTinh:
+                                                                        e.target
+                                                                            .value,
+                                                                })
+                                                            )
                                                         }
                                                     />
                                                 </td>
@@ -677,12 +771,19 @@ function thietBi() {
                                                     <input
                                                         className="input_row_value"
                                                         type="text"
-                                                        value={newEditRow.NuocSanXuat || ""}
+                                                        value={
+                                                            newEditRow.NuocSanXuat ||
+                                                            ""
+                                                        }
                                                         onChange={(e) =>
-                                                            setNewEditRow((prev) => ({
-                                                                ...prev,
-                                                                NuocSanXuat: e.target.value,
-                                                            }))
+                                                            setNewEditRow(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    NuocSanXuat:
+                                                                        e.target
+                                                                            .value,
+                                                                })
+                                                            )
                                                         }
                                                     />
                                                 </td>
@@ -690,18 +791,33 @@ function thietBi() {
                                                     <span>Hiện Trạng</span>
                                                     <select
                                                         className="input_row_value"
-                                                        value={newEditRow.HienTrang || ""}
+                                                        value={
+                                                            newEditRow.HienTrang ||
+                                                            ""
+                                                        }
                                                         onChange={(e) =>
-                                                            setNewEditRow((prev) => ({
-                                                                ...prev,
-                                                                HienTrang: e.target.value,
-                                                            }))
+                                                            setNewEditRow(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    HienTrang:
+                                                                        e.target
+                                                                            .value,
+                                                                })
+                                                            )
                                                         }
                                                     >
-                                                        <option value="Đang sử dụng">Đang sử dụng</option>
-                                                        <option value="Sửa chữa">Sửa chữa</option>
-                                                        <option value="Lỗi">Lỗi</option>
-                                                        <option value="Hỏng">Hỏng</option>
+                                                        <option value="Đang sử dụng">
+                                                            Đang sử dụng
+                                                        </option>
+                                                        <option value="Sửa chữa">
+                                                            Sửa chữa
+                                                        </option>
+                                                        <option value="Lỗi">
+                                                            Lỗi
+                                                        </option>
+                                                        <option value="Hỏng">
+                                                            Hỏng
+                                                        </option>
                                                     </select>
                                                 </td>
                                                 <td>
@@ -709,12 +825,19 @@ function thietBi() {
                                                     <input
                                                         className="input_row_value"
                                                         type="text"
-                                                        value={newEditRow.GhiChu || ""}
+                                                        value={
+                                                            newEditRow.GhiChu ||
+                                                            ""
+                                                        }
                                                         onChange={(e) =>
-                                                            setNewEditRow((prev) => ({
-                                                                ...prev,
-                                                                GhiChu: e.target.value,
-                                                            }))
+                                                            setNewEditRow(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    GhiChu: e
+                                                                        .target
+                                                                        .value,
+                                                                })
+                                                            )
                                                         }
                                                     />
                                                 </td>
@@ -723,12 +846,19 @@ function thietBi() {
                                                     <input
                                                         className="input_row_value"
                                                         type="text"
-                                                        value={newEditRow.ViTri || ""}
+                                                        value={
+                                                            newEditRow.ViTri ||
+                                                            ""
+                                                        }
                                                         onChange={(e) =>
-                                                            setNewEditRow((prev) => ({
-                                                                ...prev,
-                                                                ViTri: e.target.value,
-                                                            }))
+                                                            setNewEditRow(
+                                                                (prev) => ({
+                                                                    ...prev,
+                                                                    ViTri: e
+                                                                        .target
+                                                                        .value,
+                                                                })
+                                                            )
                                                         }
                                                     />
                                                 </td>
@@ -758,14 +888,19 @@ function thietBi() {
                                                     style={{ display: "flex" }}
                                                 >
                                                     <abbr title="Save">
-                                                        <button id="btnSave" onClick={handleSave}>
+                                                        <button
+                                                            id="btnSave"
+                                                            onClick={handleSave}
+                                                        >
                                                             <i className="bx bxs-save"></i>
                                                         </button>
                                                     </abbr>
                                                     <abbr title="Cancel">
                                                         <button
                                                             id="btn_cancel"
-                                                            onClick={handleCancelSave}
+                                                            onClick={
+                                                                handleCancelSave
+                                                            }
                                                         >
                                                             <i className="bx bx-x"></i>
                                                         </button>
@@ -783,7 +918,9 @@ function thietBi() {
                                                     {item.TenThietBi}
                                                 </td>
                                                 <td>
-                                                    <span>Thông Số Kỹ Thuật</span>
+                                                    <span>
+                                                        Thông Số Kỹ Thuật
+                                                    </span>
                                                     {item.ThongSoKyThuat}
                                                 </td>
                                                 <td className="textAlignStyle">
@@ -800,7 +937,13 @@ function thietBi() {
                                                 </td>
                                                 <td>
                                                     <span>Hiện Trạng</span>
-                                                    <div className={getStateClass(item.HienTrang)}>{item.HienTrang}</div>
+                                                    <div
+                                                        className={getStateClass(
+                                                            item.HienTrang
+                                                        )}
+                                                    >
+                                                        {item.HienTrang}
+                                                    </div>
                                                 </td>
                                                 <td>
                                                     <span>Ghi Chú</span>
@@ -822,19 +965,25 @@ function thietBi() {
                                                     <abbr title="Edit">
                                                         <button
                                                             id="btnEdit"
-                                                            onClick={() => handleEdit(item)}
+                                                            onClick={() =>
+                                                                handleEdit(item)
+                                                            }
                                                         >
                                                             <i className="bx bx-edit"></i>
                                                         </button>
                                                     </abbr>
-                                                    <abbr title="Delete">
+                                                    {/* <abbr title="Delete">
                                                         <button
                                                             id="btnDel"
-                                                            onClick={() => handleDelete(item.MaThietBi)}
+                                                            onClick={() =>
+                                                                handleDelete(
+                                                                    item.MaThietBi
+                                                                )
+                                                            }
                                                         >
                                                             <i className="bx bxs-x-square"></i>
                                                         </button>
-                                                    </abbr>
+                                                    </abbr> */}
                                                 </td>
                                             </>
                                         )}

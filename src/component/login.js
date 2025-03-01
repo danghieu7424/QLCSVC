@@ -39,7 +39,10 @@ function LoginPage() {
                     storage.setItem("token", data.token);
                     login({ id: data.username, role: data.role });
 
-                    history.push("/");
+                    setTimeout(() => {
+                        history.push("/");
+                        window.location.reload();
+                    }, 1000);
                 }
             } else {
                 alert(data.error);
@@ -95,7 +98,7 @@ function LoginPage() {
                                 checked={rememberMe}
                                 onChange={(e) => setRememberMe(e.target.checked)}
                             />
-                            <label htmlFor="remember">Nhớ tài khoản trong 7 ngày</label>
+                            <label htmlFor="remember">Nhớ tôi</label>
                         </div>
 
                         <button type="submit" className="login-button">Login</button>
@@ -129,7 +132,10 @@ function VerifyOTPPage({ location }) {
                 storage.setItem("token", data.token);
                 login(data.user);
                 console.log(data)
-                history.push("/");
+                setTimeout(() => {
+                    history.push("/");
+                    window.location.reload()
+                }, 1000);
             } else {
                 const data = await response.json();
                 alert(data.message);
@@ -218,7 +224,10 @@ function ChangePasswordPage() {
             if (response.ok) {
                 const data = await response.json();
                 alert(data.message);
-                history.push("/");
+                setTimeout(() => {
+                    history.push("/");
+                    window.location.reload()
+                }, 1000);
             } else {
                 const data = await response.json();
                 alert(data.message);

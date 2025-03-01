@@ -7,7 +7,7 @@ export function useAuth() {
 }
 
 export function AuthProvider({ children }) {
-    const [userData, setUserData] = useState(null);
+    const [userData, setUserData] = useState();
 
     const login = (user) => {
         setUserData(user);
@@ -15,6 +15,8 @@ export function AuthProvider({ children }) {
 
     const logout = () => {
         setUserData(null);
+        localStorage.removeItem("token");
+        sessionStorage.removeItem("token");
     };
 
     return (
