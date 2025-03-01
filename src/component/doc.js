@@ -59,7 +59,7 @@ const TextEditor = ({ location }) => {
         .then(request => request.json())
         .then(data => {
           alert(data.message)
-          if (TenVanBan === 'Tờ Trình') {
+          if (TenVanBan === 'Tờ Trình' || TenVanBan === 'Báo Cáo') {
             history.push('/MuaThietBi/VanBan');
           }
           else {
@@ -81,7 +81,7 @@ const TextEditor = ({ location }) => {
         .then(request => request.json())
         .then(data => {
           alert(data.message);
-          if (TenVanBan === 'Tờ Trình'  || TenVanBan === 'Báo Cáo') {
+          if (TenVanBan === 'Tờ Trình' || TenVanBan === 'Báo Cáo') {
             history.push('/MuaThietBi/VanBan');
           }
           else {
