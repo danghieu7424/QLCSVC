@@ -11,6 +11,18 @@ function MuaThietBiPage() {
     const [devices, setDevices] = useState([]);
     const [loaiVanBan, setLoaiVanBan] = useState('');
     const [newDevice, setNewDevice] = useState({ name: "", quantity: "", price: "" });
+    const [canBo, setCanBo] = useState([]);
+
+    useEffect(() => {
+        fetch('https://api-jwgltkza6q-uc.a.run.app/api/select/can-bo')
+            .then(req => req.json())
+            .then(data => {
+                setCanBo(data[0]);
+            })
+            .catch(err => {
+                console.log(err);
+            });
+    }, [canBo]);
 
     const formatCurrency = (value) => {
         return value.replace(/\D/g, "") // Loại bỏ ký tự không phải số
@@ -266,7 +278,7 @@ function MuaThietBiPage() {
     }
 
     const handleDone = () => {
-        if(!loaiVanBan) {
+        if (!loaiVanBan) {
             alert('Vui lòng chọn lại văn bản.');
             return;
         }
@@ -339,6 +351,11 @@ function MuaThietBiPage() {
         }
     };
 
+    const getTenCanBo = (maCanBo) => {
+        const canBoFind = canBo.find(cb => cb.MaCanBo === maCanBo);
+        return canBoFind ? canBoFind.TenCanBo : "Không tìm thấy";
+    };
+
 
     return (
         <div className="container_muaTB">
@@ -377,8 +394,9 @@ function MuaThietBiPage() {
                     <caption>Bảng danh sách Văn Bản</caption>
                     <thead>
                         <tr style={{ textAlign: 'center' }}>
-                            <th>Số Văn Bản</th>
-                            <th>Tên Văn Bản</th>
+                            <th>STT</th>
+                            <th>Loại Văn Bản</th>
+                            <th>Người Tạo</th>
                             <th>Ngày Tạo</th>
                             <th>Trạng Thái</th>
                             <th>Chức Năng</th>
@@ -391,15 +409,19 @@ function MuaThietBiPage() {
                                 .map((item, index) => (
                                     <tr key={index}>
                                         <td style={{ textAlign: 'center' }}>
-                                            <span>Số Văn Bản</span>
+                                            <span>STT</span>
                                             {item.SoVanBan}
                                         </td>
                                         <td style={{ textAlign: 'center' }}>
-                                            <span>Tên Văn Bản</span>
+                                            <span>Loại Văn Bản</span>
                                             {item.TenVanBan}
                                         </td>
                                         <td style={{ textAlign: 'center' }}>
-                                            <span>Tên Văn Bản</span>
+                                            <span>Người Tạo</span>
+                                            {getTenCanBo(item.MaCanBo)}
+                                        </td>
+                                        <td style={{ textAlign: 'center' }}>
+                                            <span>Ngày Tạo</span>
                                             {new Date(item.NgayTao).toLocaleDateString("vi-VN")}
                                         </td>
                                         <td style={{ textAlign: 'center' }}>
@@ -426,7 +448,7 @@ function MuaThietBiPage() {
                                 ))
                         ) : (
                             <tr>
-                                <td colSpan="4" style={{ textAlign: "center" }}>Không có dữ liệu</td>
+                                <td colSpan="6" style={{ textAlign: "center" }}>Không có dữ liệu</td>
                             </tr>
                         )}
                     </tbody>
