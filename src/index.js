@@ -16,6 +16,7 @@ import ThanhLyThietBiPage from './component/thanhLyThietBi.js';
 import TextEditor from './component/doc.js';
 import KhoPage from './component/khoPage.js';
 import ThanhLyPage from './component/thanhLyPage.js';
+import Info from './component/info.js';
 
 import { AuthProvider } from './component/authContext.js';
 
@@ -94,6 +95,7 @@ function App() {
                     <Route exact path="/ThanhLyThietBi/VanBan" component={ThanhLyThietBiPage} />
                     <Route exact path="/ThanhLyThietBi/ThongKe" component={ThanhLyPage} />
                     <Route exact path="/doc" component={TextEditor} />
+                    <Route exact path="/info" component={Info} />
                 </Switch>
             </>
         );

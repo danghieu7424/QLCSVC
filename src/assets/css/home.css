@@ -466,6 +466,7 @@ header .box__header__login ul a:hover {
     overflow: hidden;
     border: 1px solid var(--color-black-pure-alpha-10);
     box-shadow: 0 0 8px 3px var(--color-black-pure-alpha-15);
+    cursor: pointer;
 }
 
 .info_user .box_img img {

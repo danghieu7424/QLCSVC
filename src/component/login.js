@@ -1,44 +1,76 @@
 import React, { useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
-import { useAuth } from './authContext.js';
+import { useAuth } from "./authContext.js";
 
-import "../assets/css/login.css"
+import "../assets/css/login.css";
 import tbu1 from "../assets/img/tbu1.png";
 import tbu2 from "../assets/img/tbu2.jpg";
+
+function Loader() {
+    return (
+        <div className="showbox">
+            <div className="loader">
+                <svg className="circular" viewBox="25 25 50 50">
+                    <circle
+                        className="path"
+                        cx="50"
+                        cy="50"
+                        r="20"
+                        fill="none"
+                        strokeWidth="2"
+                        strokeMiterlimit="10"
+                    />
+                </svg>
+            </div>
+        </div>
+    );
+}
 
 function LoginPage() {
     const { login } = useAuth();
     const history = useHistory();
 
+    const [loading, setLoading] = useState(false);
 
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [rememberMe, setRememberMe] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
 
-
     const loginRequest = async (username, password, rememberMe) => {
         try {
-            const response = await fetch("https://api-jwgltkza6q-uc.a.run.app/login", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ username, password: password.toString(), rememberMe }),
-            });
+            const response = await fetch(
+                "https://api-jwgltkza6q-uc.a.run.app/login",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        username,
+                        password: password.toString(),
+                        rememberMe,
+                    }),
+                }
+            );
 
             const data = await response.json();
 
             if (response.ok) {
                 if (data.otpRequired) {
+                    setLoading(true);
                     // Nếu cần OTP, chuyển hướng sang trang nhập OTP
-                    history.push("/verify-otp", { username: data.username, rememberMe });
+                    history.push("/verify-otp", {
+                        username: data.username,
+                        rememberMe,
+                    });
                 } else {
+                    setLoading(true);
                     // Nếu không cần OTP, lưu token và đăng nhập ngay
                     const storage = rememberMe ? localStorage : sessionStorage;
                     storage.setItem("token", data.token);
                     login({ id: data.username, role: data.role });
-
+                    
                     setTimeout(() => {
                         history.push("/");
                         window.location.reload();
@@ -58,15 +90,29 @@ function LoginPage() {
     };
 
     return (
-        <div className="container-login" style={{ backgroundImage: `url(${tbu2})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div
+            className="container-login"
+            style={{
+                backgroundImage: `url(${tbu2})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+            }}
+        >
+            {loading && (
+                <Loader />
+            )}
             <div className="box-login">
                 <div className="login-section">
-                    <img className="logo" src={tbu1} alt="Thái Bình University" />
+                    <img
+                        className="logo"
+                        src={tbu1}
+                        alt="Thái Bình University"
+                    />
                     <h1>Welcome back!</h1>
                     <p>Mời các thầy cô đăng nhập.</p>
                     <form onSubmit={handleSubmit}>
                         <div className="box-input">
-                            <i className='icon-left bx bx-user' ></i>
+                            <i className="icon-left bx bx-user"></i>
                             <input
                                 type="mcb"
                                 placeholder="Mã Cán Bộ"
@@ -76,7 +122,7 @@ function LoginPage() {
                             />
                         </div>
                         <div className="box-input">
-                            <i className='icon-left bx bx-key' ></i>
+                            <i className="icon-left bx bx-key"></i>
                             <input
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Mật Khẩu"
@@ -85,7 +131,9 @@ function LoginPage() {
                                 onChange={(e) => setPassword(e.target.value)}
                             />
                             <i
-                                className={`icon-right bx ${showPassword ? "bx-hide" : "bx-show"}`}
+                                className={`icon-right bx ${
+                                    showPassword ? "bx-hide" : "bx-show"
+                                }`}
                                 onClick={() => setShowPassword(!showPassword)}
                                 style={{ cursor: "pointer" }}
                             ></i>
@@ -96,12 +144,16 @@ function LoginPage() {
                                 type="checkbox"
                                 id="remember"
                                 checked={rememberMe}
-                                onChange={(e) => setRememberMe(e.target.checked)}
+                                onChange={(e) =>
+                                    setRememberMe(e.target.checked)
+                                }
                             />
                             <label htmlFor="remember">Nhớ tôi</label>
                         </div>
 
-                        <button type="submit" className="login-button">Login</button>
+                        <button type="submit" className="login-button">
+                            Login
+                        </button>
                     </form>
                 </div>
                 <div className="image-section"></div>
@@ -111,6 +163,7 @@ function LoginPage() {
 }
 
 function VerifyOTPPage({ location }) {
+    const [loading, setLoading] = useState(false);
     const history = useHistory();
     const { login } = useAuth();
     const { username, rememberMe } = location.state || {}; // Lấy email từ props
@@ -118,23 +171,26 @@ function VerifyOTPPage({ location }) {
 
     const verifyOTP = async () => {
         try {
-            const response = await fetch("https://api-jwgltkza6q-uc.a.run.app/api/otp/verify-otp", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ username, otp }),
-            });
+            const response = await fetch(
+                "https://api-jwgltkza6q-uc.a.run.app/api/otp/verify-otp",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ username, otp }),
+                }
+            );
 
             if (response.ok) {
                 const data = await response.json();
                 const storage = rememberMe ? localStorage : sessionStorage;
                 storage.setItem("token", data.token);
                 login(data.user);
-                console.log(data)
+                console.log(data);
                 setTimeout(() => {
                     history.push("/");
-                    window.location.reload()
+                    window.location.reload();
                 }, 1000);
             } else {
                 const data = await response.json();
@@ -151,10 +207,24 @@ function VerifyOTPPage({ location }) {
     };
 
     return (
-        <div className="container-login" style={{ backgroundImage: `url(${tbu2})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div
+            className="container-login"
+            style={{
+                backgroundImage: `url(${tbu2})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+            }}
+        >
+            {loading && (
+                <Loader />
+            )}
             <div className="box-login">
                 <div className="login-section">
-                    <img className="logo" src={tbu1} alt="Thái Bình University" />
+                    <img
+                        className="logo"
+                        src={tbu1}
+                        alt="Thái Bình University"
+                    />
                     <h1>Nhập Mã OTP</h1>
                     <p>Vui lòng nhập mã OTP đã được gửi đến email của bạn.</p>
                     <form onSubmit={handleSubmit}>
@@ -165,7 +235,9 @@ function VerifyOTPPage({ location }) {
                             onChange={(e) => setOtp(e.target.value)}
                             value={otp}
                         />
-                        <button type="submit" className="login-button">Xác Nhận OTP</button>
+                        <button type="submit" className="login-button">
+                            Xác Nhận OTP
+                        </button>
                     </form>
                 </div>
                 <div className="image-section"></div>
@@ -185,17 +257,18 @@ function ChangePasswordPage() {
     const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
 
     useEffect(() => {
-        const token = localStorage.getItem("token") || sessionStorage.getItem("token");
+        const token =
+            localStorage.getItem("token") || sessionStorage.getItem("token");
         if (token && !userData) {
             fetch("https://api-jwgltkza6q-uc.a.run.app/protected-route", {
                 method: "GET",
                 headers: { Authorization: token },
             })
-                .then(res => res.ok ? res.json() : null)
-                .then(data => {
+                .then((res) => (res.ok ? res.json() : null))
+                .then((data) => {
                     if (data) login(data.user); // Cập nhật userData
                 })
-                .catch(error => {
+                .catch((error) => {
                     console.error("Error during token verification: ", error);
                     localStorage.removeItem("token");
                     sessionStorage.removeItem("token");
@@ -213,20 +286,27 @@ function ChangePasswordPage() {
             return;
         }
         try {
-            const response = await fetch("https://api-jwgltkza6q-uc.a.run.app/change-password", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ username: userData.id, oldPassword, newPassword }),
-            });
+            const response = await fetch(
+                "https://api-jwgltkza6q-uc.a.run.app/change-password",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        username: userData.id,
+                        oldPassword,
+                        newPassword,
+                    }),
+                }
+            );
 
             if (response.ok) {
                 const data = await response.json();
                 alert(data.message);
                 setTimeout(() => {
                     history.push("/");
-                    window.location.reload()
+                    window.location.reload();
                 }, 1000);
             } else {
                 const data = await response.json();
@@ -243,10 +323,21 @@ function ChangePasswordPage() {
     };
 
     return (
-        <div className="container-login" style={{ backgroundImage: `url(${tbu2})`, backgroundSize: 'cover', backgroundPosition: 'center' }}>
+        <div
+            className="container-login"
+            style={{
+                backgroundImage: `url(${tbu2})`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+            }}
+        >
             <div className="box-login">
                 <div className="login-section">
-                    <img className="logo" src={tbu1} alt="Thái Bình University" />
+                    <img
+                        className="logo"
+                        src={tbu1}
+                        alt="Thái Bình University"
+                    />
                     <h1>Đổi mật khẩu</h1>
                     <p>Vui lòng nhập mật khẩu mới.</p>
                     <form onSubmit={handleSubmit}>
@@ -259,8 +350,12 @@ function ChangePasswordPage() {
                                 value={oldPassword}
                             />
                             <i
-                                className={`icon-right bx ${showOldPassword ? "bx-hide" : "bx-show"}`}
-                                onClick={() => setShowOldPassword(!showOldPassword)}
+                                className={`icon-right bx ${
+                                    showOldPassword ? "bx-hide" : "bx-show"
+                                }`}
+                                onClick={() =>
+                                    setShowOldPassword(!showOldPassword)
+                                }
                                 style={{ cursor: "pointer" }}
                             ></i>
                         </div>
@@ -271,34 +366,52 @@ function ChangePasswordPage() {
                                 required
                                 onChange={(e) => setNewPassword(e.target.value)}
                                 value={newPassword}
-                            />    
+                            />
                             <i
-                                className={`icon-right bx ${showNewPassword ? "bx-hide" : "bx-show"}`}
-                                onClick={() => setShowNewPassword(!showNewPassword)}
+                                className={`icon-right bx ${
+                                    showNewPassword ? "bx-hide" : "bx-show"
+                                }`}
+                                onClick={() =>
+                                    setShowNewPassword(!showNewPassword)
+                                }
                                 style={{ cursor: "pointer" }}
                             ></i>
                         </div>
                         <div className="box-input">
                             <input
-                                type={showConfirmNewPassword ? "text" : "password"}
+                                type={
+                                    showConfirmNewPassword ? "text" : "password"
+                                }
                                 placeholder="Nhập lại mật khẩu"
                                 required
-                                onChange={(e) => setConfirmNewPassword(e.target.value)}
+                                onChange={(e) =>
+                                    setConfirmNewPassword(e.target.value)
+                                }
                                 value={confirmNewPassword}
-                            />    
+                            />
                             <i
-                                className={`icon-right bx ${showConfirmNewPassword ? "bx-hide" : "bx-show"}`}
-                                onClick={() => setShowConfirmNewPassword(!showConfirmNewPassword)}
+                                className={`icon-right bx ${
+                                    showConfirmNewPassword
+                                        ? "bx-hide"
+                                        : "bx-show"
+                                }`}
+                                onClick={() =>
+                                    setShowConfirmNewPassword(
+                                        !showConfirmNewPassword
+                                    )
+                                }
                                 style={{ cursor: "pointer" }}
                             ></i>
                         </div>
-                        <button type="submit" className="login-button">Đổi mật khẩu</button>
+                        <button type="submit" className="login-button">
+                            Đổi mật khẩu
+                        </button>
                     </form>
                 </div>
                 <div className="image-section"></div>
             </div>
         </div>
-    )
+    );
 }
 
 export { LoginPage, VerifyOTPPage, ChangePasswordPage };
