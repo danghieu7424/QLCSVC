@@ -1,0 +1,163 @@
+.container-login {
+    position: relative;
+    inset: 0;
+    width: 100%;
+    height: 100dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.box-login {
+    position: relative;
+    min-width: 300px;
+    width: 90%;
+    max-width: 480px;
+    height: 70%;
+    padding: 2rem;
+    border: 1px solid var(--color-black-pure-alpha-10);
+    border-radius: 6px;
+    backdrop-filter: blur(10px);
+    filter: 2px 2px 2px var(--color-black-pure-alpha-60);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-section {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.login-section h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    /* color: var(--color-yellow); */
+}
+
+.login-section p {
+    margin-bottom: 20px;
+    /* color: var(--color-yellow); */
+}
+
+.login-section form {
+    position: relative;
+    width: 100%;
+}
+
+.login-section .box-input {
+    position: relative;
+    width: 100%;
+}
+.login-section .box-input .icon-left {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 10px;
+    font-size: 1rem;
+}
+
+.login-section .box-input .icon-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: all .1s ease-in-out;
+}
+
+.login-section input[type="mcb"],
+.login-section input[type="password"],
+.login-section input[type="text"],
+.login-section input[type="otp"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.login-section input.mcb-input {
+    padding: 10px 10px 10px calc(20px + 1rem);
+}
+
+.login-section input.password-input {
+    padding: 10px calc(20px + 1rem) 10px calc(20px + 1rem);
+}
+
+.login-section input[type="checkbox"] {
+    margin-right: 10px;
+}
+
+.login-section .login-button {
+    background-color: #00aaff;
+    margin-top: 1rem;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+}
+
+.login-section .login-button:hover {
+    background-color: #0088cc;
+}
+
+.login-section .login-button:active {
+    background-color: #005fa6;
+}
+
+.limg {
+    width: 600px;
+    height: 500px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.logo {
+    width: 100px;
+    margin-bottom: 20px;
+}
+
+.sign_out {
+    position: relative;
+    width: 100%;
+    padding: 10px 0;
+    border-top: 1px solid var(--color-black-pure-alpha-30);
+}
+
+.sign_out button {
+    position: relative;
+    width: 100%;
+    padding: 1rem;
+    font-size: 1rem;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all .1s linear;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: row;
+    gap: .5rem;
+    white-space: none;
+}
+.sign_out button i {
+    position: relative;
+    font-size: 1.2rem;
+}
+
+.sign_out button:hover {
+    background-color: #FEFEFEBB;
+}
+

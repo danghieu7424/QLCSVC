@@ -1,0 +1,96 @@
+.box_info_container {
+    position: relative;
+    top: 4rem;
+    left: 0;
+    width: 100%;
+    height: calc(100dvh - 4rem);
+    padding: .625rem;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: .625rem;
+}
+
+.box_info_container .box_info {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    gap: .625rem;
+}
+
+.box_info_container .box_info-center {
+    position: relative;
+    flex: 0 0 1;
+    margin-top: 1rem;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.box_info_container .box_info-center button {
+    position: relative;
+    width: 4rem;
+    padding: .625rem;
+    border-radius: .375rem;
+    border: 1px solid;
+    background: #3ea6ff1F;
+    color: var(--color-light-blue);
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.box_info_container .box_info .box_info-left {
+    position: relative;
+    flex: 0 0 20%;
+}
+.box_info_container .box_info input {
+    position: relative;
+    flex: 0 0 calc(80% - .625rem);
+    height: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid;
+}
+
+.input_check {
+    width: 100%;
+}
+
+.input_check .switch {
+    position: relative;
+    padding: 0 1rem;
+    border-radius: .5rem;
+    border: 1px solid var(--color-black-pure-alpha-15);
+    background: var(--color-white-4);
+    transition: all .1s ease-in;
+}
+
+.input_check .switch::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    margin: .125rem;
+    width: .75rem;
+    height: .75rem;
+    aspect-ratio: 1/1;
+    border: 1px solid var(--color-black-pure-alpha-15);
+    border-radius: 50%;
+    transition: all .1s ease-in-out;
+}
+
+.input_check input:checked + .switch {
+    border: 1px solid var(--color-black-pure-alpha-15);
+    background: var(--color-yellow);
+}
+
+.input_check input:checked + .switch::before {
+    top: 0;
+    left: calc(100% - .75rem - (.125rem * 2) - 1px);
+    background: var(--color-light-green);
+}
