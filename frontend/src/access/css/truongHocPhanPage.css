@@ -1,0 +1,154 @@
+.thp-container {
+    position: relative;
+    top: 4rem;
+    width: 100%;
+    min-height: calc(100dvh - 4rem);
+    padding: 0.625rem;
+    font-family: inter;
+}
+
+#box_tools_container {
+    position: relative;
+    width: 100%;
+    height: 4rem;
+    padding: .625rem;
+    border-radius: .1875rem;
+    background: var(--bg-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 0 6px 2px #3333;
+}
+
+#box_tools_container .box_tools button {
+    position: relative;
+    aspect-ratio: 1/1;
+    padding: .1875rem;
+    text-align: center;
+    border-radius: .375rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    outline: none;
+}
+
+/* -------btn add------- */
+#box_tools_container .box_tools button.btnAdd {
+    border: 1px solid var(--primary);
+    background: var(--blue-alpha-20);
+}
+
+#box_tools_container .box_tools button.btnAdd svg {
+    fill:var(--primary);
+}
+
+#box_tools_container .box_tools button.btnAdd:hover {
+    border: 1px solid var(--hover-primary);
+}
+
+#box_tools_container .box_tools button.btnAdd:hover svg {
+    fill: var(--hover-primary);
+}
+
+/* -------btn Del------- */
+#box_tools_container .box_tools button.btnDel {
+    border: 1px solid var(--warning);
+    background: var(--yellow-alpha-20);
+}
+
+#box_tools_container .box_tools button.btnDel svg {
+    fill:var(--warning);
+}
+
+#box_tools_container .box_tools button.btnDel:hover {
+    border: 1px solid var(--orange);
+}
+
+#box_tools_container .box_tools button.btnDel:hover svg {
+    fill: var(--orange);
+}
+
+
+/* -------btn ok------- */
+#box_tools_container .box_tools .box_tools-style button.btnOK {
+    border: 1px solid var(--success);
+    background: var(--green-alpha-20);
+}
+
+#box_tools_container .box_tools .box_tools-style button.btnOK svg {
+    fill:var(--success);
+}
+
+#box_tools_container .box_tools .box_tools-style button.btnOK:hover {
+    border: 1px solid var(--hover-success);
+}
+
+#box_tools_container .box_tools .box_tools-style button.btnOK:hover svg {
+    fill: var(--hover-success);
+}
+
+/* -------btn cancel------- */
+#box_tools_container .box_tools .box_tools-style button.btnCancel {
+    border: 1px solid var(--danger);
+    background: var(--red-alpha-20);
+}
+
+#box_tools_container .box_tools .box_tools-style button.btnCancel svg {
+    fill:var(--danger);
+}
+
+#box_tools_container .box_tools .box_tools-style button.btnCancel:hover {
+    border: 1px solid var(--hover-danger);
+}
+
+#box_tools_container .box_tools .box_tools-style button.btnCancel:hover svg {
+    fill: var(--hover-danger);
+}
+
+/* ==============del============== */
+
+#box_tools_container .box_tools .box_tools-style.box_tools-del button.btnOK {
+    border: 1px solid var(--danger);
+    background: var(--red-alpha-20);
+}
+
+#box_tools_container .box_tools .box_tools-style.box_tools-del button.btnOK svg {
+    fill: var(--danger);
+}
+
+#box_tools_container .box_tools .box_tools-style.box_tools-del button.btnOK:hover {
+    border: 1px solid var(--hover-danger);
+}
+
+#box_tools_container .box_tools .box_tools-style.box_tools-del button.btnOK:hover svg {
+    fill: var(--hover-danger);
+}
+
+#box_tools_container .box_tools .box_tools-style.box_tools-del button.btnCancel {
+    border: 1px solid var(--success);
+    background: var(--green-alpha-20);
+}
+
+#box_tools_container .box_tools .box_tools-style.box_tools-del button.btnCancel svg {
+    fill: var(--success);
+}
+
+#box_tools_container .box_tools .box_tools-style.box_tools-del button.btnCancel:hover {
+    border: 1px solid var(--hover-success);
+}
+
+#box_tools_container .box_tools .box_tools-style.box_tools-del button.btnCancel:hover svg {
+    fill: var(--hover-success);
+}
+
+/* -------------- */
+
+#box_tools_container .box_tools .box_tools-style {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: .375rem;
+}
+

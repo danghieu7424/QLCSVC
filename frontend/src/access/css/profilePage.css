@@ -1,0 +1,145 @@
+.profile-container {
+    position: relative;
+    top: 4rem;
+    left: 0;
+    width: 100%;
+    min-height: calc(100dvh - 4rem);
+    padding: .625rem;
+    font-family: inter;
+}
+
+.profile-container .box_profile {
+    position: relative;
+    width: 100%;
+    min-height: 10rem;
+    padding: .625rem;
+    border: 1px solid var(--dark-30);
+    border-radius: .375rem;
+    background: var(--bg-light);
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    gap: .625rem;
+}
+
+.profile-container .box_profile::before {
+    content: '';
+    position: absolute;
+    bottom: -1rem;
+    left: -0.0625rem;
+    width: 100%;
+    min-height: calc(100% + 1rem - 0.0625rem);
+    border: 1px solid var(--dark-30);
+    border-radius: .375rem;
+    background: var(--green);
+    filter: blur(1px);
+    transition: all .2s ease-in-out;
+    z-index: -1;
+}
+
+.profile-container .box_profile:hover::before {
+    bottom: -1.25rem;
+    filter: blur(1.5px);
+}
+
+.profile-container .box_profile .box_avatar {
+    position: relative;
+    flex: 0 0 30%;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    flex-direction: column;
+    gap: .625rem;
+}
+
+.profile-container .box_profile .box_avatar .box_avatar-img {
+    position: relative;
+    width: 70%;
+    aspect-ratio: 1/1;
+    border: 1px solid var(--dark-5);
+    border-radius: 50%;
+    margin: 3rem 0 3rem 0;
+}
+
+.profile-container .box_profile .box_avatar .box_avatar-change {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    min-width: 2rem;
+    min-height: 2rem;
+    aspect-ratio: 1/1;
+    border: 1px solid var(--dark-10);
+    border-radius: 50%;
+    background: transparent;
+    cursor: pointer;
+    transition: all .1s ease-in
+}
+
+.profile-container .box_profile .box_avatar .box_avatar-change svg {
+    fill: var(--dark-10);
+    transition: all .1s ease-in
+}
+
+.profile-container .box_profile .box_avatar .box_avatar-change:hover {
+    border: 1px solid var(--dark-30);
+}
+
+.profile-container .box_profile .box_avatar .box_avatar-change:hover svg {
+    fill: var(--dark-30);
+}
+
+.profile-container .box_profile .box_avatar .edit_account {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-container .box_profile .box_avatar .edit_account ul {
+    position: relative;
+    list-style: none;
+    margin-bottom: 2rem;
+}
+
+.profile-container .box_profile .box_avatar .edit_account ul li {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    padding: 0.625rem;
+    border-radius: 0.1875rem;
+    font-size: 1rem;
+    border: 1px solid var(--dark-5);
+    background: transparent;
+    transition: all 0.2s ease-in-out;
+    cursor: pointer;
+    user-select: none;
+}
+
+.profile-container .box_profile .box_avatar .edit_account ul li:hover {
+    border: 1px solid var(--dark-30);
+    background: var(--dark-5);
+}
+
+
+.profile-container .box_profile .box_info {
+    position: relative;
+    flex: 1;
+    padding: 3rem 0 0 0;
+    display: flex;
+    justify-content: start;
+    align-items: start;
+    flex-direction: column;
+    gap: .625rem;
+}
+
+.profile-container .box_profile .box_info span {
+    position: relative;
+    display: inline-block;
+    width: 100%;
+    height: auto;
+    padding: .45rem .375rem;
+    margin: 0.625rem 0px;
+
+}

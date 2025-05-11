@@ -1,0 +1,41 @@
+{
+    "MaKhoa": "1",
+    "TenKhoa": "Công nghệ và Kỹ thuật",
+    "Nganh": [
+        {
+            "MaNganh": "7480201",
+            "TenNganh": "CÔNG NGHỆ THÔNG TIN",
+            "Phong": [
+                {
+                    "MaPhong": "F303",
+                    "TenPhong": "Phòng máy tính 3",
+                    "CanBo": [
+                        {
+                            "MaCanBo": "01010093",
+                            "TenCanBo": "Nguyễn Văn A",
+                            "ChucVu": "Giảng viên"
+                        },
+                        {
+                            "MaCanBo": "2",
+                            "TenCanBo": "Trần Thị B",
+                            "ChucVu": "Giảng viên"
+                        }
+                    ]
+                },
+                {
+                    "MaPhong": "F205",
+                    "TenPhong": "Phòng máy tính 4"
+                    
+                }
+            ]
+        },
+        {
+            "MaNganh": "7510201",
+            "TenNganh": "CÔNG NGHỆ KỸ THUẬT CƠ KHÍ"
+        },
+        {
+            "MaNganh": "7510301",
+            "TenNganh": "CÔNG NGHỆ KỸ THUẬT ĐIỆN, ĐIỆN TỬ"
+        }
+    ]
+}

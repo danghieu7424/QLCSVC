@@ -1,0 +1,574 @@
+.QuanLyPhongPage {
+  position: relative;
+  top: 4rem;
+  width: 100%;
+  min-height: calc(100dvh - 4rem);
+  padding: 0.625rem;
+  font-family: inter;
+}
+
+.QuanLyPhongPage .buttons {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.QuanLyPhongPage .buttons button {
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.QuanLyPhongPage div.box-tree-view-head {
+  position: relative;
+  margin-top: 0.3125rem;
+  margin-left: 0.3125rem;
+  font-weight: bold;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.QuanLyPhongPage ul.tree-view {
+  list-style-type: none;
+  padding-left: 7.5px;
+  position: relative;
+  font-size: 1rem;
+}
+
+.QuanLyPhongPage .tree-view .child {
+  margin: 5px 0;
+  position: relative;
+  padding: 0.3rem 0 0.3rem 20px;
+}
+
+.QuanLyPhongPage .tree-view .child::before {
+  content: "";
+  position: absolute;
+  top: -5px;
+  left: 0;
+  width: 1px;
+  height: calc(100% + 5px);
+  background-color: #ccc;
+}
+
+.QuanLyPhongPage .tree-view .child::after {
+  content: "";
+  position: absolute;
+  top: 1.2rem;
+  left: 0;
+  width: 15px;
+  height: 1px;
+  border-radius: 0 1px 1px 0;
+  background-color: #ccc;
+}
+
+.QuanLyPhongPage .tree-view .tree-view-child {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+.QuanLyPhongPage .tree-view .tree-view-child .btnDelete {
+  position: relative;
+  width: 1.75rem;
+  height: 1.75rem;
+  aspect-ratio: 1/1;
+  border: 1px solid var(--dark-30);
+  border-radius: 0.1825rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.1s ease-in-out;
+  cursor: pointer;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.QuanLyPhongPage .tree-view .tree-view-child .btnDelete::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -0.625rem;
+  width: 0.625rem;
+  height: 100%;
+  background: transparent;
+}
+
+.QuanLyPhongPage .tree-view .canbo:hover + .btnDelete {
+  opacity: 1;
+  visibility: visible;
+}
+
+.QuanLyPhongPage .tree-view .tree-view-child .btnDelete abbr {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.QuanLyPhongPage .tree-view .tree-view-child .btnDelete svg {
+  fill: var(--dark-60);
+}
+
+.QuanLyPhongPage .tree-view .tree-view-child .btnDelete:hover {
+  opacity: 1;
+  visibility: visible;
+  border: 1px solid var(--hover-danger);
+  background-color: var(--red-alpha-20);
+  box-shadow: 1px 1px 1px var(--dark-5), 3px 3px 3px var(--dark-5),
+    5px 5px 5px var(--dark-5), -1px -1px 1px var(--light-10),
+    -3px -3px 3px var(--light-10), -5px -5px 5px var(--light-10),
+    inset -1px -1px 2px var(--dark-5), inset 1px 1px 2px var(--light-100);
+}
+
+.QuanLyPhongPage .tree-view .tree-view-child .btnDelete:hover svg {
+  fill: var(--hover-danger);
+}
+
+.QuanLyPhongPage .tree-view .child:last-child::before {
+  height: 1.6rem !important;
+}
+
+/* .QuanLyPhongPage .tree-view .tree-view-child:nth-last-child(2):before {
+    height: 1.2rem;
+} */
+
+.QuanLyPhongPage .tree-view .tree-node {
+  position: relative;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.QuanLyPhongPage .tree-view .title {
+  font-weight: bold;
+  color: #1a0dab;
+  cursor: default;
+}
+
+.QuanLyPhongPage .tree-view .head-of-department {
+  color: #1c8027;
+  cursor: default;
+}
+
+.QuanLyPhongPage .tree-view .member-name {
+  color: #1c8076;
+  cursor: default;
+}
+
+.QuanLyPhongPage .toggle::before {
+  content: "▶";
+  color: #666;
+  margin-right: 5px;
+  cursor: pointer;
+  border-radius: 0.1875rem;
+  text-align: center;
+}
+
+.QuanLyPhongPage .expanded::before {
+  content: "▼";
+  text-align: center;
+}
+
+.QuanLyPhongPage .hidden {
+  display: none;
+}
+
+.tree-view-add {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.75rem;
+  aspect-ratio: 1/1;
+  margin: 0 0 0 5px;
+  border-radius: 0.1875rem;
+  border: 1px solid var(--dark-30);
+  background: transparent;
+  transition: all 0.2s ease-in-out;
+  opacity: 0;
+  visibility: hidden;
+  cursor: pointer;
+}
+
+.tree-view-add::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -0.4rem;
+  width: 0.4rem;
+  height: 100%;
+  background: transparent;
+}
+
+.QuanLyPhongPage .tree-view .hocphan:hover + .tree-view-add {
+  opacity: 1;
+  visibility: visible;
+}
+
+.tree-view-add svg {
+  fill: var(--dark-60);
+}
+
+.tree-view-add:hover {
+  opacity: 1;
+  visibility: visible;
+  background: var(--blue-alpha-20);
+  border: 1px solid var(--hover-primary);
+  box-shadow: 1px 1px 1px var(--dark-5), 3px 3px 3px var(--dark-5),
+    5px 5px 5px var(--dark-5), -1px -1px 1px var(--light-10),
+    -3px -3px 3px var(--light-10), -5px -5px 5px var(--light-10),
+    inset -1px -1px 2px var(--dark-5), inset 1px 1px 2px var(--light-100);
+}
+
+.tree-view-add:hover svg {
+  fill: var(--hover-primary);
+}
+
+.QuanLyPhongPage .tree-view .childAdd {
+  opacity: 0;
+  visibility: hidden;
+  display: none !important;
+  margin: 0;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+.QuanLyPhongPage .tree-view .childAdd .btnSave {
+  position: relative;
+  width: 1.75rem;
+  height: 1.75rem;
+  aspect-ratio: 1/1;
+  margin-left: 0.625rem;
+  border: 1px solid var(--dark-30);
+  border-radius: 0.1875rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.1s ease-in-out;
+}
+
+.QuanLyPhongPage .tree-view .childAdd .btnSave svg {
+  fill: var(--dark-60);
+}
+
+.QuanLyPhongPage .tree-view .childAdd .btnSave:hover {
+  border: 1px solid var(--hover-success);
+  background-color: var(--green-alpha-20);
+  box-shadow: 1px 1px 1px var(--dark-5), 3px 3px 3px var(--dark-5),
+    5px 5px 5px var(--dark-5), -1px -1px 1px var(--light-10),
+    -3px -3px 3px var(--light-10), -5px -5px 5px var(--light-10),
+    inset -1px -1px 2px var(--dark-5), inset 1px 1px 2px var(--light-100);
+}
+
+.QuanLyPhongPage .tree-view .childAdd .btnSave:hover svg {
+  fill: var(--hover-success);
+}
+
+.QuanLyPhongPage .tree-view .childAdd .btnSave abbr {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.QuanLyPhongPage .tree-view .childAdd .btnCancel {
+  position: relative;
+  width: 1.75rem;
+  height: 1.75rem;
+  aspect-ratio: 1/1;
+  margin-left: 0.625rem;
+  border: 1px solid var(--dark-30);
+  border-radius: 0.1875rem;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.1s ease-in-out;
+}
+
+.QuanLyPhongPage .tree-view .childAdd .btnCancel svg {
+  fill: var(--dark-60);
+}
+
+.QuanLyPhongPage .tree-view .childAdd .btnCancel:hover {
+  border: 1px solid var(--gray);
+  background-color: var(--gray-alpha-20);
+  box-shadow: 1px 1px 1px var(--dark-5), 3px 3px 3px var(--dark-5),
+    5px 5px 5px var(--dark-5), -1px -1px 1px var(--light-10),
+    -3px -3px 3px var(--light-10), -5px -5px 5px var(--light-10),
+    inset -1px -1px 2px var(--dark-5), inset 1px 1px 2px var(--light-100);
+}
+
+.QuanLyPhongPage .tree-view .childAdd .btnCancel:hover svg {
+  fill: var(--gray);
+}
+
+.QuanLyPhongPage .tree-view .childAdd .btnCancel abbr {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.QuanLyPhongPage .tree-view .childAdd.active {
+  opacity: 1;
+  visibility: visible;
+  display: inline-flex !important;
+}
+
+.QuanLyPhongPage .tree-view .childAdd.active::before {
+  height: 2rem;
+}
+
+.QuanLyPhongPage .tree-view .childAdd.active::after {
+  top: 1.6rem;
+}
+
+.QuanLyPhongPage .tree-view .child:has(+ .childAdd.active)::before {
+  height: calc(100% + 5px);
+}
+
+/* -------btn------- */
+
+.QuanLyPhongPage .tree-view-add {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 1.75rem;
+  aspect-ratio: 1/1;
+  margin: 0 0 0 5px;
+  border-radius: 0.1875rem;
+  border: 1px solid var(--dark-30);
+  background: transparent;
+  transition: all 0.2s ease-in-out;
+  opacity: 0;
+  visibility: hidden;
+  cursor: pointer;
+}
+
+.QuanLyPhongPage .tree-view-add::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -0.4rem;
+  width: 0.4rem;
+  height: 100%;
+  background: transparent;
+}
+
+.QuanLyPhongPage .tree-view .title:hover + .tree-view-add {
+  opacity: 1;
+  visibility: visible;
+}
+
+.QuanLyPhongPage .tree-view-add svg {
+  fill: var(--dark-60);
+}
+
+.QuanLyPhongPage .tree-view-add:hover {
+  opacity: 1;
+  visibility: visible;
+  background: var(--blue-alpha-20);
+  border: 1px solid var(--hover-primary);
+  box-shadow: 1px 1px 1px var(--dark-5), 3px 3px 3px var(--dark-5),
+    5px 5px 5px var(--dark-5), -1px -1px 1px var(--light-10),
+    -3px -3px 3px var(--light-10), -5px -5px 5px var(--light-10),
+    inset -1px -1px 2px var(--dark-5), inset 1px 1px 2px var(--light-100);
+}
+
+.QuanLyPhongPage .tree-view-add:hover svg {
+  fill: var(--hover-primary);
+}
+
+
+.QuanLyPhongPage .tree-view .childAdd {
+    opacity: 0;
+    visibility: hidden;
+    display: none !important;
+    margin: 0;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+
+.QuanLyPhongPage .tree-view .childAdd .btnSave {
+    position: relative;
+    width: 1.75rem;
+    height: 1.75rem;
+    aspect-ratio: 1/1;
+    margin-left: .625rem;
+    border: 1px solid var(--dark-30);
+    border-radius: .1875rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all .1s ease-in-out;
+}
+
+.QuanLyPhongPage .tree-view .childAdd .btnSave svg {
+    fill: var(--dark-60);
+}
+
+.QuanLyPhongPage .tree-view .childAdd .btnSave:hover {
+    border: 1px solid var(--hover-success);
+    background-color: var(--green-alpha-20);
+    box-shadow: 1px 1px 1px var(--dark-5),
+        3px 3px 3px var(--dark-5),
+        5px 5px 5px var(--dark-5),
+        -1px -1px 1px var(--light-10),
+        -3px -3px 3px var(--light-10),
+        -5px -5px 5px var(--light-10),
+        inset -1px -1px 2px var(--dark-5),
+        inset 1px 1px 2px var(--light-100);
+}
+
+.QuanLyPhongPage .tree-view .childAdd .btnSave:hover svg {
+    fill: var(--hover-success);
+}
+
+.QuanLyPhongPage .tree-view .childAdd .btnSave abbr {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.QuanLyPhongPage .tree-view .childAdd .btnCancel {
+    position: relative;
+    width: 1.75rem;
+    height: 1.75rem;
+    aspect-ratio: 1/1;
+    margin-left: .625rem;
+    border: 1px solid var(--dark-30);
+    border-radius: .1875rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all .1s ease-in-out;
+}
+
+.QuanLyPhongPage .tree-view .childAdd .btnCancel svg {
+    fill: var(--dark-60);
+}
+
+.QuanLyPhongPage .tree-view .childAdd .btnCancel:hover {
+    border: 1px solid var(--gray);
+    background-color: var(--gray-alpha-20);
+    box-shadow: 1px 1px 1px var(--dark-5),
+        3px 3px 3px var(--dark-5),
+        5px 5px 5px var(--dark-5),
+        -1px -1px 1px var(--light-10),
+        -3px -3px 3px var(--light-10),
+        -5px -5px 5px var(--light-10),
+        inset -1px -1px 2px var(--dark-5),
+        inset 1px 1px 2px var(--light-100);
+}
+
+.QuanLyPhongPage .tree-view .childAdd .btnCancel:hover svg {
+    fill: var(--gray);
+}
+
+.QuanLyPhongPage .tree-view .childAdd .btnCancel abbr {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.QuanLyPhongPage .tree-view .childAdd.active {
+    opacity: 1;
+    visibility: visible;
+    display: inline-flex !important;
+}
+
+.QuanLyPhongPage .tree-view .child.childAdd.active:last-child::before {
+  height: 2.2rem !important;
+}
+
+.QuanLyPhongPage .tree-view .childAdd.active::before {
+    height: calc(100% + 5px) !important;
+}
+
+.QuanLyPhongPage .tree-view .childAdd.active::after {
+    top: 1.9rem;
+}
+
+.QuanLyPhongPage .tree-view .child:has(+ .childAdd.active)::before {
+    height: calc(100% + 5px);
+}
+
+
+/* ----delete btn----- */
+
+.QuanLyPhongPage .tree-view .tree-view-child .btnDelete {
+    position: relative;
+    width: 1.75rem;
+    height: 1.75rem;
+    aspect-ratio: 1/1;
+    border: 1px solid var(--dark-30);
+    border-radius: .1825rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all .1s ease-in-out;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.QuanLyPhongPage .tree-view .tree-view-child .btnDelete::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -.625rem;
+    width: .625rem;
+    height: 100%;
+    background: transparent;
+}
+
+.QuanLyPhongPage .tree-view .member-name:hover + .btnDelete {
+    opacity: 1;
+    visibility: visible;
+}
+
+.QuanLyPhongPage .tree-view .tree-view-child .btnDelete abbr {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.QuanLyPhongPage .tree-view .tree-view-child .btnDelete svg {
+    fill: var(--dark-60)
+}
+
+.QuanLyPhongPage .tree-view .tree-view-child .btnDelete:hover {
+    opacity: 1;
+    visibility: visible;
+    border: 1px solid var(--hover-danger);
+    background-color: var(--red-alpha-20);
+    box-shadow: 1px 1px 1px var(--dark-5),
+        3px 3px 3px var(--dark-5),
+        5px 5px 5px var(--dark-5),
+        -1px -1px 1px var(--light-10),
+        -3px -3px 3px var(--light-10),
+        -5px -5px 5px var(--light-10),
+        inset -1px -1px 2px var(--dark-5),
+        inset 1px 1px 2px var(--light-100);
+}
+
+.QuanLyPhongPage .tree-view .tree-view-child .btnDelete:hover svg {
+    fill: var(--hover-danger);
+}

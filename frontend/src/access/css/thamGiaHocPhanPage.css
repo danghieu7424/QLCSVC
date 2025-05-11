@@ -1,0 +1,342 @@
+.tghp-container {
+    position: relative;
+    top: 4rem;
+    width: 100%;
+    min-height: calc(100dvh - 4rem);
+    padding: 0.625rem;
+    font-family: inter;
+}
+
+.tghp-container .buttons {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.625rem;
+}
+
+.tghp-container .buttons button {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.tghp-container div.box-tree-view-head {
+    position: relative;
+    margin-top: 0.3125rem;
+    margin-left: 0.3125rem;
+    font-weight: bold;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tghp-container ul.tree-view {
+    list-style-type: none;
+    padding-left: 7.5px;
+    position: relative;
+    font-size: 1rem;
+}
+
+.tghp-container .tree-view .child {
+    margin: 5px 0;
+    position: relative;
+    padding-left: 20px;
+}
+
+.tghp-container .tree-view .child::before {
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: 0;
+    width: 1px;
+    height: calc(100% + 5px);
+    background-color: #ccc;
+}
+
+.tghp-container .tree-view .child::after {
+    content: "";
+    position: absolute;
+    top: 14px;
+    left: 0;
+    width: 15px;
+    height: 1px;
+    border-radius: 0 1px 1px 0;
+    background-color: #ccc;
+}
+
+.tghp-container .tree-view .tree-view-child {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: .625rem;
+}
+
+.tghp-container .tree-view .tree-view-child .btnDelete {
+    position: relative;
+    width: 1.75rem;
+    height: 1.75rem;
+    aspect-ratio: 1/1;
+    border: 1px solid var(--dark-30);
+    border-radius: .1825rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all .1s ease-in-out;
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+}
+
+.tghp-container .tree-view .tree-view-child .btnDelete::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -.625rem;
+    width: .625rem;
+    height: 100%;
+    background: transparent;
+}
+
+.tghp-container .tree-view .canbo:hover + .btnDelete {
+    opacity: 1;
+    visibility: visible;
+}
+
+.tghp-container .tree-view .tree-view-child .btnDelete abbr {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tghp-container .tree-view .tree-view-child .btnDelete svg {
+    fill: var(--dark-60)
+}
+
+.tghp-container .tree-view .tree-view-child .btnDelete:hover {
+    opacity: 1;
+    visibility: visible;
+    border: 1px solid var(--hover-danger);
+    background-color: var(--red-alpha-20);
+    box-shadow: 1px 1px 1px var(--dark-5),
+        3px 3px 3px var(--dark-5),
+        5px 5px 5px var(--dark-5),
+        -1px -1px 1px var(--light-10),
+        -3px -3px 3px var(--light-10),
+        -5px -5px 5px var(--light-10),
+        inset -1px -1px 2px var(--dark-5),
+        inset 1px 1px 2px var(--light-100);
+}
+
+.tghp-container .tree-view .tree-view-child .btnDelete:hover svg {
+    fill: var(--hover-danger);
+}
+
+.tghp-container .tree-view .child:last-child::before {
+    height: 1.2rem;
+}
+
+.tghp-container .tree-view .tree-view-child:nth-last-child(2):before {
+    height: 1.2rem;
+}
+
+.tghp-container .tree-view .hocphan {
+    font-weight: bold;
+    color: #1a0dab;
+    cursor: default;
+}
+
+.tghp-container .tree-view .canbo {
+    color: #1c8027;
+    cursor: default;
+}
+
+.tghp-container .toggle::before {
+    content: "▶";
+    color: #666;
+    margin-right: 5px;
+    cursor: pointer;
+    border-radius: 0.1875rem;
+    text-align: center;
+}
+
+.tghp-container .expanded::before {
+    content: "▼";
+    text-align: center;
+}
+
+.tghp-container .hidden {
+    display: none;
+}
+
+.tree-view-add {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1.75rem;
+    aspect-ratio: 1/1;
+    margin: 0 0 0 5px;
+    border-radius: 0.1875rem;
+    border: 1px solid var(--dark-30);
+    background: transparent;
+    transition: all 0.2s ease-in-out;
+    opacity: 0;
+    visibility: hidden;
+    cursor: pointer;
+}
+
+.tree-view-add::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -.4rem;
+    width: .4rem;
+    height: 100%;
+    background: transparent;
+}
+
+.tghp-container .tree-view .hocphan:hover + .tree-view-add {
+    opacity: 1;
+    visibility: visible;
+}
+
+.tree-view-add svg {
+    fill: var(--dark-60);
+}
+
+.tree-view-add:hover {
+    opacity: 1;
+    visibility: visible;
+    background: var(--blue-alpha-20);
+    border: 1px solid var(--hover-primary);
+    box-shadow: 1px 1px 1px var(--dark-5),
+        3px 3px 3px var(--dark-5),
+        5px 5px 5px var(--dark-5),
+        -1px -1px 1px var(--light-10),
+        -3px -3px 3px var(--light-10),
+        -5px -5px 5px var(--light-10),
+        inset -1px -1px 2px var(--dark-5),
+        inset 1px 1px 2px var(--light-100);
+}
+
+.tree-view-add:hover svg {
+    fill: var(--hover-primary);
+}
+
+.tghp-container .tree-view .childAdd {
+    opacity: 0;
+    visibility: hidden;
+    display: none !important;
+    margin: 0;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.tghp-container .tree-view .childAdd .btnSave {
+    position: relative;
+    width: 1.75rem;
+    height: 1.75rem;
+    aspect-ratio: 1/1;
+    margin-left: .625rem;
+    border: 1px solid var(--dark-30);
+    border-radius: .1875rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all .1s ease-in-out;
+}
+
+.tghp-container .tree-view .childAdd .btnSave svg {
+    fill: var(--dark-60);
+}
+
+.tghp-container .tree-view .childAdd .btnSave:hover {
+    border: 1px solid var(--hover-success);
+    background-color: var(--green-alpha-20);
+    box-shadow: 1px 1px 1px var(--dark-5),
+        3px 3px 3px var(--dark-5),
+        5px 5px 5px var(--dark-5),
+        -1px -1px 1px var(--light-10),
+        -3px -3px 3px var(--light-10),
+        -5px -5px 5px var(--light-10),
+        inset -1px -1px 2px var(--dark-5),
+        inset 1px 1px 2px var(--light-100);
+}
+
+.tghp-container .tree-view .childAdd .btnSave:hover svg {
+    fill: var(--hover-success);
+}
+
+.tghp-container .tree-view .childAdd .btnSave abbr {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tghp-container .tree-view .childAdd .btnCancel {
+    position: relative;
+    width: 1.75rem;
+    height: 1.75rem;
+    aspect-ratio: 1/1;
+    margin-left: .625rem;
+    border: 1px solid var(--dark-30);
+    border-radius: .1875rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all .1s ease-in-out;
+}
+
+.tghp-container .tree-view .childAdd .btnCancel svg {
+    fill: var(--dark-60);
+}
+
+.tghp-container .tree-view .childAdd .btnCancel:hover {
+    border: 1px solid var(--gray);
+    background-color: var(--gray-alpha-20);
+    box-shadow: 1px 1px 1px var(--dark-5),
+        3px 3px 3px var(--dark-5),
+        5px 5px 5px var(--dark-5),
+        -1px -1px 1px var(--light-10),
+        -3px -3px 3px var(--light-10),
+        -5px -5px 5px var(--light-10),
+        inset -1px -1px 2px var(--dark-5),
+        inset 1px 1px 2px var(--light-100);
+}
+
+.tghp-container .tree-view .childAdd .btnCancel:hover svg {
+    fill: var(--gray);
+}
+
+.tghp-container .tree-view .childAdd .btnCancel abbr {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.tghp-container .tree-view .childAdd.active {
+    opacity: 1;
+    visibility: visible;
+    display: inline-flex !important;
+}
+
+.tghp-container .tree-view .childAdd.active::before {
+    height: 2rem;
+}
+
+.tghp-container .tree-view .childAdd.active::after {
+    top: 1.6rem;
+}
+
+.tghp-container .tree-view .child:has(+ .childAdd.active)::before {
+    height: calc(100% + 5px);
+}
