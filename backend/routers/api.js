@@ -273,30 +273,216 @@ router.delete("/api/delete/quan-ly-phong", verifyToken, async (req, res) => {
 // =======phong======= //
 
 router.get("/api/select/trang-thai-phong", async (req, res) => {
-    try {
-      const result = await queryDatabase(
-        `
+  try {
+    const result = await queryDatabase(
+      `
         SELECT COLUMN_TYPE
         FROM INFORMATION_SCHEMA.COLUMNS
         WHERE TABLE_NAME = 'THIETBI'
           AND COLUMN_NAME = 'TrangThai';
+      `
+    );
+
+    const enumStr = result[0]?.COLUMN_TYPE || ""; // lấy chuỗi enum
+
+    const values = enumStr
+      .replace(/^enum\(/, "")
+      .replace(/\)$/, "")
+      .split(/','/)
+      .map((s) => s.replace(/^'/, "").replace(/'$/, ""));
+
+    res.json({ message: "Thành công.", data: values });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// ======= loại thiết bị ======= //
+
+router.get("/api/select/don-vi-tinh-loai-thiet-bi", async (req, res) => {
+  try {
+    const result = await queryDatabase(
+      `
+        SELECT COLUMN_TYPE
+        FROM INFORMATION_SCHEMA.COLUMNS
+        WHERE TABLE_NAME = 'LOAI_THIETBI'
+          AND COLUMN_NAME = 'DonViTinh';
+      `
+    );
+
+    const enumStr = result[0]?.COLUMN_TYPE || ""; // lấy chuỗi enum
+
+    const values = enumStr
+      .replace(/^enum\(/, "")
+      .replace(/\)$/, "")
+      .split(/','/)
+      .map((s) => s.replace(/^'/, "").replace(/'$/, ""));
+
+    res.json({ message: "Thành công.", data: values });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.get("/api/select/loai-thiet-bi", async (req, res) => {
+  try {
+    const result = await queryDatabase(
+      `
+        SELECT *
+        FROM LOAI_THIETBI
         `
+    );
+
+    res.json({ message: "Thành công.", data: result });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.post(
+  "/api/insert/loai-thiet-bi",
+  verifyToken,
+  checkManager,
+  async (req, res) => {
+    const { rows } = req.body;
+
+    console.log(rows);
+    // res.json({ message: "Thành công." });
+
+    if (!Array.isArray(rows) || rows.length === 0) {
+      return res.status(400).json({ message: "Không có dữ liệu để thêm." });
+    }
+
+    const values = [];
+    for (const row of rows) {
+      const {
+        TenLoai,
+        ThongSoKyThuat,
+        DonViTinh,
+        XuatXu,
+        NamSanXuat,
+        NgayNhapKho,
+        MaCanBo,
+        GiaNhap,
+        SoLuong,
+      } = row;
+    
+      values.push([
+        TenLoai,
+        ThongSoKyThuat,
+        typeof DonViTinh === "object" ? DonViTinh.value : DonViTinh,
+        XuatXu,
+        NamSanXuat,
+        NgayNhapKho,
+        MaCanBo,
+        GiaNhap,
+        SoLuong,
+      ]);
+    }    
+
+    try {
+      // Tạo dấu ? động theo số lượng dòng
+      const placeholders = values.map(() => "(?, ?, ?, ?, ?, ?, ?, ?, ?)").join(", ");
+
+      await queryDatabase(
+        `
+          INSERT INTO LOAI_THIETBI
+          (TenLoai, ThongSoKyThuat, DonViTinh, XuatXu, NamSanXuat, NgayNhapKho, MaCanBo, GiaNhap, SoLuong)
+          VALUES ${placeholders}
+        `,
+        values.flat()
       );
-  
-      const enumStr = result[0]?.COLUMN_TYPE || ""; // lấy chuỗi enum
-  
-      const values = enumStr
-        .replace(/^enum\(/, "")
-        .replace(/\)$/, "")
-        .split(/','/)
-        .map((s) => s.replace(/^'/, "").replace(/'$/, ""));
-  
-      res.json({ message: "Thành công.", data: values });
+
+      res.json({ message: "Thêm thành công tất cả dòng." });
     } catch (error) {
       console.error(error.message);
       res.status(500).json({ message: error.message });
     }
-  });
-  
+  }
+);
+
+router.put(
+  "/api/update/loai-thiet-bi",
+  verifyToken,
+  checkManager,
+  async (req, res) => {
+    const {
+      MaLoai,
+      TenLoai,
+      ThongSoKyThuat,
+      DonViTinh,
+      XuatXu,
+      NamSanXuat,
+      NgayNhapKho,
+      MaCanBo,
+      GiaNhap,
+      SoLuong,
+    } = req.body;
+
+    try {
+      await queryDatabase(
+        `
+            UPDATE LOAI_THIETBI
+            SET
+                TenLoai = ?,
+                ThongSoKyThuat = ?,
+                DonViTinh = ?,
+                XuatXu = ?,
+                NamSanXuat = ?,
+                NgayNhapKho = ?,
+                MaCanBo = ?,
+                GiaNhap = ?,
+                SoLuong = ?
+            WHERE MaLoai = ?
+        `,
+        [
+          TenLoai,
+          ThongSoKyThuat,
+          DonViTinh,
+          XuatXu,
+          NamSanXuat,
+          NgayNhapKho,
+          MaCanBo,
+          GiaNhap,
+          SoLuong,
+          MaLoai,
+        ]
+      );
+
+      res.json({ message: "Cập nhật thành công." });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ message: error.message });
+    }
+  }
+);
+
+router.delete(
+  "/api/delete/loai-thiet-bi",
+  verifyToken,
+  checkManager,
+  async (req, res) => {
+    const [...delRows] = req.body;
+
+    if (!Array.isArray(delRows) || delRows.length === 0) {
+        return res.status(400).json({ message: "Danh sách mã học phần không hợp lệ" });
+    }
+
+    try {
+        const placeholders = delRows.map(() => "?").join(", ");
+        const sql = `DELETE FROM LOAI_THIETBI WHERE MaLoai IN (${placeholders})`;
+
+        await queryDatabase(sql, delRows);
+
+        res.json({ message: "Xóa thành công." });
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+        console.log(error.message);
+    }
+  }
+);
 
 module.exports = router;

@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import API_BASE_URL from "./base/config";
 import { InputChange } from "./base/formContainer.js";
 
 import "../access/css/profilePage.css";
 
 export default function ProfilePage() {
-    const history = useHistory();
+    const navigate = useNavigate();
     const [data, setData] = useState({});
     const [loading, setLoading] = useState(true);
     const [avatarUrl, setAvatarUrl] = useState('');
@@ -102,7 +102,7 @@ export default function ProfilePage() {
     };
 
     const handleChangePassword = () => {
-        history.push("/change-password");
+        navigate("/change-password");
     }
 
     return (

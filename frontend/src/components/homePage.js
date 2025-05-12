@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useHistory } from "react-router-dom";
 import API_BASE_URL from "./base/config";
 
 import "../access/css/homePage.css";
@@ -18,7 +17,6 @@ export default function HomePage() {
         `${API_BASE_URL}/api/stream/public?path=tbu2.jpg`,
     ];
 
-    const history = useHistory();
     const [index, setIndex] = useState(0);
     const [fadeIn, setFadeIn] = useState(true);
 

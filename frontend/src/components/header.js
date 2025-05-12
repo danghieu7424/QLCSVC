@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import API_BASE_URL from "./base/config";
 
 import "../access/css/header.css";
 
 export default function Header() {
     const infoRef = useRef(null);
-    const history = useHistory();
+    const navigate = useNavigate();
     const [user, setUser] = useState(null);
     const [error, setError] = useState("");
     const [showInForMore, setShowInForMore] = useState(false);
@@ -68,12 +68,12 @@ export default function Header() {
             credentials: "include",
         }).then(() => {
             setUser(null);
-            history.push("/login");
+            navigate("/login");
         });
     };
 
     const handleProfile = () => {
-        history.push("/profile");
+        navigate("/profile");
     };
 
     return (
@@ -112,6 +112,11 @@ export default function Header() {
                                                         <li>
                                                             <Link to="/quan-ly-phong-page">
                                                                 Quản lý phòng
+                                                            </Link>
+                                                        </li> 
+                                                        <li>
+                                                            <Link to="/loai-thiet-bi">
+                                                                Loại thiết bị
                                                             </Link>
                                                         </li> 
                                                     </>

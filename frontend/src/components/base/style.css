@@ -350,6 +350,17 @@
     font-size: 1em;
 }
 
+.InputChange-container textarea {
+    position: relative;
+    width: 10rem;
+    height: 5rem;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid var(--dark);
+    padding: 1rem .375rem;
+    font-size: 1em;
+}
+
 .InputChange-container .InputChange-box div {
     position: relative;
     width: 100%;

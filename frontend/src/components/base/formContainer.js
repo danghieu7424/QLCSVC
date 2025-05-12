@@ -63,7 +63,7 @@ const InputSearch = ({ className = "", list = [], onChange }) => {
     );
 };
 
-const InputSearchSelect = ({ className = "", keyShow, list = [], onChange }) => {
+const InputSearchSelect = ({ className = "", inputStyle ={} ,keyShow, list = [], onChange }) => {
     const [searchText, setSearchText] = useState("");
 
     const filteredList = list.filter((item) =>
@@ -83,6 +83,7 @@ const InputSearchSelect = ({ className = "", keyShow, list = [], onChange }) => 
                 width: "100%",
                 height: "auto",
                 margin: ".625rem 0",
+                ...inputStyle 
             }}
         >
             <div className="InputSearch-input">
@@ -92,6 +93,7 @@ const InputSearchSelect = ({ className = "", keyShow, list = [], onChange }) => 
                     onChange={(e) => {
                         setSearchText(e.target.value);
                     }}
+                    style={inputStyle}
                 />
                 <span>
                     <svg width="14" height="14" viewBox="0 0 24 24">
@@ -351,7 +353,7 @@ const InputChange = ({ className = "", value, onChange }) => {
         >
             <div className="InputChange-box">
                 {isEditing ? (
-                    <input
+                    <textarea
                         type="text"
                         value={text}
                         autoFocus

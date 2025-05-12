@@ -48,6 +48,7 @@ body {
     width: 100%;
     box-shadow: 0 0 8px 2px #3333;
     border-radius: 0.1875rem;
+    overflow-y: auto;
 }
 
 #box_table_container h2 {
@@ -100,6 +101,10 @@ body {
 
 #box_table_container tbody tr:nth-of-type(even) {
   background-color: #f8f8f8;
+}
+
+#box_table_container tbody tr:nth-of-type(odd) {
+  background-color: #ffffff;
 }
 
 #box_table_container tbody tr:last-of-type {

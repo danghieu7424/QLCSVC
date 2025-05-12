@@ -67,11 +67,17 @@
     --tran-05: all 0.5s ease;
 }
 
+.box-auth-container {
+    position: relative;
+    width: 100%;
+    height: 100dvh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .auth-container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: relative;
     width: min(350px, calc(100% - 2 * .625rem));
     padding: 6rem 1.25rem 3rem;
     border: 1px solid var(--dark-10);
