@@ -42,6 +42,8 @@
 }
 
 .QuanLyPhongPage .tree-view .child {
+  position: relative;
+  min-height: 2rem;
   margin: 5px 0;
   position: relative;
   padding: 0.3rem 0 0.3rem 20px;
@@ -150,6 +152,10 @@
   font-weight: bold;
   color: #1a0dab;
   cursor: default;
+  min-height: 2rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .QuanLyPhongPage .tree-view .head-of-department {

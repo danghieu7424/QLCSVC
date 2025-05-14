@@ -9,6 +9,7 @@ import LoginPage from "../components/loginPage.js";
 import ProfilePage from "../components/profilePage.js";
 import ChangePasswordPage from "../components/changePasswordPage.js";
 import LoaiThietBiPage from "../components/loaiThietBiPage.js";
+import ThietBiPage from "../components/thietBiPage.js";
 
 import QuanLyPhongPage from "../components/quanLyPhongPage.js";
 
@@ -61,6 +62,14 @@ const Router = () => {
           element={
             <TransitionComponent>
               <LoaiThietBiPage />
+            </TransitionComponent>
+          }
+        />
+        <Route
+          path="/thiet-bi"
+          element={
+            <TransitionComponent>
+              <ThietBiPage />
             </TransitionComponent>
           }
         />

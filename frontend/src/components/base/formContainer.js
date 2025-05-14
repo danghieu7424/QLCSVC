@@ -301,7 +301,7 @@ const SwitchButton = ({ className = "", value = false, onChange }) => {
     );
 };
 
-const InputChange = ({ className = "", value, onChange }) => {
+const InputChange = ({ className = "", value, onChange, disabled }) => {
     const [isEditing, setIsEditing] = useState(false);
     const [text, setText] = useState("");
     const timeoutRef = useRef(null);
@@ -311,6 +311,7 @@ const InputChange = ({ className = "", value, onChange }) => {
     }, [value]);
 
     const handleEdit = () => {
+        if (disabled) return;
         setIsEditing(true);
     };
 
@@ -332,6 +333,7 @@ const InputChange = ({ className = "", value, onChange }) => {
 
     // Mobile long press handler
     const handleTouchStart = () => {
+        if (disabled) return;
         timeoutRef.current = setTimeout(() => {
             handleEdit();
         }, 500); // nhấn giữ 0.5s
