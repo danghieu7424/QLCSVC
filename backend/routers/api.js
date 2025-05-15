@@ -554,9 +554,6 @@ router.get("/api/select/trang-thai-thiet-bi", async (req, res) => {
 router.get("/api/select/thiet-bi", async (req, res) => {
     const { MaPhong, TrangThai } = req.query;
 
-    console.log("MaPhong: ", MaPhong);
-    console.log("TrangThai: ", TrangThai);
-
     try {
         let sql = `
             SELECT tb.MaThietBi, ltb.MaLoai, ltb.TenLoai, tb.TrangThai, tb.ViTriHienTai, tb.GiaiTrinh
@@ -591,7 +588,48 @@ router.get("/api/select/thiet-bi", async (req, res) => {
 
         sql += ` ORDER BY tb.MaLoai ASC`;
 
-        console.log(sql);
+        const resultTB = await queryDatabase(sql, params);
+
+        res.json({ message: "Thành công.", data: resultTB });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: error.message });
+    }
+});
+
+router.get("/api/select/all-thiet-bi", async (req, res) => {
+   const { MaPhong, TrangThai } = req.query;
+    // console.log(">>> Query input:", { MaPhong, TrangThai });
+    try {
+        let sql = `
+            SELECT tb.MaThietBi, ltb.MaLoai, ltb.TenLoai, tb.TrangThai, tb.ViTriHienTai, tb.GiaiTrinh
+            FROM THIETBI tb
+            LEFT JOIN LOAI_THIETBI ltb ON tb.MaLoai = ltb.MaLoai
+            WHERE 1=1
+        `;
+
+        const params = [];
+
+        if (
+            TrangThai !== undefined &&
+            TrangThai !== null &&
+            TrangThai !== "" &&
+            TrangThai !== "null"
+        ) {
+            sql += ` AND tb.TrangThai = ?`;
+            params.push(TrangThai);
+        }
+
+        if (
+            MaPhong !== undefined &&
+            MaPhong !== null &&
+            MaPhong !== "" &&
+            MaPhong !== "null"
+        ) {
+            sql += ` AND tb.ViTriHienTai = ?`;
+            params.push(MaPhong);
+        }
+        sql += ` ORDER BY tb.MaLoai ASC`;
 
         const resultTB = await queryDatabase(sql, params);
 
@@ -611,18 +649,45 @@ router.put(
             req.body;
 
         try {
+            const oldResult = await queryDatabase(
+                `SELECT ViTriHienTai FROM THIETBI WHERE MaThietBi = ? AND MaLoai = ?`,
+                [MaThietBi, MaLoai]
+            );
+
+            if (oldResult.length === 0) {
+                return res
+                    .status(404)
+                    .json({ message: "Không tìm thấy thiết bị." });
+            }
+
+            const oldViTri = oldResult[0].ViTriHienTai;
+
+            // 2. So sánh vị trí cũ và mới
+            const isViTriChanged = oldViTri !== ViTriHienTai;
+
             await queryDatabase(
                 `
-            UPDATE THIETBI
-            SET
-                TrangThai = ?,
-                ViTriHienTai = ?,
-                GiaiTrinh = ?
-            WHERE MaThietBi = ?
-              AND MaLoai = ?
-        `,
+                    UPDATE THIETBI
+                    SET
+                        TrangThai = ?,
+                        ViTriHienTai = ?,
+                        GiaiTrinh = ?
+                    WHERE MaThietBi = ?
+                      AND MaLoai = ?
+                `,
                 [TrangThai, ViTriHienTai, GiaiTrinh, MaThietBi, MaLoai]
             );
+
+            if (isViTriChanged) {
+                await queryDatabase(
+                    `
+                        INSERT INTO CHUYEN_THIETBI
+                        (MaThietBi, MaLoai, TuPhong, DenPhong, NgayChuyen, MaCanBo)
+                        VALUES (?, ?, ?, ?, NOW(), ?)
+                    `,
+                    [MaThietBi, MaLoai, oldViTri, ViTriHienTai, req.user.id]
+                );
+            }
 
             res.json({ message: "Cập nhật thành công." });
         } catch (error) {
@@ -631,5 +696,51 @@ router.put(
         }
     }
 );
+
+router.put("/api/update/nhieu-thiet-bi", verifyToken, checkManager, async (req, res) => {
+    const thietBis = req.body;
+
+    if (!Array.isArray(thietBis) || thietBis.length === 0) {
+        return res.status(400).json({ message: "Danh sách thiết bị không hợp lệ." });
+    }
+
+    try {
+        for (const item of thietBis) {
+            const { MaThietBi, MaLoai, TrangThai, ViTriHienTai, GiaiTrinh } = item;
+
+            const oldResult = await queryDatabase(
+                `SELECT ViTriHienTai FROM THIETBI WHERE MaThietBi = ? AND MaLoai = ?`,
+                [MaThietBi, MaLoai]
+            );
+
+            if (oldResult.length === 0) continue;
+
+            const oldViTri = oldResult[0].ViTriHienTai;
+            const isViTriChanged = oldViTri !== ViTriHienTai;
+
+            await queryDatabase(
+                `UPDATE THIETBI
+                 SET TrangThai = ?, ViTriHienTai = ?, GiaiTrinh = ?
+                 WHERE MaThietBi = ? AND MaLoai = ?`,
+                [TrangThai, ViTriHienTai, GiaiTrinh, MaThietBi, MaLoai]
+            );
+
+            if (isViTriChanged) {
+                await queryDatabase(
+                    `INSERT INTO CHUYEN_THIETBI
+                     (MaThietBi, MaLoai, TuPhong, DenPhong, NgayChuyen, MaCanBo)
+                     VALUES (?, ?, ?, ?, NOW(), ?)`,
+                    [MaThietBi, MaLoai, oldViTri, ViTriHienTai, req.user.id]
+                );
+            }
+        }
+
+        res.json({ message: "Cập nhật danh sách thiết bị thành công." });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: error.message });
+    }
+});
+
 
 module.exports = router;

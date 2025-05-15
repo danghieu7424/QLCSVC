@@ -268,6 +268,7 @@ export default function LoaiThietBiPage() {
                         handleAddRows();
                       }}
                       className="btnAdd"
+                      disabled={elementLoading}
                     >
                       {elementLoading ? (
                         <Loader />
@@ -281,6 +282,7 @@ export default function LoaiThietBiPage() {
                       title="Xóa"
                       onClick={() => setShowCheck(true)}
                       className="btnDel"
+                      disabled={elementLoading}
                     >
                       {elementLoading ? (
                         <Loader width="20px" height="20px" color="#fff" />
@@ -301,6 +303,7 @@ export default function LoaiThietBiPage() {
                           handleAddRows();
                         }}
                         className="btnAdd"
+                        disabled={elementLoading}
                       >
                         {elementLoading ? (
                           <Loader width="20px" height="20px" color="#fff" />
@@ -323,6 +326,7 @@ export default function LoaiThietBiPage() {
                         }
                       }}
                       className="btnOK"
+                      disabled={elementLoading}
                     >
                       {elementLoading ? (
                         <Loader width="20px" height="20px" color="#fff" />
@@ -346,6 +350,7 @@ export default function LoaiThietBiPage() {
                           setSelectedRows([]);
                         }
                       }}
+                      disabled={elementLoading}
                     >
                       {elementLoading ? (
                         <Loader width="20px" height="20px" color="#fff" />

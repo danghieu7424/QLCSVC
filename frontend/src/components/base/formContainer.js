@@ -63,7 +63,13 @@ const InputSearch = ({ className = "", list = [], onChange }) => {
     );
 };
 
-const InputSearchSelect = ({ className = "", inputStyle ={} ,keyShow, list = [], onChange }) => {
+const InputSearchSelect = ({
+    className = "",
+    inputStyle = {},
+    keyShow,
+    list = [],
+    onChange,
+}) => {
     const [searchText, setSearchText] = useState("");
 
     const filteredList = list.filter((item) =>
@@ -83,7 +89,7 @@ const InputSearchSelect = ({ className = "", inputStyle ={} ,keyShow, list = [],
                 width: "100%",
                 height: "auto",
                 margin: ".625rem 0",
-                ...inputStyle 
+                ...inputStyle,
             }}
         >
             <div className="InputSearch-input">
@@ -122,7 +128,14 @@ const InputSearchSelect = ({ className = "", inputStyle ={} ,keyShow, list = [],
     );
 };
 
-const InputSearchSelectShow = ({ className = "", keyShow, keyList, value = "", list = [], onChange }) => {
+const InputSearchSelectShow = ({
+    className = "",
+    keyShow,
+    keyList,
+    value = "",
+    list = [],
+    onChange,
+}) => {
     const [selected, setSelected] = useState(value);
     const [showList, setShowList] = useState(false);
     const [searchText, setSearchText] = useState("");
@@ -137,12 +150,11 @@ const InputSearchSelectShow = ({ className = "", keyShow, keyList, value = "", l
             setSelected(value);
         }
     }, [value, keyShow]);
-    
 
     const handleEdit = () => {
         setSearchText(selected);
         setShowList(true);
-    }
+    };
 
     const handleClickOutside = (e) => {
         if (containerRef.current && !containerRef.current.contains(e.target)) {
@@ -184,17 +196,18 @@ const InputSearchSelectShow = ({ className = "", keyShow, keyList, value = "", l
 
     const filteredList = list.filter((item) => {
         const displayValue = item[keyList] ?? item[keyShow];
-        return typeof displayValue === "string" &&
-            displayValue.toLowerCase().includes(searchText.toLowerCase());
+        return (
+            typeof displayValue === "string" &&
+            displayValue.toLowerCase().includes(searchText.toLowerCase())
+        );
     });
-    
+
     const handleSelect = (item) => {
         setShowList(false);
         setSelected(item[keyShow]);
         setSearchText(item[keyShow]);
         onChange?.(item);
     };
-
 
     return (
         <div
@@ -251,12 +264,149 @@ const InputSearchSelectShow = ({ className = "", keyShow, keyList, value = "", l
                                     </li>
                                 ))
                             ) : (
-                                <li className="no-result">Không tìm thấy kết quả</li>
+                                <li className="no-result">
+                                    Không tìm thấy kết quả
+                                </li>
                             )}
                         </ul>
                     </div>
                 </div>
             )}
+        </div>
+    );
+};
+
+const InputSearchSelected = ({
+    className = "",
+    keyShow,
+    keyList,
+    value = "",
+    list = [],
+    inputStyle = {},
+    onChange,
+}) => {
+    const [selected, setSelected] = useState(value);
+    const [searchText, setSearchText] = useState("");
+    const [showList, setShowList] = useState(false);
+    const containerRef = useRef(null);
+
+    useEffect(() => {
+        const selectedValue =
+            typeof value === "object" && value !== null
+                ? value[keyShow]
+                : value;
+        setSelected(selectedValue);
+        setSearchText(selectedValue);
+    }, [value, keyShow]);
+
+    const handleClickOutside = (e) => {
+        if (containerRef.current && !containerRef.current.contains(e.target)) {
+            setShowList(false);
+            onChange?.(emptyObject);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("mousedown", handleClickOutside);
+        document.addEventListener("touchstart", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+            document.removeEventListener("touchstart", handleClickOutside);
+        };
+    }, []);
+
+    const filteredList = list.filter((item) => {
+        const displayValue = item[keyList] ?? item[keyShow];
+        return (
+            typeof displayValue === "string" &&
+            displayValue.toLowerCase().includes(searchText.toLowerCase())
+        );
+    });
+
+    const handleSelect = (item) => {
+        setShowList(false);
+        const display = item[keyShow];
+        setSelected(display);
+        setSearchText(display);
+        onChange?.(item);
+    };
+
+    const emptyObject = React.useMemo(() => {
+        if (
+            Array.isArray(list) &&
+            list.length > 0 &&
+            list[0] &&
+            typeof list[0] === "object"
+        ) {
+            return Object.keys(list[0]).reduce((acc, key) => {
+                acc[key] = "";
+                return acc;
+            }, {});
+        }
+        return { [keyShow]: "" };
+    }, [list, keyShow]);
+
+    return (
+        <div
+            ref={containerRef}
+            className={`${className} InputSelect-container`}
+            style={{ position: "relative", width: "100%", ...inputStyle }}
+        >
+            <div
+                className={`${className} InputSearch-container`}
+                style={{
+                    position: "relative",
+                    width: "100%",
+                    height: "auto",
+                    margin: ".625rem 0",
+                }}
+            >
+                <div className="InputSearch-input">
+                    <input
+                        type="text"
+                        value={searchText}
+                        onFocus={() => setShowList(true)}
+                        onChange={(e) => setSearchText(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                                e.preventDefault();
+                                setSelected("");
+                                setSearchText("");
+                                setShowList(false);
+                                onChange?.(emptyObject);
+                            }
+                        }}
+                        placeholder="Chọn..."
+                    />
+                    <span>
+                        <svg width="14" height="14" viewBox="0 0 24 24">
+                            <path d="M11.178 19.569a.998.998 0 0 0 1.644 0l9-13A.999.999 0 0 0 21 5H3a1.002 1.002 0 0 0-.822 1.569l9 13z"></path>
+                        </svg>
+                    </span>
+                </div>
+
+                {showList && (
+                    <div className="InputSearch-list">
+                        <ul>
+                            {filteredList.length > 0 ? (
+                                filteredList.map((item, index) => (
+                                    <li
+                                        className="InputSearch-list-child"
+                                        key={index}
+                                        onClick={() => handleSelect(item)}
+                                    >
+                                        {item[keyList] ?? item[keyShow]}
+                                    </li>
+                                ))
+                            ) : (
+                                <li className="no-result">
+                                    Không tìm thấy kết quả
+                                </li>
+                            )}
+                        </ul>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
@@ -491,4 +641,12 @@ const InputSelect = ({ value = "", list = [], onChange, className = "" }) => {
     );
 };
 
-export { InputChange, InputSearch, InputSearchSelect, InputSearchSelectShow, InputSelect, SwitchButton };
+export {
+    InputChange,
+    InputSearch,
+    InputSearchSelect,
+    InputSearchSelectShow,
+    InputSelect,
+    SwitchButton,
+    InputSearchSelected,
+};

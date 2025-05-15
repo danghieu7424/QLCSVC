@@ -119,6 +119,11 @@ export default function Header() {
                                                                 Loại thiết bị
                                                             </Link>
                                                         </li> 
+                                                        <li>
+                                                            <Link to="/thiet-bi?TrangThai=Kho">
+                                                                Kho thiết bị
+                                                            </Link>
+                                                        </li> 
                                                     </>
                                                 )}
                                             {user.Role === "manager" && (

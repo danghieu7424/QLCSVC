@@ -290,7 +290,7 @@ export default function QuanLyPhongPage() {
                                                                 ></span>
                                                                 <span className="title">
                                                                     <Link
-                                                                        to={`/thiet-bi?MaPhong=${phong.MaPhong}`}
+                                                                        to={`/thiet-bi-trong-phong?MaPhong=${phong.MaPhong}`}
                                                                     >
                                                                         {`${phong.MaPhong} - ${phong.TenPhong}`}
                                                                     </Link>

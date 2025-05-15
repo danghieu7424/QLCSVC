@@ -9,7 +9,8 @@ import LoginPage from "../components/loginPage.js";
 import ProfilePage from "../components/profilePage.js";
 import ChangePasswordPage from "../components/changePasswordPage.js";
 import LoaiThietBiPage from "../components/loaiThietBiPage.js";
-import ThietBiPage from "../components/thietBiPage.js";
+import ThietBiPage from "../components/thietBiPage.jsx";
+import ThietBiTrongPhongPage from "../components/thietBiTrongPhongPage.jsx";
 
 import QuanLyPhongPage from "../components/quanLyPhongPage.js";
 
@@ -70,6 +71,14 @@ const Router = () => {
           element={
             <TransitionComponent>
               <ThietBiPage />
+            </TransitionComponent>
+          }
+        />
+        <Route
+          path="/thiet-bi-trong-phong"
+          element={
+            <TransitionComponent>
+              <ThietBiTrongPhongPage />
             </TransitionComponent>
           }
         />
