@@ -30,34 +30,33 @@ export default function ThietBiPage() {
     const query = new URLSearchParams(location.search);
 
     const [data, setData] = useState([]);
+    const [showData, setShowData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [elementLoading, setElementLoading] = useState(false);
     const [phong, setPhong] = useState([]);
     const [trangThai, setTrangThai] = useState([]);
     const [showCheck, setShowCheck] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
+    const [showHistory, setShowHistory] = useState(false);
 
+    const [history, setHistory] = useState([]);
     const [selectedTrangThai, setSelectedTrangThai] = useState("");
     const [selectedMaPhong, setSelectedMaPhong] = useState("");
 
     const [selectedRows, setSelectedRows] = useState([]);
 
-    const fetchTable = async (TrangThai = "", MaPhong = "") => {
+    const fetchTable = async () => {
         try {
-            const res = await fetch(
-                `${API_BASE_URL}/api/select/all-thiet-bi?TrangThai=${TrangThai}&MaPhong=${MaPhong}`,
-                {
-                    method: "GET",
-                    headers: { "Content-Type": "application/json" },
-                    credentials: "include",
-                }
-            );
+            const res = await fetch(`${API_BASE_URL}/api/select/all-thiet-bi`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+                credentials: "include",
+            });
 
             const result = await res.json();
 
             if (Array.isArray(result.data)) {
                 setData(result.data);
-                console.log(result.data);
             } else {
                 throw new Error("unauthorized");
             }
@@ -121,15 +120,68 @@ export default function ThietBiPage() {
         }
     };
 
-    useEffect(() => {
-        const TrangThai = query.get("TrangThai") || "";
-        const MaPhong = query.get("MaPhong") || "";
+    const fetchHistory = async () => {
+        try {
+            const res = await fetch(
+                `${API_BASE_URL}/api/select/thiet-bi/lich-su`,
+                {
+                    method: "GET",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                }
+            );
 
-        setSelectedTrangThai(TrangThai);
-        setSelectedMaPhong(MaPhong);
+            const result = await res.json();
+
+            if (Array.isArray(result.data)) {
+                setHistory(result.data);
+            } else {
+                throw new Error("unauthorized");
+            }
+        } catch (error) {
+            if (error.message === "unauthorized") {
+                // window.location.href = "/login";
+                console.log(error.message);
+                // Chuyển hướng đến trang đăng nhập
+            } else {
+                console.error("Lỗi tải dữ liệu:", error.message);
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => {
         fetchData();
-        fetchTable(TrangThai, MaPhong);
-    }, [location.search]);
+        fetchTable();
+        fetchHistory();
+    }, []);
+
+    useEffect(() => {
+        const savedTrangThai = localStorage.getItem("TrangThai") || "";
+        const savedMaPhong = localStorage.getItem("MaPhong") || "";
+
+        setSelectedTrangThai(savedTrangThai);
+        setSelectedMaPhong(savedMaPhong);
+    }, []);
+
+    useEffect(() => {
+        let filtered = [...data];
+
+        if (selectedTrangThai) {
+            filtered = filtered.filter(
+                (item) => item.TrangThai === selectedTrangThai
+            );
+        }
+
+        if (selectedMaPhong) {
+            filtered = filtered.filter(
+                (item) => item.ViTriHienTai === selectedMaPhong
+            );
+        }
+
+        setShowData(filtered);
+    }, [data, selectedTrangThai, selectedMaPhong]);
 
     const handleUpdate = async (rowIndex, keys, newValues) => {
         setElementLoading(true);
@@ -175,9 +227,14 @@ export default function ThietBiPage() {
         setElementLoading(true);
 
         try {
-            // Tạo danh sách bản ghi cần cập nhật
             const payload = data
-                .filter((row) => selectedRows.includes(row.MaLoai))
+                .filter((row) =>
+                    selectedRows.some(
+                        (sel) =>
+                            sel.MaThietBi === row.MaThietBi &&
+                            sel.MaLoai === row.MaLoai
+                    )
+                )
                 .map((row) => ({
                     MaThietBi: row.MaThietBi,
                     MaLoai: row.MaLoai,
@@ -214,6 +271,61 @@ export default function ThietBiPage() {
             {loading && <LoaderPage />}
             {!loading && (
                 <>
+                    {true && (
+                        <div
+                            className={`box_history ${
+                                showHistory ? "active" : ""
+                            }`}
+                        >
+                            <div className="box_history-btn">
+                                <button
+                                    title="Đóng"
+                                    className="btnCancel"
+                                    onClick={() => {
+                                        setShowHistory(false);
+                                    }}
+                                >
+                                    <svg
+                                        width="24"
+                                        height="24"
+                                        viewBox="0 0 24 24"
+                                    >
+                                        <path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div className="box_history-main">
+                                <table>
+                                    <caption>
+                                        <h2>Lịch sử sửa đổi</h2>
+                                    </caption>
+                                    <thead>
+                                        <tr>
+                                            <th>Số loại TB</th>
+                                            <th>Tên thiết bị</th>
+                                            <th>Trường thay đổi</th>
+                                            <th>Giá trị đổi</th>
+                                            <th>Thời gian</th>
+                                            <th>Cán Bộ thực hiện</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {history.map((row, rowIndex) => (
+                                            <tr key={rowIndex}>
+                                                <td>{row.MaThietBi}</td>
+                                                <td>{row.TenLoai}</td>
+                                                <td>{row.TruongThayDoi}</td>
+                                                <td>{`${row.GiaTriCu} >>> ${row.GiaTriMoi}`}</td>
+                                                <td>{row.ThoiGian}</td>
+                                                <td>{row.TenCanBo}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
+
                     {showEdit && (
                         <div className="box-show-edit">
                             <div className="box-show-edit-title">
@@ -301,15 +413,8 @@ export default function ThietBiPage() {
                                     }))}
                                     onChange={(selected) => {
                                         if (selected) {
-                                            navigate(
-                                                `/thiet-bi?MaPhong=${query.get(
-                                                    "MaPhong"
-                                                )}&TrangThai=${selected.label}`
-                                            );
-                                            fetchTable(
-                                                selected.label,
-                                                query.get("MaPhong")
-                                            );
+                                            localStorage.setItem("TrangThai", selected.label);
+                                            setSelectedTrangThai(selected.label);
                                         }
                                     }}
                                     inputStyle={{ width: "10rem" }}
@@ -324,17 +429,8 @@ export default function ThietBiPage() {
                                     list={phong}
                                     onChange={(selected) => {
                                         if (selected) {
-                                            navigate(
-                                                `/thiet-bi?MaPhong=${
-                                                    selected.MaPhong
-                                                }&TrangThai=${query.get(
-                                                    "TrangThai"
-                                                )}`
-                                            );
-                                            fetchTable(
-                                                query.get("TrangThai"),
-                                                selected.MaPhong
-                                            );
+                                            localStorage.setItem("TrangThai", selected.MaPhong);
+                                            setSelectedMaPhong(selected.MaPhong);
                                         }
                                     }}
                                     inputStyle={{ width: "10rem" }}
@@ -362,24 +458,46 @@ export default function ThietBiPage() {
                                                 >
                                                     <g
                                                         id="SVGRepo_bgCarrier"
-                                                        stroke-width="0"
+                                                        strokeWidth="0"
                                                     ></g>
                                                     <g
                                                         id="SVGRepo_tracerCarrier"
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
                                                         stroke="#CCCCCC"
-                                                        stroke-width="0.144"
+                                                        strokeWidth="0.144"
                                                     ></g>
                                                     <g id="SVGRepo_iconCarrier">
                                                         <path
                                                             d="M15.4998 5.50067L18.3282 8.3291M13 21H21M3 21.0004L3.04745 20.6683C3.21536 19.4929 3.29932 18.9052 3.49029 18.3565C3.65975 17.8697 3.89124 17.4067 4.17906 16.979C4.50341 16.497 4.92319 16.0772 5.76274 15.2377L17.4107 3.58969C18.1918 2.80865 19.4581 2.80864 20.2392 3.58969C21.0202 4.37074 21.0202 5.63707 20.2392 6.41812L8.37744 18.2798C7.61579 19.0415 7.23497 19.4223 6.8012 19.7252C6.41618 19.994 6.00093 20.2167 5.56398 20.3887C5.07171 20.5824 4.54375 20.6889 3.48793 20.902L3 21.0004Z"
                                                             stroke="#000000"
-                                                            stroke-width="0.72"
-                                                            stroke-linecap="round"
-                                                            stroke-linejoin="round"
+                                                            strokeWidth="0.72"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
                                                         ></path>
                                                     </g>
+                                                </svg>
+                                            )}
+                                        </button>
+                                        <button
+                                            title="Lịch sử sửa đổi"
+                                            onClick={() => {
+                                                setShowHistory(true);
+                                                fetchHistory();
+                                            }}
+                                            className="btnAdd"
+                                            disabled={elementLoading}
+                                        >
+                                            {elementLoading ? (
+                                                <Loader />
+                                            ) : (
+                                                <svg
+                                                    width="24"
+                                                    height="24"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path d="M12 2C6.486 2 2 6.486 2 12s4.486 10 10 10 10-4.486 10-10S17.514 2 12 2zm0 18c-4.411 0-8-3.589-8-8s3.589-8 8-8 8 3.589 8 8-3.589 8-8 8z"></path>
+                                                    <path d="M13 7h-2v6h6v-2h-4z"></path>
                                                 </svg>
                                             )}
                                         </button>
@@ -444,7 +562,7 @@ export default function ThietBiPage() {
                         id="box_table_container"
                         style={{ overflow: "visible" }}
                     >
-                        <h2>Bảng thông tin về Loại Thiết Bị</h2>
+                        <h2>Bảng thông tin về Thiết Bị</h2>
                         <table>
                             <thead>
                                 <tr>
@@ -457,7 +575,7 @@ export default function ThietBiPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {data.map((row, rowIndex) => (
+                                {showData.map((row, rowIndex) => (
                                     <tr key={rowIndex}>
                                         {showCheck && (
                                             <td
@@ -471,24 +589,37 @@ export default function ThietBiPage() {
                                                     style={{
                                                         cursor: "pointer",
                                                     }}
-                                                    checked={selectedRows.includes(
-                                                        row.MaLoai
+                                                    checked={selectedRows.some(
+                                                        (item) =>
+                                                            item.MaThietBi ===
+                                                                row.MaThietBi &&
+                                                            item.MaLoai ===
+                                                                row.MaLoai
                                                     )}
                                                     onChange={(e) => {
                                                         const isChecked =
                                                             e.target.checked;
+
                                                         setSelectedRows(
                                                             (prev) => {
                                                                 if (isChecked) {
                                                                     return [
                                                                         ...prev,
-                                                                        row.MaLoai,
+                                                                        {
+                                                                            MaThietBi:
+                                                                                row.MaThietBi,
+                                                                            MaLoai: row.MaLoai,
+                                                                        },
                                                                     ];
                                                                 } else {
                                                                     return prev.filter(
-                                                                        (id) =>
-                                                                            id !==
-                                                                            row.MaLoai
+                                                                        (
+                                                                            item
+                                                                        ) =>
+                                                                            item.MaThietBi !==
+                                                                                row.MaThietBi ||
+                                                                            item.MaLoai !==
+                                                                                row.MaLoai
                                                                     );
                                                                 }
                                                             }

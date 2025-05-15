@@ -17,7 +17,8 @@ const pool = mysql.createPool({
     queueLimit: 0,
     connectTimeout: 10000,
     timezone: "+07:00",
-    enableKeepAlive: true
+    enableKeepAlive: true,
+    multipleStatements: true,
 });
 
 // Test kết nối

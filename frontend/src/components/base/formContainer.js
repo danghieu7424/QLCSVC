@@ -302,7 +302,7 @@ const InputSearchSelected = ({
     const handleClickOutside = (e) => {
         if (containerRef.current && !containerRef.current.contains(e.target)) {
             setShowList(false);
-            onChange?.(emptyObject);
+            // onChange?.(emptyObject);
         }
     };
 
