@@ -11,6 +11,7 @@ import ChangePasswordPage from "../components/changePasswordPage.js";
 import LoaiThietBiPage from "../components/loaiThietBiPage.js";
 import ThietBiPage from "../components/thietBiPage.jsx";
 import ThietBiTrongPhongPage from "../components/thietBiTrongPhongPage.jsx";
+import VanBanPage from "../components/vanBanPage.jsx";
 
 import QuanLyPhongPage from "../components/quanLyPhongPage.js";
 
@@ -79,6 +80,14 @@ const Router = () => {
           element={
             <TransitionComponent>
               <ThietBiTrongPhongPage />
+            </TransitionComponent>
+          }
+        />
+        <Route
+          path="/van-ban"
+          element={
+            <TransitionComponent>
+              <VanBanPage />
             </TransitionComponent>
           }
         />

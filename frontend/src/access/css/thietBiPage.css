@@ -141,14 +141,27 @@
 }
 
 .box_history .box_history-btn button {
+  position: relative;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.box_history .box_history-filter {
     position: relative;
-    width: 1.75rem;
-    height: 1.75rem;
+}
+
+.box_history .box_history-filter .input-date {
+    position: relative;
+    width: 10rem;
+    height: 2rem;
+    padding: 0.375rem;
     border-radius: 0.375rem;
-    cursor: pointer;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
+    outline: none;
 }
 
 /* -------btn cancel------- */

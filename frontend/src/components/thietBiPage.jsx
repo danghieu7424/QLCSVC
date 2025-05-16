@@ -29,6 +29,8 @@ export default function ThietBiPage() {
     const location = useLocation();
     const query = new URLSearchParams(location.search);
 
+    const [filterDate, setFilterDate] = useState("");
+
     const [data, setData] = useState([]);
     const [showData, setShowData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -37,6 +39,7 @@ export default function ThietBiPage() {
     const [trangThai, setTrangThai] = useState([]);
     const [showCheck, setShowCheck] = useState(false);
     const [showEdit, setShowEdit] = useState(false);
+    const [showText, setShowText] = useState(false);
     const [showHistory, setShowHistory] = useState(false);
 
     const [history, setHistory] = useState([]);
@@ -266,6 +269,42 @@ export default function ThietBiPage() {
         }
     };
 
+    const handleGetListThanhLy = async () => {
+        const confirm = window.confirm(
+            "Bạn có chắc chắn muốn thanh lý những thiết bị này không?"
+        );
+        if (!confirm) return;
+        try {
+            const res = await fetch(
+                `${API_BASE_URL}/api/select/danh-sach-thanh-ly`,
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    credentials: "include",
+                    body: JSON.stringify([...selectedRows]),
+                }
+            );
+
+            const result = await res.json();
+
+            if (!res.ok) throw new Error(result.message || "Lỗi.");
+
+            console.log(result.data);
+
+            toast.success(result.message);
+        } catch (error) {
+            console.log(error.message);
+            toast.error(error.message);
+        } finally {
+            setElementLoading(false);
+        }
+    };
+
+    const filteredHistory = history.filter((row) => {
+        if (!filterDate) return true; // không lọc nếu chưa chọn ngày
+        return row.ThoiGian.startsWith(filterDate); // so sánh phần ngày
+    });
+
     return (
         <div className="page-container thp-container tb-container">
             {loading && <LoaderPage />}
@@ -293,6 +332,17 @@ export default function ThietBiPage() {
                                         <path d="m16.192 6.344-4.243 4.242-4.242-4.242-1.414 1.414L10.535 12l-4.242 4.242 1.414 1.414 4.242-4.242 4.243 4.242 1.414-1.414L13.364 12l4.242-4.242z"></path>
                                     </svg>
                                 </button>
+                                <div className="box_history-filter">
+                                    <input
+                                        type="date"
+                                        value={filterDate}
+                                        onChange={(e) =>
+                                            setFilterDate(e.target.value)
+                                        }
+                                        placeholder="Chọn ngày"
+                                        className="input-date"
+                                    />
+                                </div>
                             </div>
                             <div className="box_history-main">
                                 <table>
@@ -310,7 +360,7 @@ export default function ThietBiPage() {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {history.map((row, rowIndex) => (
+                                        {filteredHistory.map((row, rowIndex) => (
                                             <tr key={rowIndex}>
                                                 <td>{row.MaThietBi}</td>
                                                 <td>{row.TenLoai}</td>
@@ -413,8 +463,13 @@ export default function ThietBiPage() {
                                     }))}
                                     onChange={(selected) => {
                                         if (selected) {
-                                            localStorage.setItem("TrangThai", selected.label);
-                                            setSelectedTrangThai(selected.label);
+                                            localStorage.setItem(
+                                                "TrangThai",
+                                                selected.label
+                                            );
+                                            setSelectedTrangThai(
+                                                selected.label
+                                            );
                                         }
                                     }}
                                     inputStyle={{ width: "10rem" }}
@@ -429,8 +484,13 @@ export default function ThietBiPage() {
                                     list={phong}
                                     onChange={(selected) => {
                                         if (selected) {
-                                            localStorage.setItem("TrangThai", selected.MaPhong);
-                                            setSelectedMaPhong(selected.MaPhong);
+                                            localStorage.setItem(
+                                                "TrangThai",
+                                                selected.MaPhong
+                                            );
+                                            setSelectedMaPhong(
+                                                selected.MaPhong
+                                            );
                                         }
                                     }}
                                     inputStyle={{ width: "10rem" }}
@@ -439,7 +499,7 @@ export default function ThietBiPage() {
                         </div>
                         <div className="box_tools">
                             <div className={`box_tools-style box_tools-add`}>
-                                {!showCheck ? (
+                                {!(showCheck || showText) ? (
                                     <>
                                         <button
                                             title="Sửa nhiều dòng"
@@ -501,13 +561,41 @@ export default function ThietBiPage() {
                                                 </svg>
                                             )}
                                         </button>
+                                        <button
+                                            title="Văn bản"
+                                            onClick={() => {
+                                                setShowCheck(true);
+                                                setShowText(true);
+                                            }}
+                                            className="btnAdd"
+                                            disabled={elementLoading}
+                                        >
+                                            {elementLoading ? (
+                                                <Loader />
+                                            ) : (
+                                                <svg
+                                                    width="24"
+                                                    height="24"
+                                                    viewBox="0 0 24 24"
+                                                >
+                                                    <path d="M19.903 8.586a.997.997 0 0 0-.196-.293l-6-6a.997.997 0 0 0-.293-.196c-.03-.014-.062-.022-.094-.033a.991.991 0 0 0-.259-.051C13.04 2.011 13.021 2 13 2H6c-1.103 0-2 .897-2 2v16c0 1.103.897 2 2 2h12c1.103 0 2-.897 2-2V9c0-.021-.011-.04-.013-.062a.952.952 0 0 0-.051-.259c-.01-.032-.019-.063-.033-.093zM16.586 8H14V5.414L16.586 8zM6 20V4h6v5a1 1 0 0 0 1 1h5l.002 10H6z"></path>
+                                                    <path d="M8 12h8v2H8zm0 4h8v2H8zm0-8h2v2H8z"></path>
+                                                </svg>
+                                            )}
+                                        </button>
                                     </>
                                 ) : (
                                     <>
                                         <button
                                             title="OK"
                                             onClick={() => {
-                                                setShowEdit(true);
+                                                if (showEdit) {
+                                                    setShowEdit(true);
+                                                }
+                                                if (showText) {
+                                                    handleGetListThanhLy();
+                                                    // console.log(selectedRows);
+                                                }
                                             }}
                                             className="btnOK"
                                             disabled={elementLoading}
@@ -534,6 +622,8 @@ export default function ThietBiPage() {
                                             className="btnCancel"
                                             onClick={() => {
                                                 setShowCheck(false);
+                                                setShowText(false);
+                                                setSelectedRows([]);
                                             }}
                                             disabled={elementLoading}
                                         >

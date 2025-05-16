@@ -648,7 +648,7 @@ router.put(
         const { MaThietBi, MaLoai, TrangThai, ViTriHienTai, GiaiTrinh } =
             req.body;
 
-            console.log({ MaThietBi, MaLoai, TrangThai, ViTriHienTai, GiaiTrinh })
+        console.log({ MaThietBi, MaLoai, TrangThai, ViTriHienTai, GiaiTrinh });
 
         try {
             await queryDatabase(
@@ -657,14 +657,14 @@ router.put(
                     UPDATE THIETBI
                     SET TrangThai = ?, ViTriHienTai = ?, GiaiTrinh = ?
                     WHERE MaThietBi = ? AND MaLoai = ?`,
-                    [
-                        req.user.id,
-                        TrangThai,
-                        ViTriHienTai,
-                        GiaiTrinh,
-                        MaThietBi,
-                        MaLoai,
-                    ]
+                [
+                    req.user.id,
+                    TrangThai,
+                    ViTriHienTai,
+                    GiaiTrinh,
+                    MaThietBi,
+                    MaLoai,
+                ]
             );
 
             res.json({ message: "Cập nhật thành công." });
@@ -732,6 +732,78 @@ router.get("/api/select/thiet-bi/lich-su", async (req, res) => {
                 LEFT JOIN LOAI_THIETBI ltb ON ltb.MaLoai = ls.MaLoai
                 LEFT JOIN CANBO cb ON cb.MaCanBo = ls.MaCanBo
         `
+        );
+
+        res.json({ message: "Thành công.", data: result });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: error.message });
+    }
+});
+router.post("/api/select/danh-sach-thanh-ly", verifyToken, async (req, res) => {
+    const rows = req.body;
+
+    if (!Array.isArray(rows) || rows.length === 0) {
+        return res.json({ message: "Danh sách rỗng", data: [] });
+    }
+
+    try {
+        // 1. Tạo phiếu thanh lý và lấy MaThanhLy vừa tạo
+        const insertThanhLy = await queryDatabase(
+            `INSERT INTO THANHLY_THIETBI (NgayDeXuat, MaCanBo, GiaBan) VALUES (CURDATE(), ?, 0.00)`,
+            [req.user.id]
+        );
+        const maThanhLy = insertThanhLy.insertId;
+
+        // 2. Chèn danh sách thiết bị vào bảng DANHSACH_THANHLY_THIETBI
+        const placeholders = rows.map(() => `(?, ?, ?)`).join(", ");
+        const values = rows.flatMap((row) => [
+            maThanhLy,
+            row.MaThietBi,
+            row.MaLoai,
+        ]);
+
+        await queryDatabase(
+            `
+            INSERT INTO DANHSACH_THANHLY_THIETBI (MaThanhLy, MaThietBi, MaLoai)
+            VALUES ${placeholders}
+        `,
+            values
+        );
+
+        // 3. Trả về danh sách thiết bị đã chọn
+        const whereClause = rows
+            .map(() => "(MaThietBi = ? AND MaLoai = ?)")
+            .join(" OR ");
+        const whereValues = rows.flatMap((row) => [row.MaThietBi, row.MaLoai]);
+
+        const result = await queryDatabase(
+            `SELECT * FROM THIETBI WHERE ${whereClause}`,
+            whereValues
+        );
+
+        res.json({ message: "Thành công.", data: result });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: error.message });
+    }
+});
+
+router.get('/api/select/danh-sach-thanh-ly', async (req, res) => {
+    const { MaThanhLy } = req.query;
+    try {
+        const result = await queryDatabase(
+            `
+                SELECT tltb.MaThanhLy, ltb.TenLoai, tb.TriGia, tltb.MaCanBo
+                FROM DANHSACH_THANHLY_THIETBI dstltb
+                LEFT JOIN THANHLY_THIETBI tltb 
+                    ON dstltb.MaThanhLy = tltb.MaThanhLy
+                LEFT JOIN THIETBI tb 
+                    ON tb.MaThietBi = dstltb.MaThietBi AND tb.MaLoai = dstltb.MaLoai
+                LEFT JOIN LOAI_THIETBI ltb 
+                    ON ltb.MaLoai = dstltb.MaLoai
+                WHERE tltb.MaThanhLy = ?;
+            `, [MaThanhLy]
         );
 
         res.json({ message: "Thành công.", data: result });

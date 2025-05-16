@@ -110,17 +110,20 @@ export default function Header() {
                                                             </Link>
                                                         </li>*/}
                                                         <li>
-                                                            <Link to="/quan-ly-phong-page">
+                                                            <Link to="/quan-ly-phong-page"
+                                                            style={{position: 'relative', display: 'inline-block', width: "100%", height: "100%"}}>
                                                                 Quản lý phòng
                                                             </Link>
                                                         </li> 
                                                         <li>
-                                                            <Link to="/loai-thiet-bi">
+                                                            <Link to="/loai-thiet-bi"
+                                                            style={{position: 'relative', display: 'inline-block',width: "100%", height: "100%"}}>
                                                                 Loại thiết bị
                                                             </Link>
                                                         </li> 
                                                         <li>
-                                                            <Link to="/thiet-bi?TrangThai=Kho">
+                                                            <Link to="/thiet-bi?TrangThai=Kho"
+                                                            style={{position: 'relative', display: 'inline-block',width: "100%", height: "100%"}}>
                                                                 Kho thiết bị
                                                             </Link>
                                                         </li> 
