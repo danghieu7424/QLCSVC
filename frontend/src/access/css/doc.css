@@ -20,10 +20,11 @@
   background: white;
   border: 1px solid #ccc;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-  
 }
 
-.tool button, .tool select, .tool input {
+.tool button,
+.tool select,
+.tool input {
   min-width: 2rem;
   border: none;
   padding: 5px;
@@ -57,13 +58,13 @@
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-.toolbar button, .toolbar select, .toolbar input {
+.toolbar button,
+.toolbar select,
+.toolbar input {
   border: none;
   padding: 5px;
   cursor: pointer;
 }
-
-
 
 .editor {
   width: 100%;
@@ -72,11 +73,13 @@
   padding: 10px;
   font-size: 16px;
   line-height: 1.5;
-  font-family: 'Times New Roman', Times, serif;
+  font-family: "Times New Roman", Times, serif;
 }
 
-.editor table, .editor td, .editor th {
-  font-family: 'Times New Roman', serif !important;
+.editor table,
+.editor td,
+.editor th {
+  font-family: "Times New Roman", serif !important;
 }
 
 .editor table {
@@ -84,7 +87,8 @@
   border-collapse: collapse;
 }
 
-.editor table th, .editor table td {
+.editor table th,
+.editor table td {
   padding: 8px;
   border: 1px solid black;
   text-align: left;
@@ -95,7 +99,8 @@
   cursor: pointer;
 }
 
-.editor table th:hover, td:hover {
+.editor table th:hover,
+td:hover {
   background: #ddd;
 }
 
@@ -107,4 +112,128 @@
 
 .editor .add-row-btn:hover {
   background: #bbb;
+}
+
+#cursor-tools {
+  position: absolute;
+  top: 100px;
+  left: 100px;
+  width: 450px;
+  min-height: 2rem;
+  padding: 0.375rem;
+  border: 1px solid #ccc;
+  border-radius: 0.375rem;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  /* pointer-events: none; */
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  background: #eee;
+  z-index: 9999999999;
+
+  .font {
+    position: relative;
+    width: 5rem;
+
+    #select-font {
+      position: relative;
+      width: 100%;
+      padding: 0.625rem;
+      outline: none;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+      &:is(:focus-visible) {
+        outline: 1px solid #ccc;
+      }
+
+      & > option {
+        border: 1px solid #e5e5e5;
+        padding: 10px;
+      }
+    }
+  }
+
+  .font-size {
+    position: relative;
+    width: 3rem;
+
+    & > input {
+      position: relative;
+      width: 100%;
+      padding: 0.625rem;
+      outline: none;
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+      &:is(:focus-visible) {
+        outline: 1px solid #ccc;
+      }
+    }
+  }
+
+  .font-color {
+    position: relative;
+    width: 2rem;
+    height: 2rem;
+
+    & > input[type="color"] {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      aspect-ratio: 1/1;
+      border: none;
+      border-radius: 50%;
+      cursor: pointer;
+      border: none;
+      outline: none;
+      -webkit-appearance: none;
+
+      &::-webkit-color-swatch-wrapper {
+        padding: 0;
+      }
+
+      &::-webkit-color-swatch {
+        border: none;
+        border-radius: 50%;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+    }
+  }
+
+  div {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.125rem;
+
+    & > button {
+      position: relative;
+      width: 2rem;
+      height: 2rem;
+      padding: 0.375rem;
+      border: none;
+      border-radius: 0.375rem;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      background: #eee;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      transition: background 0.3s ease;
+
+      &:hover {
+        background: #ddd;
+      }
+
+      &:active {
+        background: #ccc;
+      }
+    }
+  }
 }
