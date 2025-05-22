@@ -84,6 +84,10 @@ router.get("/thiet-bi", requireAuth, (req, res) => {
     res.sendFile(path.join(__dirname, "htdocs", "index.html"));
 });
 
+router.get("/van-ban", requireAuth, (req, res) => {
+    res.sendFile(path.join(__dirname, "htdocs", "index.html"));
+});
+
 router.use(express.static(path.join(__dirname, "htdocs")));
 router.use(favicon(path.join(__dirname, "htdocs", "favicon.ico")));
 router.use((req, res, next) => {
