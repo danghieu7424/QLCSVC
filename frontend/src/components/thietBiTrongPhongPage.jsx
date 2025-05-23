@@ -175,15 +175,20 @@ export default function ThietBiTrongPhongPage() {
     }
   };
 
+  
   const handleBatchUpdate = async (newViTriHienTai) => {
     if (selectedRows.length === 0) return;
 
     setElementLoading(true);
 
     try {
-      // Tạo danh sách bản ghi cần cập nhật
       const payload = data
-        .filter((row) => selectedRows.includes(row.MaLoai))
+        .filter((row) =>
+          selectedRows.some(
+            (sel) =>
+              sel.MaThietBi === row.MaThietBi && sel.MaLoai === row.MaLoai
+          )
+        )
         .map((row) => ({
           MaThietBi: row.MaThietBi,
           MaLoai: row.MaLoai,
@@ -262,16 +267,16 @@ export default function ThietBiTrongPhongPage() {
 
   useEffect(() => {
     if (editorRef.current) {
-      editorRef.current.innerHTML = noteData?.GhiChu || "Viết nội dung tại đây...";
+      editorRef.current.innerHTML =
+        noteData?.GhiChu || "Viết nội dung tại đây...";
     }
   }, [noteData]);
 
   useEffect(() => {
-  if (filterDate) {
-    handleGetNote();
-  }
-}, [filterDate]);
-
+    if (filterDate) {
+      handleGetNote();
+    }
+  }, [filterDate]);
 
   return (
     <div className="page-container thp-container tb-container">
@@ -326,7 +331,9 @@ export default function ThietBiTrongPhongPage() {
                 suppressContentEditableWarning={true}
                 className="box_note-editor-area"
               >
-                {noteData && noteData.GhiChu ? noteData.GhiChu : "Viết nội dung tại đây..."}
+                {noteData && noteData.GhiChu
+                  ? noteData.GhiChu
+                  : "Viết nội dung tại đây..."}
               </div>
             </div>
           </div>
@@ -497,14 +504,29 @@ export default function ThietBiTrongPhongPage() {
                           style={{
                             cursor: "pointer",
                           }}
-                          checked={selectedRows.includes(row.MaLoai)}
+                          checked={selectedRows.some(
+                            (item) =>
+                              item.MaThietBi === row.MaThietBi &&
+                              item.MaLoai === row.MaLoai
+                          )}
                           onChange={(e) => {
                             const isChecked = e.target.checked;
+
                             setSelectedRows((prev) => {
                               if (isChecked) {
-                                return [...prev, row.MaLoai];
+                                return [
+                                  ...prev,
+                                  {
+                                    MaThietBi: row.MaThietBi,
+                                    MaLoai: row.MaLoai,
+                                  },
+                                ];
                               } else {
-                                return prev.filter((id) => id !== row.MaLoai);
+                                return prev.filter(
+                                  (item) =>
+                                    item.MaThietBi !== row.MaThietBi ||
+                                    item.MaLoai !== row.MaLoai
+                                );
                               }
                             });
                           }}

@@ -10,19 +10,20 @@ router.get("/api/select/profile", verifyToken, async (req, res) => {
   try {
     const [result] = await queryDatabase(
       `
-                SELECT
-                    cb.*,
-                    k.TenKhoa,
-                    n.TenNganh
-                FROM
-                    CANBO cb
-                JOIN
-                    KHOA k ON k.MaKhoa = cb.MaKhoa
-                JOIN
-                    NGANH n ON n.MaNganh = cb.MaNganh
-                WHERE
-                    MaCanBo = ?;
-            `,
+        SET time_zone = '+07:00';
+        SELECT
+            cb.*,
+            k.TenKhoa,
+            n.TenNganh
+        FROM
+            CANBO cb
+        JOIN
+            KHOA k ON k.MaKhoa = cb.MaKhoa
+        JOIN
+            NGANH n ON n.MaNganh = cb.MaNganh
+        WHERE
+            MaCanBo = ?;
+      `,
       [decoded.id]
     );
 
@@ -43,23 +44,20 @@ router.get("/api/select/data", verifyToken, async (req, res) => {
   try {
     const rawResult_cb = await queryDatabase(
       `
-                SELECT MaCanBo, TenCanBo FROM CANBO;
-            `,
-      []
+        SELECT MaCanBo, TenCanBo FROM CANBO;
+      `
     );
 
     const rawResult_n = await queryDatabase(
       `
-                SELECT MaNganh, TenNganh FROM NGANH;
-            `,
-      []
+        SELECT MaNganh, TenNganh FROM NGANH;
+      `
     );
 
     const rawResult_k = await queryDatabase(
       `
-                SELECT MaKhoa, TenKhoa FROM KHOA;
-            `,
-      []
+        SELECT MaKhoa, TenKhoa FROM KHOA;
+      `
     );
 
     res.json({
@@ -275,9 +273,10 @@ router.delete("/api/delete/quan-ly-phong", verifyToken, async (req, res) => {
     // Xóa cán bộ khỏi phòng
     await queryDatabase(
       `
-            DELETE FROM QUANLY_PHONG
-            WHERE MaPhong = ? AND MaCanBo = ?
-        `,
+        SET time_zone = '+07:00';
+        DELETE FROM QUANLY_PHONG
+        WHERE MaPhong = ? AND MaCanBo = ?
+      `,
       [MaPhong, MaCanBo]
     );
 
@@ -409,6 +408,7 @@ router.post(
 
       await queryDatabase(
         `
+          SET time_zone = '+07:00';
           INSERT INTO LOAI_THIETBI
           (TenLoai, ThongSoKyThuat, DonViTinh, XuatXu, NamSanXuat, NgayNhapKho, MaCanBo, GiaNhap, SoLuong)
           VALUES ${placeholders}
@@ -445,6 +445,7 @@ router.put(
     try {
       await queryDatabase(
         `
+            SET time_zone = '+07:00';
             UPDATE LOAI_THIETBI
             SET
                 TenLoai = ?,
@@ -651,6 +652,7 @@ router.put(
       await queryDatabase(
         `
                     SET @MaCanBo = ?;
+                    SET time_zone = '+07:00';
                     UPDATE THIETBI
                     SET TrangThai = ?, ViTriHienTai = ?, GiaiTrinh = ?
                     WHERE MaThietBi = ? AND MaLoai = ?`,
@@ -686,6 +688,7 @@ router.put(
         await queryDatabase(
           `
                     SET @MaCanBo = ?;
+                    SET time_zone = '+07:00';
                     UPDATE THIETBI
                     SET TrangThai = ?, ViTriHienTai = ?, GiaiTrinh = ?
                     WHERE MaThietBi = ? AND MaLoai = ?`,
@@ -727,7 +730,10 @@ router.post("/api/select/danh-sach-thanh-ly", verifyToken, async (req, res) => {
   try {
     // 1. Tạo phiếu thanh lý và lấy MaThanhLy vừa tạo
     const insertThanhLy = await queryDatabase(
-      `INSERT INTO THANHLY_THIETBI (NgayDeXuat, MaCanBo, GiaBan) VALUES (CURDATE(), ?, 0.00)`,
+      `
+        SET time_zone = '+07:00';
+        INSERT INTO THANHLY_THIETBI (NgayDeXuat, MaCanBo, GiaBan) VALUES (CURDATE(), ?, 0.00)
+      `,
       [req.user.id]
     );
     const maThanhLy = insertThanhLy.insertId;
@@ -742,9 +748,10 @@ router.post("/api/select/danh-sach-thanh-ly", verifyToken, async (req, res) => {
 
     await queryDatabase(
       `
-            INSERT INTO DANHSACH_THANHLY_THIETBI (MaThanhLy, MaThietBi, MaLoai)
-            VALUES ${placeholders}
-        `,
+        SET time_zone = '+07:00';
+        INSERT INTO DANHSACH_THANHLY_THIETBI (MaThanhLy, MaThietBi, MaLoai)
+        VALUES ${placeholders}
+      `,
       values
     );
 
@@ -818,6 +825,7 @@ router.post("/api/save/note", verifyToken, async (req, res) => {
   try {
     await queryDatabase(
       `
+        SET time_zone = '+07:00';
         INSERT INTO Note (MaPhong, Ngay, GhiChu)
         VALUES (?, ?, ?)
         ON DUPLICATE KEY UPDATE GhiChu = VALUES(GhiChu);
@@ -831,6 +839,5 @@ router.post("/api/save/note", verifyToken, async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-
 
 module.exports = router;

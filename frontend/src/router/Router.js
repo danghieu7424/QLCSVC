@@ -4,7 +4,7 @@ import { Routes, Route } from 'react-router-dom';
 import { TransitionProvider } from '../context/TransitionContext';
 import TransitionComponent from '../components/Transition';
 
-import HomePage from "../components/homePage.js";
+import HomePage from "../components/homePage.jsx";
 import LoginPage from "../components/loginPage.js";
 import ProfilePage from "../components/profilePage.js";
 import ChangePasswordPage from "../components/changePasswordPage.js";
