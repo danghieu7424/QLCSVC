@@ -97,7 +97,7 @@ export default function Header() {
                     <>
                         <div className="navigation">
                             <ul>
-                                <li>
+                                <li className="nav">
                                     Cơ sở vật chất
                                     <ul className="drop_down">
                                         <>
@@ -109,19 +109,19 @@ export default function Header() {
                                                                 Tổng quan Học Phần
                                                             </Link>
                                                         </li>*/}
-                                                        <li>
+                                                        <li className="navChild">
                                                             <Link to="/quan-ly-phong-page"
                                                             style={{position: 'relative', display: 'inline-block', width: "100%", height: "100%"}}>
                                                                 Quản lý phòng
                                                             </Link>
                                                         </li> 
-                                                        <li>
+                                                        <li className="navChild">
                                                             <Link to="/loai-thiet-bi"
                                                             style={{position: 'relative', display: 'inline-block',width: "100%", height: "100%"}}>
                                                                 Loại thiết bị
                                                             </Link>
                                                         </li> 
-                                                        <li>
+                                                        <li className="navChild">
                                                             <Link to="/thiet-bi?TrangThai=Kho"
                                                             style={{position: 'relative', display: 'inline-block',width: "100%", height: "100%"}}>
                                                                 Kho thiết bị

@@ -1,9 +1,27 @@
+#smooth-wrapper {
+  position: relative;
+  height: 100%;
+  min-height: calc(100dvh - 4.0625rem);
+  overflow: hidden;
+  position: fixed;
+}
+
+#smooth-content {
+  position: relative;
+  will-change: transform;
+}
+
 .home-container {
   position: relative;
   width: 100%;
   top: calc(4rem + 0.0625rem);
   min-height: 100dvh;
   padding: 0 0rem 0rem;
+
+  .panel.frame {
+    position: relative;
+    min-height: calc(100dvh - 4.0625rem);
+  }
 }
 
 .home-introduction {
@@ -119,7 +137,8 @@
   width: min(100%, 1024px);
   left: 50%;
   transform: translateX(-50%);
-  margin: 1rem 0;
+  /* margin: 1rem 0; */
+  padding: 1rem 0 0 0;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 
   h2,
@@ -127,13 +146,13 @@
   p {
     position: relative;
     text-align: center;
-    margin: .625rem;
+    margin: 0.625rem;
   }
 
   .home-body-listNote {
     position: relative;
     width: 100%;
-    margin: 3rem 0 0 0 ;
+    margin: 3rem 0 0 0;
     display: flex;
     justify-content: start;
     align-items: start;
@@ -166,7 +185,7 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
-        box-shadow: 0 .125rem .25rem rgba(0, 0, 0, .075);
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
       }
     }
   }
