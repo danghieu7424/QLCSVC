@@ -175,7 +175,6 @@ export default function ThietBiTrongPhongPage() {
     }
   };
 
-  
   const handleBatchUpdate = async (newViTriHienTai) => {
     if (selectedRows.length === 0) return;
 
@@ -278,6 +277,17 @@ export default function ThietBiTrongPhongPage() {
     }
   }, [filterDate]);
 
+  useEffect(() => {
+    if (showNote || showEdit) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showNote, showEdit]);
+
   return (
     <div className="page-container thp-container tb-container">
       {loading && <LoaderPage />}
@@ -341,7 +351,7 @@ export default function ThietBiTrongPhongPage() {
             <div className="box-show-edit">
               <div className="box-show-edit-title">
                 <div className="box-show-edit-btn">
-                  <button
+                  {/* <button
                     title="OK"
                     onClick={() => {
                       // setShowEdit(true);
@@ -356,7 +366,7 @@ export default function ThietBiTrongPhongPage() {
                         <path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path>
                       </svg>
                     )}
-                  </button>
+                  </button> */}
 
                   <button
                     title="Hủy"
@@ -439,7 +449,11 @@ export default function ThietBiTrongPhongPage() {
                     <button
                       title="OK"
                       onClick={() => {
-                        setShowEdit(true);
+                        if (selectedRows.length === 0) {
+                          alert("Vui lòng chọn ít nhất một thiết bị để sửa.");
+                        } else {
+                          setShowEdit(true);
+                        }
                       }}
                       className="btnOK"
                       disabled={elementLoading}
@@ -569,13 +583,20 @@ export default function ThietBiTrongPhongPage() {
                         );
                         const currentTen = current || "";
 
+                        // Chỉ lấy các trạng thái theo thứ tự yêu cầu
+                        const allowedTrangThai = [
+                          "Kho",
+                          "Đang sử dụng",
+                          "Chờ bảo dưỡng",
+                          "Hỏng",
+                        ];
                         return (
                           <td key={colIndex} className={col.type}>
                             <InputSelect
                               value={currentTen}
-                              list={trangThai.map((dvt) => dvt)}
+                              list={allowedTrangThai}
                               onChange={(selectedTen) => {
-                                const selected = trangThai.find(
+                                const selected = allowedTrangThai.find(
                                   (dvt) => dvt === selectedTen
                                 );
                                 if (selected) {

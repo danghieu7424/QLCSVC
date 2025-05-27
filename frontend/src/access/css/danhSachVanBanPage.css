@@ -8,3 +8,25 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     max-height: calc(100% - 7.5rem);
 }
+
+.table_more {
+    position: relative;
+    
+    .btn {
+        position: relative;
+        width: 100%;
+        margin: .625rem 0 0 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.625rem;
+
+        button {
+            position: relative;
+            width: 100%;
+            min-height: 1rem;
+            padding: .375rem;
+            cursor: pointer;
+        }
+    }
+}

@@ -39,6 +39,7 @@ export default function ThietBiPage() {
   const [trangThai, setTrangThai] = useState([]);
   const [showCheck, setShowCheck] = useState(false);
   const [showEdit, setShowEdit] = useState(false);
+  const [showBoxEdit, setShowBoxEdit] = useState(false);
   const [showText, setShowText] = useState(false);
   const [showHistory, setShowHistory] = useState(false);
 
@@ -297,16 +298,26 @@ export default function ThietBiPage() {
 
   useEffect(() => {
     if (showHistory) {
-      document.body.style.overflow = 'hidden';
+      document.body.style.overflow = "hidden";
     } else {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     }
-  
+
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = "";
     };
   }, [showHistory]);
-  
+
+  useEffect(() => {
+    if (showHistory || showEdit) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showHistory, showEdit]);
 
   return (
     <div className="page-container thp-container tb-container">
@@ -373,22 +384,22 @@ export default function ThietBiPage() {
             <div className="box-show-edit">
               <div className="box-show-edit-title">
                 <div className="box-show-edit-btn">
-                  <button
-                    title="OK"
-                    onClick={() => {
-                      // setShowEdit(true);
-                    }}
-                    className="btnOK"
-                    disabled={elementLoading}
-                  >
-                    {elementLoading ? (
-                      <Loader width="20px" height="20px" color="#fff" />
-                    ) : (
-                      <svg width="24" height="24" viewBox="0 0 24 24">
-                        <path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path>
-                      </svg>
-                    )}
-                  </button>
+                  {/* <button
+                              title="OK"
+                              onClick={() => {
+                                // setShowEdit(true);
+                              }}
+                              className="btnOK"
+                              disabled={elementLoading}
+                            >
+                              {elementLoading ? (
+                                <Loader width="20px" height="20px" color="#fff" />
+                              ) : (
+                                <svg width="24" height="24" viewBox="0 0 24 24">
+                                  <path d="m10 15.586-3.293-3.293-1.414 1.414L10 18.414l9.707-9.707-1.414-1.414z"></path>
+                                </svg>
+                              )}
+                            </button> */}
 
                   <button
                     title="Hủy"
@@ -470,6 +481,7 @@ export default function ThietBiPage() {
                       title="Sửa nhiều dòng"
                       onClick={() => {
                         setShowCheck((prev) => !prev);
+                        setShowBoxEdit((prev) => !prev);
                       }}
                       className="btnAdd"
                       disabled={elementLoading}
@@ -540,11 +552,19 @@ export default function ThietBiPage() {
                     <button
                       title="OK"
                       onClick={() => {
-                        if (showEdit) {
-                          setShowEdit(true);
+                        if (showBoxEdit) {
+                            if (selectedRows.length === 0) {
+                            alert("Vui lòng chọn ít nhất một thiết bị để sửa.");
+                            } else {
+                            setShowEdit(true);
+                            }
                         }
                         if (showText) {
-                          handleGetListThanhLy();
+                          if (selectedRows.length === 0) {
+                            alert("Vui lòng chọn ít nhất một thiết bị để thanh lý.");
+                            } else {
+                            handleGetListThanhLy();
+                            }
                           // console.log(selectedRows);
                         }
                       }}
@@ -676,13 +696,20 @@ export default function ThietBiPage() {
                         );
                         const currentTen = current || "";
 
+                        // Chỉ lấy các trạng thái theo thứ tự yêu cầu
+                        const allowedTrangThai = [
+                          "Kho",
+                          "Đang sử dụng",
+                          "Chờ bảo dưỡng",
+                          "Hỏng",
+                        ];
                         return (
                           <td key={colIndex} className={col.type}>
                             <InputSelect
                               value={currentTen}
-                              list={trangThai.map((dvt) => dvt)}
+                              list={allowedTrangThai}
                               onChange={(selectedTen) => {
-                                const selected = trangThai.find(
+                                const selected = allowedTrangThai.find(
                                   (dvt) => dvt === selectedTen
                                 );
                                 if (selected) {
