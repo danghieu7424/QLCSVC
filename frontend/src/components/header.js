@@ -127,6 +127,12 @@ export default function Header() {
                                                                 Kho thiết bị
                                                             </Link>
                                                         </li> 
+                                                        <li className="navChild">
+                                                            <Link to="/danh-sach-van-ban"
+                                                            style={{position: 'relative', display: 'inline-block',width: "100%", height: "100%"}}>
+                                                                Danh sách văn bản
+                                                            </Link>
+                                                        </li> 
                                                     </>
                                                 )}
                                             {user.Role === "manager" && (

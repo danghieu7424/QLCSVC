@@ -1,10 +1,8 @@
 .thp-container {
-  position: relative;
-  top: 4rem;
-  width: 100%;
-  min-height: calc(100dvh - 4rem);
-  padding: 0.625rem;
+  width: fit-content;
+  min-width: 100%;
   font-family: inter;
+  
   .thp-container {
     position: relative;
     top: 4rem;

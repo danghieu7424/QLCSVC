@@ -583,7 +583,7 @@ export default function ThietBiPage() {
               </div>
             </div>
           </div>
-          <div id="box_table_container" style={{ overflow: "visible" }}>
+          <div id="box_table_container">
             <h2>Bảng thông tin về Thiết Bị</h2>
             <table>
               <thead>

@@ -17,58 +17,57 @@ export default function HomePage() {
 
   const main = useRef();
   const { completed } = useContext(TransitionContext);
-  const scrollTween = useRef();
-  const snapTriggers = useRef([]);
-  const { contextSafe } = useGSAP(
-    () => {
-      let panels = gsap.utils.toArray(".panel"),
-        scrollStarts = [0],
-        snapScroll = (value) => value; 
-      panels.forEach((panel, i) => {
-        snapTriggers.current[i] = ScrollTrigger.create({
-          trigger: panel,
-          start: "top top",
-        });
-      });
+  // const scrollTween = useRef();
+  // const snapTriggers = useRef([]);
+  // const { contextSafe } = useGSAP(
+  //   () => {
+  //     let panels = gsap.utils.toArray(".panel"),
+  //       scrollStarts = [0],
+  //       snapScroll = (value) => value;
+  //     panels.forEach((panel, i) => {
+  //       snapTriggers.current[i] = ScrollTrigger.create({
+  //         trigger: panel,
+  //         start: "top top",
+  //       });
+  //     });
 
-      ScrollTrigger.addEventListener("refresh", () => {
-        scrollStarts = snapTriggers.current.map((trigger) => trigger.start);
-        snapScroll = ScrollTrigger.snapDirectional(scrollStarts);
-      });
+  //     ScrollTrigger.addEventListener("refresh", () => {
+  //       scrollStarts = snapTriggers.current.map((trigger) => trigger.start);
+  //       snapScroll = ScrollTrigger.snapDirectional(scrollStarts);
+  //     });
 
-      ScrollTrigger.observe({
-        type: "wheel,touch",
-        onChangeY(self) {
-          if (!scrollTween.current) {
-           
-            let scroll = snapScroll(
-              self.scrollY() + self.deltaY,
-              self.deltaY > 0 ? 1 : -1
-            );
-            goToSection(scrollStarts.indexOf(scroll));
-          }
-        },
-      });
+  //     ScrollTrigger.observe({
+  //       type: "wheel,touch",
+  //       onChangeY(self) {
+  //         if (!scrollTween.current) {
+  //           let scroll = snapScroll(
+  //             self.scrollY() + self.deltaY,
+  //             self.deltaY > 0 ? 1 : -1
+  //           );
+  //           goToSection(scrollStarts.indexOf(scroll));
+  //         }
+  //       },
+  //     });
 
-      ScrollTrigger.refresh();
-    },
-    {
-      dependencies: [completed],
-      scope: main,
-      revertOnUpdate: true,
-    }
-  );
+  //     ScrollTrigger.refresh();
+  //   },
+  //   {
+  //     dependencies: [completed],
+  //     scope: main,
+  //     revertOnUpdate: true,
+  //   }
+  // );
 
-  const goToSection = contextSafe((i) => {
-    // console.log("scroll to", i);
-    // console.log(snapTriggers.current[i].start);
-    scrollTween.current = gsap.to(window, {
-      scrollTo: { y: snapTriggers.current[i].start - 65, autoKill: false },
-      duration: 1,
-      onComplete: () => (scrollTween.current = null),
-      overwrite: true,
-    });
-  });
+  // const goToSection = contextSafe((i) => {
+  //   // console.log("scroll to", i);
+  //   // console.log(snapTriggers.current[i].start);
+  //   scrollTween.current = gsap.to(window, {
+  //     scrollTo: { y: snapTriggers.current[i].start - 65, autoKill: false },
+  //     duration: 1,
+  //     onComplete: () => (scrollTween.current = null),
+  //     overwrite: true,
+  //   });
+  // });
 
   return (
     <main className="home-container" ref={main}>
@@ -82,10 +81,10 @@ export default function HomePage() {
           </div>
         </div>
         <div className="home-introduction-title">
-          <h6>trường Đại học Thái Bình</h6>
+          <h6>Trường Đại học Thái Bình</h6>
           <h3>Website quản lý cơ sở vật</h3>
           <h3>khoa Công nghệ và Kỹ thuật</h3>
-          <h5>dễ dàng - nhanh chóng - tiện lợi</h5>
+          <h5>Dễ dàng - Nhanh chóng - Tiện lợi</h5>
         </div>
         <div className="home-introduction-show">
           <div
@@ -113,27 +112,98 @@ export default function HomePage() {
             </div>
             <div className="listNode-child">
               <div className="box-listNode-child">
-                <h3>Hỗ trợ kỹ thuật</h3>
-                <p>Cập nhật, theo dõi và tra cứu tài sản mọi lúc, mọi nơi.</p>
+                <h3>Phân quyền và kiểm soát truy cập</h3>
+                <p>
+                  Bảo mật dữ liệu với phân quyền rõ ràng cho từng vai trò, phòng
+                  xưởng.
+                </p>
               </div>
             </div>
             <div className="listNode-child">
               <div className="box-listNode-child">
-                <h3>Quản lý tài sản 24/7</h3>
-                <p>Cập nhật, theo dõi và tra cứu tài sản mọi lúc, mọi nơi.</p>
+                <h3>Báo cáo trực quan & xuất dữ liệu dễ dàng</h3>
+                <p>
+                  Trình bày dữ liệu dưới dạng hỗ trợ xuất tờ trình bằng word.
+                </p>
               </div>
             </div>
             <div className="listNode-child">
               <div className="box-listNode-child">
-                <h3>Quản lý tài sản 24/7</h3>
-                <p>Cập nhật, theo dõi và tra cứu tài sản mọi lúc, mọi nơi.</p>
+                <h3>Quản lý vòng đời tài sản</h3>
+                <p>
+                  Theo dõi quá trình sử dụng – bảo trì – thanh lý của từng tài
+                  sản theo chu kỳ.
+                </p>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      
+      <section className="panel frame home-body nganh">
+        <div className="home-body-box1">
+          <h2>CÁC NGÀNH KHOA CÔNG NGHỆ VÀ KỸ THUẬT</h2>
+          <div className="home-body-listNote">
+            <div className="listNode-child">
+              <div className="box-listNode-child">
+                <h3>NGÀNH CÔNG NGHỆ THÔNG TIN</h3>
+                <ul>
+                  <li>Chương trình đào tạo hiện đại, sát thực tế</li>
+                  <li>Thực hành với hệ thống phòng Lab chuyên sâu</li>
+                  <li>Liên kết doanh nghiệp – đảm bảo việc làm </li>
+                  <li>Giảng viên trình độ cao, tâm huyết </li>
+                </ul>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    window.location.href = "https://tbu.edu.vn/gioi-thieu-ve-khoa-cong-nghe-thong-tin.html";
+                  }}
+                >
+                  xem thêm
+                </button>
+              </div>
+            </div>
+            <div className="listNode-child">
+              <div className="box-listNode-child">
+                <h3>NGÀNH CÔNG NGHỆ KỸ THUẬT CƠ KHÍ</h3>
+                <ul>
+                  <li>Đào tạo kỹ sư thực hành giỏi</li>
+                  <li>Ứng dụng trong công nghiệp, điện tử dân dụng</li>
+                  <li>Phòng thực hành với máy móc thiết bị hiện đại</li>
+                  <li>Cơ hội thực tập doanh nghiệp lớn</li>
+                </ul>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    window.location.href = "https://tbu.edu.vn/nganh-cong-nghe-ky-thuat-co-khi.html";
+                  }}
+                >
+                  xem thêm
+                </button>
+              </div>
+            </div>
+            <div className="listNode-child">
+              <div className="box-listNode-child">
+                <h3>NGÀNH CÔNG NGHỆ KỸ THUẬT ĐIỆN – ĐIỆN TỬ</h3>
+                <ul>
+                  <li>Đào tạo kỹ sư thực hành giỏi</li>
+                  <li>Ứng dụng trong công nghiệp, điện tử dân dụng</li>
+                  <li>Phòng thực hành với máy móc thiết bịbị hiện đại</li>
+                  <li>Cơ hội thực tập doanh nghiệp lớn</li>
+                </ul>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => {
+                    window.location.href = "https://tbu.edu.vn/chuan-dau-ra-trinh-do-dai-hoc-nganh-cong-nghe-ky-thuat-dien-dien-tu.html";
+                  }}
+                >
+                  xem thêm
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <footer
         className="panel home-footer"
