@@ -80,29 +80,33 @@ export default function HomePage() {
             <span></span>
           </div>
         </div>
+        <div className="floating-items">
+          <div className="item delay-1" style={{"--scale": "2", "--rotate": "15deg"}}>🖥️</div>
+          <div className="item delay-2" style={{"--scale": "1.5", "--rotate": "20deg"}}>🪑</div>
+          <div className="item delay-3" style={{"--scale": "2.2", "--rotate": "-20deg"}}>🖱️</div>
+          <div className="item delay-4" style={{"--scale": "1.8", "--rotate": "10deg"}}>⌨️</div>
+          <div className="item delay-5" style={{"--scale": "1.2", "--rotate": "-5deg"}}>🖨️</div>
+          <div className="item delay-6" style={{"--scale": "1.9", "--rotate": "12deg"}}>🖼️</div>
+        </div>
         <div className="home-introduction-title">
           <h6>Trường Đại học Thái Bình</h6>
           <h3>Website quản lý cơ sở vật</h3>
           <h3>khoa Công nghệ và Kỹ thuật</h3>
-          <h5>Dễ dàng - Nhanh chóng - Tiện lợi</h5>
+          {/* <h5>Dễ dàng - Nhanh chóng - Tiện lợi</h5> */}
         </div>
-        <div className="home-introduction-show">
+        {/* <div className="home-introduction-show">
           <div
             className="box-introduction-show"
             style={{
               background: `url("${congTruong}") no-repeat 60% / cover`,
             }}
           ></div>
-        </div>
+        </div> */}
       </div>
 
       <section className="panel frame home-body">
         <div className="home-body-box1">
           <h2>Tính năng nổi bật</h2>
-          <p>
-            Phần mềm giúp bạn quản lý cơ sở vật chất một cách chuyên nghiệp,
-            hiệu quả và bảo mật.
-          </p>
           <div className="home-body-listNote">
             <div className="listNode-child">
               <div className="box-listNode-child">
@@ -147,16 +151,21 @@ export default function HomePage() {
             <div className="listNode-child">
               <div className="box-listNode-child">
                 <h3>NGÀNH CÔNG NGHỆ THÔNG TIN</h3>
-                <ul>
-                  <li>Chương trình đào tạo hiện đại, sát thực tế</li>
-                  <li>Thực hành với hệ thống phòng Lab chuyên sâu</li>
-                  <li>Liên kết doanh nghiệp – đảm bảo việc làm </li>
-                  <li>Giảng viên trình độ cao, tâm huyết </li>
-                </ul>
+                <div
+                  className="box_listNode-img"
+                  style={{
+                    background: `url('${API_BASE_URL}/api/stream/public?path=phong_cntt.jpg') no-repeat center / cover`,
+                    position: "relative",
+                    width: "100%",
+                    height: "100%",
+                    aspectRatio: "16/9",
+                  }}
+                ></div>
                 <button
                   className="btn btn-primary"
                   onClick={() => {
-                    window.location.href = "https://tbu.edu.vn/gioi-thieu-ve-khoa-cong-nghe-thong-tin.html";
+                    window.location.href =
+                      "https://tbu.edu.vn/gioi-thieu-ve-khoa-cong-nghe-thong-tin.html";
                   }}
                 >
                   xem thêm
@@ -166,16 +175,21 @@ export default function HomePage() {
             <div className="listNode-child">
               <div className="box-listNode-child">
                 <h3>NGÀNH CÔNG NGHỆ KỸ THUẬT CƠ KHÍ</h3>
-                <ul>
-                  <li>Đào tạo kỹ sư thực hành giỏi</li>
-                  <li>Ứng dụng trong công nghiệp, điện tử dân dụng</li>
-                  <li>Phòng thực hành với máy móc thiết bị hiện đại</li>
-                  <li>Cơ hội thực tập doanh nghiệp lớn</li>
-                </ul>
+                <div
+                  className="box_listNode-img"
+                  style={{
+                    background: `url('${API_BASE_URL}/api/stream/public?path=xuong_cnck.jpg') no-repeat center / cover`,
+                    position: "relative",
+                    width: "100%",
+                    height: "100%",
+                    aspectRatio: "16/9",
+                  }}
+                ></div>
                 <button
                   className="btn btn-primary"
                   onClick={() => {
-                    window.location.href = "https://tbu.edu.vn/nganh-cong-nghe-ky-thuat-co-khi.html";
+                    window.location.href =
+                      "https://tbu.edu.vn/nganh-cong-nghe-ky-thuat-co-khi.html";
                   }}
                 >
                   xem thêm
@@ -185,16 +199,21 @@ export default function HomePage() {
             <div className="listNode-child">
               <div className="box-listNode-child">
                 <h3>NGÀNH CÔNG NGHỆ KỸ THUẬT ĐIỆN – ĐIỆN TỬ</h3>
-                <ul>
-                  <li>Đào tạo kỹ sư thực hành giỏi</li>
-                  <li>Ứng dụng trong công nghiệp, điện tử dân dụng</li>
-                  <li>Phòng thực hành với máy móc thiết bịbị hiện đại</li>
-                  <li>Cơ hội thực tập doanh nghiệp lớn</li>
-                </ul>
+                <div
+                  className="box_listNode-img"
+                  style={{
+                    background: `url('${API_BASE_URL}/api/stream/public?path=phong_dien.jpg') no-repeat center / cover`,
+                    position: "relative",
+                    width: "100%",
+                    height: "100%",
+                    aspectRatio: "16/9",
+                  }}
+                ></div>
                 <button
                   className="btn btn-primary"
                   onClick={() => {
-                    window.location.href = "https://tbu.edu.vn/chuan-dau-ra-trinh-do-dai-hoc-nganh-cong-nghe-ky-thuat-dien-dien-tu.html";
+                    window.location.href =
+                      "https://tbu.edu.vn/chuan-dau-ra-trinh-do-dai-hoc-nganh-cong-nghe-ky-thuat-dien-dien-tu.html";
                   }}
                 >
                   xem thêm

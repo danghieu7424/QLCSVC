@@ -1,15 +1,23 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { Loader, LoaderPage } from "./base/LoaderForm";
 import API_BASE_URL from "./base/config";
 
+import {
+  InputChange,
+  InputSearchSelected,
+  InputSearchSelectShow,
+  InputSelect,
+} from "./base/formContainer.js";
 import "../access/css/danhSachVanBanPage.css";
 
 const columns = [
   { label: "Mã thanh lý", key: "MaThanhLy", type: "center", disable: true },
+  { label: "Tên văn bản", key: "TenvanBan", type: "left", disable: false },
   { label: "Ngày đề xuất", key: "NgayDeXuat", type: "left", disable: true },
   { label: "Lý do", key: "LyDo", type: "left", disable: false },
-  { label: "Ngày thanh lý", key: "NgayThanhLy", type: "left", disable: false },
-  { label: "Mã cán bộ", key: "MaCanBo", type: "left", disable: false },
+  //   { label: "Ngày thanh lý", key: "NgayThanhLy", type: "left", disable: false },
+  { label: "Mã cán bộ", key: "TenCanBo", type: "left", disable: false },
   { label: "Giá bán", key: "GiaBan", type: "left", disable: false },
 ];
 
@@ -42,6 +50,7 @@ export default function DanhSachVanBanPage() {
           : "",
       }));
       setVanBanList(formattedData);
+      console.log("Van Ban List:", formattedData);
     } catch (error) {
       setVanBanList([]);
     } finally {
@@ -56,20 +65,11 @@ export default function DanhSachVanBanPage() {
 
   if (loading) return <LoaderPage />;
 
-  const handleCheckboxChange = (row, isChecked) => {
-    setSelectedRows((prev) => {
-      if (isChecked) {
-        return [...prev, row];
-      } else {
-        return prev.filter((item) => item.MaThanhLy !== row.MaThanhLy);
-      }
-    });
-  };
-
   function DanhSachThietBi({ maThanhLy }) {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
       setLoading(true);
@@ -97,31 +97,34 @@ export default function DanhSachVanBanPage() {
       );
     };
 
-    const handleSave = async () => {
-      setSaving(true);
-      try {
-        await fetch(`${API_BASE_URL}/api/update/danh-sach-thanh-ly`, {
+const handleSave = async () => {
+  setSaving(true);
+  try {
+        // Gửi toàn bộ danh sách thiết bị cùng lúc (dạng mảng)
+        const response = await fetch(`${API_BASE_URL}/api/update/danh-sach-thanh-ly`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
           body: JSON.stringify(
-            data.map(tb => ({
-              MaThanhLy: maThanhLy,
-              MaThietBi: tb.MaThietBi,
-              MaLoai: tb.MaLoai,
-              Gia: tb.Gia,
-            }))
+                data.map(tb => ({
+                  MaThanhLy: maThanhLy,
+                  MaThietBi: tb.MaThietBi,
+                  MaLoai: tb.MaLoai,
+                  Gia: tb.Gia,
+                }))
           ),
         });
 
+        if (!response.ok) throw new Error("Có lỗi khi lưu.");
+
         await fetchData();
         toast.success("Lưu thành công!");
-      } catch (err) {
+  } catch (err) {
         toast.error("Có lỗi khi lưu.");
-      } finally {
+  } finally {
         setSaving(false);
-      }
-    };
+  }
+};
 
     if (loading) return <div>Đang tải...</div>;
     if (!data.length) return <div>Không có thiết bị.</div>;
@@ -162,17 +165,39 @@ export default function DanhSachVanBanPage() {
           </tbody>
         </table>
         <div className="btn">
-          <button
-            onClick={handleSave}
-            disabled={saving}
-          >
+          <button onClick={handleSave} disabled={saving}>
             {saving ? <Loader /> : "Lưu"}
           </button>
-          <button>Mở</button>
+          <button
+            onClick={() => {
+              // Sử dụng navigate để chuyển trang và truyền state
+              navigate("/van-ban", { state: { MaThanhLy: maThanhLy } });
+            }}
+          >
+            Mở
+          </button>
         </div>
       </div>
     );
   }
+
+  const handleUpdate = (rowIndex, keys, values) => {
+    setVanBanList((prev) =>
+      prev.map((item, idx) =>
+        idx === rowIndex
+          ? {
+              ...item,
+              ...keys.reduce(
+                (acc, key, i) => ({ ...acc, [key]: values[i] }),
+                {}
+              ),
+            }
+          : item
+      )
+    );
+  };
+
+  // Dummy InputChange component for demonstration, replace with your actual import if needed
 
   return (
     <div className="page-container danh-sach-van-ban">
@@ -193,12 +218,22 @@ export default function DanhSachVanBanPage() {
               </tr>
             </thead>
             <tbody>
-              {vanBanList.map((vb, idx) => (
-                <React.Fragment key={vb.MaThanhLy || idx}>
+              {vanBanList.map((vb, rowIndex) => (
+                <React.Fragment key={vb.MaThanhLy || rowIndex}>
                   <tr>
                     {columns.map((col) => (
                       <td key={col.key} className={col.type}>
-                        {vb[col.key]}
+                        {["TenvanBan", "LyDo"].includes(col.key) ? (
+                          <InputChange
+                            value={vb[col.key]}
+                            disabled={col.disable}
+                            onChange={(newVal) =>
+                              handleUpdate(rowIndex, [col.key], [newVal])
+                            }
+                          />
+                        ) : (
+                          vb[col.key]
+                        )}
                       </td>
                     ))}
                     <td>

@@ -25,6 +25,7 @@ export default function ProfilePage() {
             if (!resRaw.ok)
                 throw new Error(result.message || "Lỗi lấy dữ liệu.");
 
+            console.log("Profile data:", result.data);
             setData(result.data);
             // console.log(result);
         } catch (error) {

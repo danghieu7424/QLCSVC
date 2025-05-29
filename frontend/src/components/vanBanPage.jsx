@@ -1,7 +1,10 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useLocation } from "react-router-dom";
+import API_BASE_URL from "./base/config";
 import "../access/css/doc.css";
 
 export default function VanBanPage() {
+  const [data, setData] = useState([]);
   const [listData, setListData] = useState([]);
   const editorRef = useRef(null);
   const cursorToolsRef = useRef(null);
@@ -14,16 +17,42 @@ export default function VanBanPage() {
     isUnderline: false,
     align: "left", // left | center | right | justify
   });
+  const location = useLocation();
+  const MaThanhLy = location.state?.MaThanhLy || "";
+  const [TenVanBan, setTenVanBan] = useState("");
 
-  const fetchListData = async () => {
+  const fetchListData = async (MaThanhLy) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/select/van-ban`, {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include", // Gửi cookie chứa token
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Fetched data:", data);
+        setData(data.data);
+      } else {
+        console.error("Error fetching data:", data);
+      }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
     try {
       const response = await fetch(
-        `${API_BASE_URL}/api/select/danh-sach-thanh-ly`
+        `${API_BASE_URL}/api/select/danh-sach-thanh-ly-van-ban?MaThanhLy=${MaThanhLy}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include", // Gửi cookie chứa token
+        }
       );
 
       const data = await response.json();
       if (response.ok) {
-        setListData(data);
+        console.log("Fetched list data:", data.data);
+        setListData(data.data);
       } else {
         console.error("Error fetching data:", data);
       }
@@ -31,6 +60,10 @@ export default function VanBanPage() {
       console.error("Error fetching data:", error);
     }
   };
+
+  useEffect(() => {
+    fetchListData(MaThanhLy);
+  }, [MaThanhLy]);
 
   const numberToWords = (num) => {
     const units = [
@@ -107,6 +140,171 @@ export default function VanBanPage() {
     return parts.join(" ").replace(/\s+/g, " ").trim();
   };
 
+  const [initialContent, setInitialContent] = useState(`
+    <table style="width: 100%; border-collapse: collapse; border: none; margin-bottom: 16px;">
+      <tr>
+          <th style=" text-align: center; border: none; background: transparent;">
+              TRƯỜNG ĐẠI HỌC THÁI BÌNH<br>
+              KHOA CÔNG NGHỆ & KỸ THUẬT
+          </th>
+          <th style=" text-align: center; border: none; background: transparent;">
+              CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM<br>
+              Độc lập – Tự do – Hạnh phúc
+          </th>
+      </tr>
+    </table>
+  
+    <h2 style="text-align: center; margin-top: 8px; margin-bottom: 8px;">${TenVanBan.toUpperCase()}</h2>
+    <h4 style="text-align: center; margin-top: 8px; margin-bottom: 24px;">
+      V/v sửa chữa các phòng thực hành máy tính phục vụ cho công tác giảng dạy, học tập và<br>
+      phục vụ kỳ thi đánh giá năng lực của ĐH QGHN, kỳ thi đánh giá tư duy của ĐH BKHN.
+    </h4>
+    <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 2.2cm;">
+    <b>Kính gửi:</b> <b>Ban Giám hiệu trường Đại học Thái Bình.</b>
+    </p>
+    <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 2cm;">
+      Căn cứ theo tình hình kiểm tra thực tế các phòng thực hành máy tính.
+    </p>
+    <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 2cm;">
+      Khoa Công nghệ & Kỹ thuật xin trình lên Ban Giám hiệu dự trù sửa chữa, thay thế các thiết bị cho các phòng thực hành máy tính, cụ thể như sau:
+    </p>
+  
+    <table id="table-request" border="1" style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+    <tr>
+      <th style="">STT</th>
+      <th style="">Tên thiết bị - Thông số kỹ thuật</th>
+      <th style="">ĐVT</th>
+      <th style="">Số lượng</th>
+      <th style="">Đơn giá</th>
+      <th style="">Thành tiền</th>
+    </tr>
+    
+    <tr>
+      <td style=" text-align: center;">1</td>
+      <td style=""></td>
+      <td style=" text-align: center;"></td>
+      <td style=" text-align: center;"></td>
+      <td style=" text-align: center;">đ</td>
+      <td style=" text-align: center;">đ</td>
+    </tr>
+  
+    <tr>
+      <td colspan="5" style=" text-align: center;"><b>Tổng cộng:</b></td>
+      <td style=" text-align: center;"><b> đ</b></td>
+    </tr>
+    <tr>
+      <td colspan="6" style=" text-align: center;"><b>Bằng chữ:</b></td>
+    </tr>
+  </table>
+  
+  
+    <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 1cm;"><i>Ghi chú: Đơn giá trên chưa bao gồm thuế VAT.</i></p>
+    <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 1cm;">Kính mong nhận được sự chấp thuận từ Ban Giám hiệu nhà trường.</p>
+    <p style="text-align: right; margin-top: 8px; margin-bottom: 16px;">Ngày ... tháng ... năm 20...</p>
+  
+    <table style="width: 100%; border-collapse: collapse; border: none; margin-bottom: 16px;">
+      <tr>
+          <th style="text-align: center; border: none; background: transparent;">
+              TRƯỞNG ĐƠN VỊ
+          </th>
+          <th style="text-align: center; border: none; background: transparent;">
+              TRƯỞNG NGÀNH
+          </th>
+          <th style="text-align: center; border: none; background: transparent;">
+              NGƯỜI ĐỀ XUẤT
+          </th>
+      </tr>
+      <tr>
+        <td style=" text-align: center; border: none; height: 4rem"></td>
+        <td style=" text-align: center; border: none; height: 4rem"></td>
+        <td style=" text-align: center; border: none; height: 4rem"></td>
+      </tr>
+    </table>
+  `);
+  const [initialContentThanhLy, setInitialContentThanhLy] = useState(`
+    <table style="width: 100%; border-collapse: collapse; border: none; margin-bottom: 16px;">
+      <tr>
+          <th style=" text-align: center; border: none; background: transparent;">
+              TRƯỜNG ĐẠI HỌC THÁI BÌNH<br>
+              KHOA CÔNG NGHỆ & KỸ THUẬT
+          </th>
+          <th style=" text-align: center; border: none; background: transparent;">
+              CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM<br>
+              Độc lập – Tự do – Hạnh phúc
+          </th>
+      </tr>
+    </table>
+  
+    <h2 style="text-align: center; margin-top: 8px; margin-bottom: 8px;">${TenVanBan.replace(
+      " Thanh Lý",
+      ""
+    ).toUpperCase()}</h2>
+    <h4 style="text-align: center; margin-top: 8px; margin-bottom: 24px;">
+      V/v bán cá thiết bị đã cũ, hỏng hóc để tạo ngân sách phụ cho các thiết bị mới.
+    </h4>
+    <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 2.2cm;">
+    <b>Kính gửi:</b> <b>Ban Giám hiệu trường Đại học Thái Bình.</b>
+    </p>
+    <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 2cm;">
+      Căn cứ theo tình hình kiểm tra thực tế các phòng thực hành máy tính.
+    </p>
+    <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 2cm;">
+      Khoa Công nghệ & Kỹ thuật xin trình lên Ban Giám hiệu dự trù thanh lý các thiết bị cho các phòng thực hành máy tính, cụ thể như sau:
+    </p>
+  
+    <table id="table-request" border="1" style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+    <tr>
+      <th style="">STT</th>
+      <th style="">Tên thiết bị - Thông số kỹ thuật</th>
+      <th style="">ĐVT</th>
+      <th style="">Số lượng</th>
+      <th style="">Đơn giá</th>
+      <th style="">Thành tiền</th>
+    </tr>
+    
+    <tr>
+      <td style=" text-align: center;">1</td>
+      <td style=""></td>
+      <td style=" text-align: center;"></td>
+      <td style=" text-align: center;"></td>
+      <td style=" text-align: center;">đ</td>
+      <td style=" text-align: center;">đ</td>
+    </tr>
+  
+    <tr>
+      <td colspan="5" style=" text-align: center;"><b>Tổng cộng:</b></td>
+      <td style=" text-align: center;"><b> đ</b></td>
+    </tr>
+    <tr>
+      <td colspan="6" style=" text-align: center;"><b>Bằng chữ:</b></td>
+    </tr>
+  </table>
+  
+  
+    <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 1cm;"><i>Ghi chú: Đơn giá trên chưa bao gồm thuế VAT.</i></p>
+    <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 1cm;">Kính mong nhận được sự chấp thuận từ Ban Giám hiệu nhà trường.</p>
+    <p style="text-align: right; margin-top: 8px; margin-bottom: 16px;">Ngày ... tháng ... năm 20...</p>
+  
+    <table style="width: 100%; border-collapse: collapse; border: none; margin-bottom: 16px;">
+      <tr>
+          <th style="text-align: center; border: none; background: transparent;">
+              TRƯỞNG ĐƠN VỊ
+          </th>
+          <th style="text-align: center; border: none; background: transparent;">
+              TRƯỞNG NGÀNH
+          </th>
+          <th style="text-align: center; border: none; background: transparent;">
+              NGƯỜI ĐỀ XUẤT
+          </th>
+      </tr>
+      <tr>
+        <td style=" text-align: center; border: none; height: 4rem"></td>
+        <td style=" text-align: center; border: none; height: 4rem"></td>
+        <td style=" text-align: center; border: none; height: 4rem"></td>
+      </tr>
+    </table>
+  `);
+
   function getTextAlign(el) {
     const align = window.getComputedStyle(el).textAlign;
     if (["left", "right", "center", "justify"].includes(align)) return align;
@@ -114,29 +312,28 @@ export default function VanBanPage() {
   }
 
   const getSelectedFontName = () => {
-  const selection = window.getSelection();
-  if (!selection || selection.rangeCount === 0) return "";
+    const selection = window.getSelection();
+    if (!selection || selection.rangeCount === 0) return "";
 
-  let node = selection.anchorNode;
-  if (!node) return "";
+    let node = selection.anchorNode;
+    if (!node) return "";
 
-  if (node.nodeType === 3) {
-    // Nếu là text node, lấy parent element
-    node = node.parentElement;
-  }
-  if (!node) return "";
+    if (node.nodeType === 3) {
+      // Nếu là text node, lấy parent element
+      node = node.parentElement;
+    }
+    if (!node) return "";
 
-  // Lấy font-family từ computed style
-  const fontFamily = window.getComputedStyle(node).fontFamily;
+    // Lấy font-family từ computed style
+    const fontFamily = window.getComputedStyle(node).fontFamily;
 
-  // fontFamily có thể trả về chuỗi dạng: "Times New Roman, serif"
-  // ta chỉ lấy font đầu tiên và loại bỏ dấu ""
-  if (fontFamily) {
-    return fontFamily.split(",")[0].replace(/["']/g, "").trim();
-  }
-  return "";
-};
-
+    // fontFamily có thể trả về chuỗi dạng: "Times New Roman, serif"
+    // ta chỉ lấy font đầu tiên và loại bỏ dấu ""
+    if (fontFamily) {
+      return fontFamily.split(",")[0].replace(/["']/g, "").trim();
+    }
+    return "";
+  };
 
   const handleSelection = () => {
     const selection = window.getSelection();
@@ -192,21 +389,87 @@ export default function VanBanPage() {
   }, []);
 
   const applyFormat = (command, value = null) => {
-  if (command === "fontName") {
-    // Tạo span với style font-family
-    document.execCommand("styleWithCSS", false, true); // bật style css
-    document.execCommand("fontName", false, value);
-    return;
-  }
-  document.execCommand(command, false, value);
-};
-
+    if (command === "fontName") {
+      // Tạo span với style font-family
+      document.execCommand("styleWithCSS", false, true); // bật style css
+      document.execCommand("fontName", false, value);
+      return;
+    }
+    document.execCommand(command, false, value);
+  };
 
   const handleAlign = (type) => {
     document.execCommand("justify" + type); // "justifyLeft", "justifyCenter", ...
   };
 
   const isAlignActive = (type) => formatState.align === type;
+
+  // Tính tổng trị giá
+  const totalTriGia = listData.reduce((sum, item) => {
+    // Chuyển string thành số, bỏ phần thập phân .00 nếu có
+    let gia = item.Gia;
+    if (typeof gia === "string") {
+      gia = gia.replace(/\.00$/, ""); // bỏ .00 cuối nếu có
+      gia = gia.replace(/,/g, ""); // bỏ dấu phẩy phân tách
+      gia = parseInt(gia, 10) || 0;
+    }
+    return sum + (typeof gia === "number" ? gia : 0);
+  }, 0);
+  const totalTriGiaText = numberToWords(totalTriGia);
+
+  // Tạo nội dung bảng với tổng trị giá và bằng chữ
+  // Định dạng số thành dạng 0.000.000.000
+  const formatNumber = (num) => {
+    if (!num) return "";
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+  };
+
+  const tableContent = `
+    <table id="table-request" border="1" style="width: 100%; border-collapse: collapse; margin-bottom: 16px;">
+      <tr>
+        <th>STT</th>
+        <th>Tên thiết bị - Thông số kỹ thuật</th>
+        <th>ĐVT</th>
+        <th>Thành tiền</th>
+      </tr>
+      ${
+        listData.length > 0
+          ? listData
+              .map(
+                (item, idx) => `
+          <tr>
+            <td style="text-align: center;">${idx + 1}</td>
+            <td>${item.TenLoai || ""}</td>
+            <td style="text-align: center;">${item.DonViTinh || ""}</td>
+            <td style="text-align: center;">${
+              item.Gia ? formatNumber(Number(item.Gia)) : ""
+            } đ</td>
+          </tr>
+        `
+              )
+              .join("")
+          : `
+          <tr>
+            <td style="text-align: center;">1</td>
+            <td></td>
+            <td style="text-align: center;"></td>
+            <td style="text-align: center;"></td>
+          </tr>
+        `
+      }
+      <tr>
+        <td colspan="3" style="text-align: center;"><b>Tổng cộng:</b></td>
+        <td style="text-align: center;"><b>${
+          totalTriGia ? formatNumber(totalTriGia) + " đ" : " đ"
+        }</b></td>
+      </tr>
+      <tr>
+        <td colspan="4" style="text-align: center;"><b>Bằng chữ: ${
+          totalTriGia ? totalTriGiaText : ""
+        }</b></td>
+      </tr>
+    </table>
+  `;
 
   return (
     <div className="page-container editor-container">
@@ -216,7 +479,8 @@ export default function VanBanPage() {
             name=""
             id="select-font"
             value={formatState.fontName}
-            onChange={(e) => {applyFormat("fontName", e.target.value)
+            onChange={(e) => {
+              applyFormat("fontName", e.target.value);
             }}
           >
             <option value="Arial">Arial</option>
@@ -318,9 +582,62 @@ export default function VanBanPage() {
         className="editor-area"
         onMouseUp={handleSelection}
         onKeyUp={handleSelection}
-      >
-        Viết nội dung tại đây...
-      </div>
+        dangerouslySetInnerHTML={{
+          __html: `
+    <table style="width: 100%; border-collapse: collapse; border: none; margin-bottom: 16px;">
+      <tr>
+          <th style=" text-align: center; border: none; background: transparent;">
+              TRƯỜNG ĐẠI HỌC THÁI BÌNH<br>
+              KHOA CÔNG NGHỆ & KỸ THUẬT
+          </th>
+          <th style=" text-align: center; border: none; background: transparent;">
+              CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM<br>
+              Độc lập – Tự do – Hạnh phúc
+          </th>
+      </tr>
+    </table>
+  
+    <h2 style="text-align: center; margin-top: 8px; margin-bottom: 8px;">${TenVanBan.replace(
+      " Thanh Lý",
+      ""
+    ).toUpperCase()}</h2>
+    <h4 style="text-align: center; margin-top: 8px; margin-bottom: 24px;">
+      V/v bán cá thiết bị đã cũ, hỏng hóc để tạo ngân sách phụ cho các thiết bị mới.
+    </h4>
+    <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 2.2cm;">
+    <b>Kính gửi:</b> <b>Ban Giám hiệu trường Đại học Thái Bình.</b>
+    </p>
+    <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 2cm;">
+      Căn cứ theo tình hình kiểm tra thực tế các phòng thực hành máy tính.
+    </p>
+    <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 2cm;">
+      Khoa Công nghệ & Kỹ thuật xin trình lên Ban Giám hiệu dự trù thanh lý các thiết bị cho các phòng thực hành máy tính, cụ thể như sau:
+    </p>
+    ${tableContent}
+    <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 1cm;"><i>Ghi chú: Đơn giá trên chưa bao gồm thuế VAT.</i></p>
+    <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 1cm;">Kính mong nhận được sự chấp thuận từ Ban Giám hiệu nhà trường.</p>
+    <p style="text-align: right; margin-top: 8px; margin-bottom: 16px;">Ngày ... tháng ... năm 20...</p>
+    <table style="width: 100%; border-collapse: collapse; border: none; margin-bottom: 16px;">
+      <tr>
+          <th style="text-align: center; border: none; background: transparent;">
+              TRƯỞNG ĐƠN VỊ
+          </th>
+          <th style="text-align: center; border: none; background: transparent;">
+              TRƯỞNG NGÀNH
+          </th>
+          <th style="text-align: center; border: none; background: transparent;">
+              NGƯỜI ĐỀ XUẤT
+          </th>
+      </tr>
+      <tr>
+        <td style=" text-align: center; border: none; height: 4rem"></td>
+        <td style=" text-align: center; border: none; height: 4rem"></td>
+        <td style=" text-align: center; border: none; height: 4rem"></td>
+      </tr>
+    </table>
+    `,
+        }}
+      />
     </div>
   );
 }
