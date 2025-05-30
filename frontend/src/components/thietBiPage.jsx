@@ -269,7 +269,7 @@ export default function ThietBiPage() {
     );
     if (!confirm) return;
     try {
-      const res = await fetch(`${API_BASE_URL}/api/select/danh-sach-thanh-ly`, {
+      const res = await fetch(`${API_BASE_URL}/api/insert/danh-sach-thanh-ly`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",

@@ -10,7 +10,6 @@ router.get("/api/select/profile", verifyToken, async (req, res) => {
   try {
     const [result] = await queryDatabase(
       `
-        SET time_zone = '+07:00';
         SELECT
             cb.*,
             k.TenKhoa,
@@ -720,7 +719,7 @@ router.get("/api/select/thiet-bi/lich-su", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-router.post("/api/select/danh-sach-thanh-ly", verifyToken, async (req, res) => {
+router.post("/api/insert/danh-sach-thanh-ly", verifyToken, async (req, res) => {
   const rows = req.body;
 
   if (!Array.isArray(rows) || rows.length === 0) {
@@ -773,31 +772,6 @@ router.post("/api/select/danh-sach-thanh-ly", verifyToken, async (req, res) => {
   }
 });
 
-router.get("/api/select/danh-sach-thanh-ly", async (req, res) => {
-  const { MaThanhLy } = req.query;
-  try {
-    const result = await queryDatabase(
-      `
-                SELECT tltb.MaThanhLy, ltb.TenLoai, tb.TriGia, tltb.MaCanBo
-                FROM DANHSACH_THANHLY_THIETBI dstltb
-                LEFT JOIN THANHLY_THIETBI tltb 
-                    ON dstltb.MaThanhLy = tltb.MaThanhLy
-                LEFT JOIN THIETBI tb 
-                    ON tb.MaThietBi = dstltb.MaThietBi AND tb.MaLoai = dstltb.MaLoai
-                LEFT JOIN LOAI_THIETBI ltb 
-                    ON ltb.MaLoai = dstltb.MaLoai
-                WHERE tltb.MaThanhLy = ?;
-            `,
-      [MaThanhLy]
-    );
-
-    res.json({ message: "Thành công.", data: result });
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: error.message });
-  }
-});
-
 // ------- note -------- //
 
 router.get("/api/select/note", verifyToken, async (req, res) => {
@@ -834,6 +808,103 @@ router.post("/api/save/note", verifyToken, async (req, res) => {
     );
 
     res.json({ message: "Lưu ghi chú thành công." });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+// ------- end note -------- //
+// ------- văn bản -------- //
+router.get("/api/select/van-ban", verifyToken, async (req, res) => {
+  try {
+    const [result] = await queryDatabase(
+      `
+        SELECT tltb.*, cb.TenCanBo
+        FROM THANHLY_THIETBI tltb
+        LEFT JOIN CANBO cb ON tltb.MaCanBo = cb.MaCanBo
+        WHERE tltb.MaCanBo = ?
+    `,
+      [req.user.id]
+    );
+
+    res.json({ message: "Done.", data: result });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.get("/api/select/danh-sach-thanh-ly", verifyToken, async (req, res) => {
+  const { MaThanhLy } = req.query;
+  try {
+    const result = await queryDatabase(
+      `
+        SELECT tltb.*, cb.TenCanBo, ltb.TenLoai, dtt.MaThietBi, dtt.MaLoai, dtt.Gia
+        FROM THANHLY_THIETBI tltb 
+        LEFT JOIN DANHSACH_THANHLY_THIETBI dtt ON tltb.MaThanhLy = dtt.MaThanhLy
+        LEFT JOIN CANBO cb ON tltb.MaCanBo = cb.MaCanBo
+        LEFT JOIN LOAI_THIETBI ltb ON ltb.MaLoai = dtt.MaLoai
+        WHERE tltb.MaThanhLy = ? AND tltb.MaCanBo = ? ;
+            `,
+      [MaThanhLy, req.user.id]
+    );
+
+    res.json({ message: "Thành công.", data: result });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.get("/api/select/danh-sach-thanh-ly-van-ban", verifyToken, async (req, res) => {
+  const { MaThanhLy } = req.query;
+  try {
+    const result = await queryDatabase(
+      `
+        SELECT tltb.*, cb.TenCanBo, ltb.TenLoai, ltb.DonViTinh, dtt.MaThietBi, dtt.MaLoai, dtt.Gia
+        FROM THANHLY_THIETBI tltb 
+        LEFT JOIN DANHSACH_THANHLY_THIETBI dtt ON tltb.MaThanhLy = dtt.MaThanhLy
+        LEFT JOIN CANBO cb ON tltb.MaCanBo = cb.MaCanBo
+        LEFT JOIN LOAI_THIETBI ltb ON ltb.MaLoai = dtt.MaLoai
+        WHERE tltb.MaThanhLy = ? AND tltb.MaCanBo = ? ;
+            `,
+      [MaThanhLy, req.user.id]
+    );
+
+    res.json({ message: "Thành công.", data: result });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.put("/api/update/danh-sach-thanh-ly", verifyToken, async (req, res) => {
+  const rows = req.body;
+
+  if (!Array.isArray(rows) || rows.length === 0) {
+    return res.status(400).json({ message: "Danh sách cập nhật không hợp lệ." });
+  }
+
+  console.log("Cập nhật danh sách thanh lý:", rows);
+
+  try {
+    for (const row of rows) {
+      const { MaThanhLy, MaThietBi, MaLoai, Gia } = row;
+      if (!MaThanhLy || !MaThietBi || !MaLoai || Gia === undefined) {
+        return res.status(400).json({ message: "Thiếu thông tin cập nhật." });
+      }
+      await queryDatabase(
+        `
+          UPDATE DANHSACH_THANHLY_THIETBI
+          SET Gia = ?
+          WHERE MaThanhLy = ? AND MaThietBi = ? AND MaLoai = ?
+        `,
+        [Gia, MaThanhLy, MaThietBi, MaLoai]
+      );
+    }
+
+    res.json({ message: "Cập nhật thành công." });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ message: error.message });
