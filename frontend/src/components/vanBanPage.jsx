@@ -33,6 +33,7 @@ export default function VanBanPage() {
       if (response.ok) {
         console.log("Fetched data:", data);
         setData(data.data);
+        setTenVanBan(data.data.TenVanBan || "");
       } else {
         console.error("Error fetching data:", data);
       }
@@ -575,6 +576,61 @@ export default function VanBanPage() {
         </div>
       </div>
 
+      <button
+        className="btn btn-primary"
+        style={{
+          marginBottom: "1rem",
+          padding: "10px 20px",
+          backgroundColor: "#007bff",
+          color: "#fff",
+          border: "none",
+          borderRadius: "4px",
+          cursor: "pointer",
+          fontSize: "1rem",
+          fontWeight: "600",
+          boxShadow: "0 2px 5px rgba(0,0,0,0.15)",
+          transition: "background-color 0.3s ease",
+        }}
+        onMouseEnter={(e) =>
+          (e.currentTarget.style.backgroundColor = "#0056b3")
+        }
+        onMouseLeave={(e) =>
+          (e.currentTarget.style.backgroundColor = "#007bff")
+        }
+        onClick={() => {
+          // Lấy nội dung HTML của editor
+          const editor = document.getElementById("editor");
+          if (!editor) return;
+          const htmlContent = editor.innerHTML;
+
+          // Tạo file Word (MIME type)
+          const header = `
+            <html xmlns:o='urn:schemas-microsoft-com:office:office' 
+                  xmlns:w='urn:schemas-microsoft-com:office:word' 
+                  xmlns='http://www.w3.org/TR/REC-html40'>
+            <head><meta charset='utf-8'></head><body>`;
+          const footer = "</body></html>";
+          const sourceHTML = header + htmlContent + footer;
+
+          // Tạo blob và link tải
+          const blob = new Blob(["\ufeff", sourceHTML], {
+            type: "application/msword",
+          });
+          const url = URL.createObjectURL(blob);
+
+          // Tạo link và click để tải
+          const link = document.createElement("a");
+          link.href = url;
+          link.download = (TenVanBan || "vanban") + ".doc";
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }}
+      >
+        Tải xuống Word
+      </button>
+
       <div
         id="editor"
         contentEditable
@@ -584,58 +640,58 @@ export default function VanBanPage() {
         onKeyUp={handleSelection}
         dangerouslySetInnerHTML={{
           __html: `
-    <table style="width: 100%; border-collapse: collapse; border: none; margin-bottom: 16px;">
-      <tr>
-          <th style=" text-align: center; border: none; background: transparent;">
-              TRƯỜNG ĐẠI HỌC THÁI BÌNH<br>
-              KHOA CÔNG NGHỆ & KỸ THUẬT
-          </th>
-          <th style=" text-align: center; border: none; background: transparent;">
-              CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM<br>
-              Độc lập – Tự do – Hạnh phúc
-          </th>
-      </tr>
-    </table>
-  
-    <h2 style="text-align: center; margin-top: 8px; margin-bottom: 8px;">${TenVanBan.replace(
-      " Thanh Lý",
-      ""
-    ).toUpperCase()}</h2>
-    <h4 style="text-align: center; margin-top: 8px; margin-bottom: 24px;">
-      V/v bán cá thiết bị đã cũ, hỏng hóc để tạo ngân sách phụ cho các thiết bị mới.
-    </h4>
-    <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 2.2cm;">
-    <b>Kính gửi:</b> <b>Ban Giám hiệu trường Đại học Thái Bình.</b>
-    </p>
-    <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 2cm;">
-      Căn cứ theo tình hình kiểm tra thực tế các phòng thực hành máy tính.
-    </p>
-    <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 2cm;">
-      Khoa Công nghệ & Kỹ thuật xin trình lên Ban Giám hiệu dự trù thanh lý các thiết bị cho các phòng thực hành máy tính, cụ thể như sau:
-    </p>
-    ${tableContent}
-    <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 1cm;"><i>Ghi chú: Đơn giá trên chưa bao gồm thuế VAT.</i></p>
-    <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 1cm;">Kính mong nhận được sự chấp thuận từ Ban Giám hiệu nhà trường.</p>
-    <p style="text-align: right; margin-top: 8px; margin-bottom: 16px;">Ngày ... tháng ... năm 20...</p>
-    <table style="width: 100%; border-collapse: collapse; border: none; margin-bottom: 16px;">
-      <tr>
-          <th style="text-align: center; border: none; background: transparent;">
-              TRƯỞNG ĐƠN VỊ
-          </th>
-          <th style="text-align: center; border: none; background: transparent;">
-              TRƯỞNG NGÀNH
-          </th>
-          <th style="text-align: center; border: none; background: transparent;">
-              NGƯỜI ĐỀ XUẤT
-          </th>
-      </tr>
-      <tr>
-        <td style=" text-align: center; border: none; height: 4rem"></td>
-        <td style=" text-align: center; border: none; height: 4rem"></td>
-        <td style=" text-align: center; border: none; height: 4rem"></td>
-      </tr>
-    </table>
-    `,
+          <table style="width: 100%; border-collapse: collapse; border: none; margin-bottom: 16px;">
+            <tr>
+                <th style=" text-align: center; border: none; background: transparent;">
+                    TRƯỜNG ĐẠI HỌC THÁI BÌNH<br>
+                    KHOA CÔNG NGHỆ & KỸ THUẬT
+                </th>
+                <th style=" text-align: center; border: none; background: transparent;">
+                    CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM<br>
+                    Độc lập – Tự do – Hạnh phúc
+                </th>
+            </tr>
+          </table>
+
+          <h2 style="text-align: center; margin-top: 8px; margin-bottom: 8px;">${TenVanBan.replace(
+            " Thanh Lý",
+            ""
+          ).toUpperCase()}</h2>
+          <h4 style="text-align: center; margin-top: 8px; margin-bottom: 24px;">
+            V/v thanh lý các thiết bị đã cũ, hỏng hóc để tạo ngân sách phụ cho các thiết bị mới.
+          </h4>
+          <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 2.2cm;">
+          <b>Kính gửi:</b> <b>Ban Giám hiệu trường Đại học Thái Bình.</b>
+          </p>
+          <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 2cm;">
+            Căn cứ theo tình hình kiểm tra thực tế các phòng thực hành máy tính.
+          </p>
+          <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 2cm;">
+            Khoa Công nghệ & Kỹ thuật xin trình lên Ban Giám hiệu dự trù thanh lý các thiết bị cho các phòng thực hành máy tính, cụ thể như sau:
+          </p>
+          ${tableContent}
+          <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 1cm;"><i>Ghi chú: Đơn giá trên chưa bao gồm thuế VAT.</i></p>
+          <p style="margin-top: 8px; margin-bottom: 16px; text-indent: 1cm;">Kính mong nhận được sự chấp thuận từ Ban Giám hiệu nhà trường.</p>
+          <p style="text-align: right; margin-top: 8px; margin-bottom: 16px;">Ngày ... tháng ... năm 20...</p>
+          <table style="width: 100%; border-collapse: collapse; border: none; margin-bottom: 16px;">
+            <tr>
+                <th style="text-align: center; border: none; background: transparent;">
+                    TRƯỞNG ĐƠN VỊ
+                </th>
+                <th style="text-align: center; border: none; background: transparent;">
+                    TRƯỞNG NGÀNH
+                </th>
+                <th style="text-align: center; border: none; background: transparent;">
+                    NGƯỜI ĐỀ XUẤT
+                </th>
+            </tr>
+            <tr>
+              <td style=" text-align: center; border: none; height: 4rem"></td>
+              <td style=" text-align: center; border: none; height: 4rem"></td>
+              <td style=" text-align: center; border: none; height: 4rem"></td>
+            </tr>
+          </table>
+          `,
         }}
       />
     </div>

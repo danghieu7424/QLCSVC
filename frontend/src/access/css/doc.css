@@ -1,4 +1,3 @@
-
 .editor-container {
   position: relative;
   display: inline-flex;
@@ -139,6 +138,7 @@
 
   .editor-area {
     position: relative;
+    margin-bottom: 1rem;
     width: 21cm;
     min-height: 29.7cm;
     padding: 2cm 2cm 2cm 3cm;

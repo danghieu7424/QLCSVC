@@ -857,11 +857,14 @@ router.get("/api/select/danh-sach-thanh-ly", verifyToken, async (req, res) => {
   }
 });
 
-router.get("/api/select/danh-sach-thanh-ly-van-ban", verifyToken, async (req, res) => {
-  const { MaThanhLy } = req.query;
-  try {
-    const result = await queryDatabase(
-      `
+router.get(
+  "/api/select/danh-sach-thanh-ly-van-ban",
+  verifyToken,
+  async (req, res) => {
+    const { MaThanhLy } = req.query;
+    try {
+      const result = await queryDatabase(
+        `
         SELECT tltb.*, cb.TenCanBo, ltb.TenLoai, ltb.DonViTinh, dtt.MaThietBi, dtt.MaLoai, dtt.Gia
         FROM THANHLY_THIETBI tltb 
         LEFT JOIN DANHSACH_THANHLY_THIETBI dtt ON tltb.MaThanhLy = dtt.MaThanhLy
@@ -869,21 +872,24 @@ router.get("/api/select/danh-sach-thanh-ly-van-ban", verifyToken, async (req, re
         LEFT JOIN LOAI_THIETBI ltb ON ltb.MaLoai = dtt.MaLoai
         WHERE tltb.MaThanhLy = ? AND tltb.MaCanBo = ? ;
             `,
-      [MaThanhLy, req.user.id]
-    );
+        [MaThanhLy, req.user.id]
+      );
 
-    res.json({ message: "Thành công.", data: result });
-  } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: error.message });
+      res.json({ message: "Thành công.", data: result });
+    } catch (error) {
+      console.error(error.message);
+      res.status(500).json({ message: error.message });
+    }
   }
-});
+);
 
 router.put("/api/update/danh-sach-thanh-ly", verifyToken, async (req, res) => {
   const rows = req.body;
 
   if (!Array.isArray(rows) || rows.length === 0) {
-    return res.status(400).json({ message: "Danh sách cập nhật không hợp lệ." });
+    return res
+      .status(400)
+      .json({ message: "Danh sách cập nhật không hợp lệ." });
   }
 
   console.log("Cập nhật danh sách thanh lý:", rows);
@@ -903,6 +909,27 @@ router.put("/api/update/danh-sach-thanh-ly", verifyToken, async (req, res) => {
         [Gia, MaThanhLy, MaThietBi, MaLoai]
       );
     }
+
+    res.json({ message: "Cập nhật thành công." });
+  } catch (error) {
+    console.error(error.message);
+    res.status(500).json({ message: error.message });
+  }
+});
+
+router.put("/api/update/danh-sach-van-ban", verifyToken, async (req, res) => {
+  const { MaThanhLy, TenVanBan, LyDo } = req.body;
+  try {
+    console.log("Cập nhật văn bản:", { TenVanBan, LyDo });
+    await queryDatabase(
+      `
+      UPDATE THANHLY_THIETBI
+      SET TenVanBan = ?, LyDo = ?
+      WHERE MaCanBo = ?
+      AND MaThanhLy = ?
+      `,
+      [TenVanBan, LyDo, req.user.id, MaThanhLy]
+    );
 
     res.json({ message: "Cập nhật thành công." });
   } catch (error) {
