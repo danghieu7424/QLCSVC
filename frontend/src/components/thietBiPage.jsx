@@ -280,8 +280,6 @@ export default function ThietBiPage() {
 
       if (!res.ok) throw new Error(result.message || "Lỗi.");
 
-      console.log(result.data);
-
       toast.success(result.message);
     } catch (error) {
       console.log(error.message);

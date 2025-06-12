@@ -301,11 +301,14 @@ router.get("/api/select/trang-thai-phong", async (req, res) => {
 
     const enumStr = result[0]?.COLUMN_TYPE || ""; // lấy chuỗi enum
 
-    const values = enumStr
+    let values = enumStr
       .replace(/^enum\(/, "")
       .replace(/\)$/, "")
       .split(/','/)
       .map((s) => s.replace(/^'/, "").replace(/'$/, ""));
+
+    // Bỏ 'Chờ kiểm kê'
+    values = values.filter((v) => v !== "Chờ kiểm kê");
 
     res.json({ message: "Thành công.", data: values });
   } catch (error) {
@@ -536,11 +539,13 @@ router.get("/api/select/trang-thai-thiet-bi", async (req, res) => {
 
     const enumStr = result[0]?.COLUMN_TYPE || ""; // lấy chuỗi enum
 
-    const values = enumStr
+    let values = enumStr
       .replace(/^enum\(/, "")
       .replace(/\)$/, "")
       .split(/','/)
       .map((s) => s.replace(/^'/, "").replace(/'$/, ""));
+
+    values = values.filter((v) => v !== "Chờ kiểm kê");
 
     res.json({ message: "Thành công.", data: values });
   } catch (error) {
@@ -728,14 +733,29 @@ router.post("/api/insert/danh-sach-thanh-ly", verifyToken, async (req, res) => {
 
   try {
     // 1. Tạo phiếu thanh lý và lấy MaThanhLy vừa tạo
-    const insertThanhLy = await queryDatabase(
+    const insertThanhLyResult = await queryDatabase(
       `
         SET time_zone = '+07:00';
-        INSERT INTO THANHLY_THIETBI (NgayDeXuat, MaCanBo, GiaBan) VALUES (CURDATE(), ?, 0.00)
+        INSERT INTO THANHLY_THIETBI (NgayDeXuat, MaCanBo, GiaBan) VALUES (CURDATE(), ?, 0.00);
+        SELECT LAST_INSERT_ID() AS MaThanhLy;
       `,
       [req.user.id]
     );
-    const maThanhLy = insertThanhLy.insertId;
+
+    // Lấy MaThanhLy từ kết quả trả về
+    let maThanhLy;
+    if (Array.isArray(insertThanhLyResult)) {
+      // mysql2 sẽ trả về mảng các kết quả cho nhiều câu lệnh
+      // Kết quả SELECT sẽ nằm ở phần tử cuối cùng
+      const lastResult = insertThanhLyResult[insertThanhLyResult.length - 1];
+      maThanhLy = lastResult[0]?.MaThanhLy;
+    } else {
+      maThanhLy = insertThanhLyResult.insertId;
+    }
+
+    if (!maThanhLy) {
+      return res.status(500).json({ message: "Không lấy được mã thanh lý." });
+    }
 
     // 2. Chèn danh sách thiết bị vào bảng DANHSACH_THANHLY_THIETBI
     const placeholders = rows.map(() => `(?, ?, ?)`).join(", ");
@@ -755,17 +775,26 @@ router.post("/api/insert/danh-sach-thanh-ly", verifyToken, async (req, res) => {
     );
 
     // 3. Trả về danh sách thiết bị đã chọn
-    const whereClause = rows
-      .map(() => "(MaThietBi = ? AND MaLoai = ?)")
-      .join(" OR ");
-    const whereValues = rows.flatMap((row) => [row.MaThietBi, row.MaLoai]);
+    // Cập nhật trạng thái thiết bị thành 'Chờ thanh lý'
+    // Cập nhật trạng thái nhiều thiết bị thành 'Chờ thanh lý'
+    const updateValues = [
+      req.user.id,
+      ...rows.flatMap((row) => [row.MaThietBi, row.MaLoai]),
+    ];
+    if (rows.length > 0) {
+      const updateClause = rows
+        .map(() => "(MaThietBi = ? AND MaLoai = ?)")
+        .join(" OR ");
+      await queryDatabase(
+        `
+      SET @MaCanBo = ?;
+      UPDATE THIETBI SET TrangThai = 'Chờ thanh lý' WHERE ${updateClause}
+      `,
+        updateValues
+      );
+    }
 
-    const result = await queryDatabase(
-      `SELECT * FROM THIETBI WHERE ${whereClause}`,
-      whereValues
-    );
-
-    res.json({ message: "Thành công.", data: result });
+    res.json({ message: "Thành công." });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ message: error.message });
@@ -818,7 +847,7 @@ router.post("/api/save/note", verifyToken, async (req, res) => {
 // ------- văn bản -------- //
 router.get("/api/select/van-ban", verifyToken, async (req, res) => {
   try {
-    const [result] = await queryDatabase(
+    const result = await queryDatabase(
       `
         SELECT tltb.*, cb.TenCanBo
         FROM THANHLY_THIETBI tltb
