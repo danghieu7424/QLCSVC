@@ -565,6 +565,7 @@ export default function ThietBiPage() {
                             }
                           // console.log(selectedRows);
                         }
+
                       }}
                       className="btnOK"
                       disabled={elementLoading}

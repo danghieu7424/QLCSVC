@@ -21,7 +21,7 @@ const columns = [
   { label: "Giá bán", key: "GiaBan", type: "left", disable: false },
 ];
 
-function DanhSachThietBi({ maThanhLy }) {
+function DanhSachThietBi({ maThanhLy, fetchData }) {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -74,12 +74,15 @@ function DanhSachThietBi({ maThanhLy }) {
         }
       );
 
-      if (!response.ok) throw new Error("Có lỗi khi lưu.");
+      const resJson = await response.json();
+      if (!response.ok || resJson.success === false) {
+        throw new Error(resJson.message || "Cập nhật thất bại");
+      }
 
-      await fetchData();
+      if (fetchData) await fetchData();
       toast.success("Lưu thành công!");
     } catch (err) {
-      toast.error("Có lỗi khi lưu.");
+      toast.error(err);
     } finally {
       setSaving(false);
     }
@@ -263,7 +266,7 @@ export default function DanhSachVanBanPage() {
                   {openRow === vb.MaThanhLy && (
                     <tr>
                       <td colSpan={columns.length + 1}>
-                        <DanhSachThietBi maThanhLy={vb.MaThanhLy} />
+                        <DanhSachThietBi maThanhLy={vb.MaThanhLy} fetchData={fetchData} />
                       </td>
                     </tr>
                   )}

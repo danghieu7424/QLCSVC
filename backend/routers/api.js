@@ -71,7 +71,7 @@ router.get("/api/select/data", verifyToken, async (req, res) => {
 
 //--------------
 
-router.get("/api/select/quan-ly-phong", async (req, res) => {
+router.get("/api/select/quan-ly-phong", verifyToken, async (req, res) => {
   try {
     const rowsPHONG = await queryDatabase(
       `
@@ -265,7 +265,7 @@ router.post(
   }
 );
 
-router.delete("/api/delete/quan-ly-phong", verifyToken, async (req, res) => {
+router.delete("/api/delete/quan-ly-phong", verifyToken, checkManager, async (req, res) => {
   const { MaPhong, MaCanBo } = req.body;
 
   try {
@@ -512,7 +512,7 @@ router.delete(
 
 // ======= thiết bị ======= //
 
-router.get("/api/select/phong", async (req, res) => {
+router.get("/api/select/phong", verifyToken, async (req, res) => {
   try {
     const result = await queryDatabase(`
           SELECT MaPhong, TenPhong
@@ -526,7 +526,7 @@ router.get("/api/select/phong", async (req, res) => {
   }
 });
 
-router.get("/api/select/trang-thai-thiet-bi", async (req, res) => {
+router.get("/api/select/trang-thai-thiet-bi", verifyToken, async (req, res) => {
   try {
     const result = await queryDatabase(
       `
@@ -554,7 +554,7 @@ router.get("/api/select/trang-thai-thiet-bi", async (req, res) => {
   }
 });
 
-router.get("/api/select/thiet-bi", async (req, res) => {
+router.get("/api/select/thiet-bi", verifyToken, async (req, res) => {
   const { MaPhong, TrangThai } = req.query;
 
   try {
@@ -600,7 +600,7 @@ router.get("/api/select/thiet-bi", async (req, res) => {
   }
 });
 
-router.get("/api/select/all-thiet-bi", async (req, res) => {
+router.get("/api/select/all-thiet-bi", verifyToken, async (req, res) => {
   const { MaPhong, TrangThai } = req.query;
   // console.log(">>> Query input:", { MaPhong, TrangThai });
   try {
@@ -724,7 +724,7 @@ router.get("/api/select/thiet-bi/lich-su", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
-router.post("/api/insert/danh-sach-thanh-ly", verifyToken, async (req, res) => {
+router.post("/api/insert/danh-sach-thanh-ly", verifyToken, checkManager, async (req, res) => {
   const rows = req.body;
 
   if (!Array.isArray(rows) || rows.length === 0) {
